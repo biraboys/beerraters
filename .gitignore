@@ -1,6 +1,6 @@
 node_modules
 package-lock.json
-pass.js
+user.js
 .vscode
 .DS_Store
 user.js
