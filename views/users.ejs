@@ -1,0 +1,5 @@
+<%- include header.ejs %>
+<% kittens.forEach(function(kitten){
+    %> <h1><%= kitten.name %></h1> <%
+}); %>
+<%- include footer.ejs %>
