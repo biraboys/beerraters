@@ -15,7 +15,7 @@ db.once('open', function() {
   router.get('/', function(req, res, next) {
     Kitten.find(function(err, kittens) {
       if (err) return console.error(err);
-      res.send(kittens);
+      res.render('users', { kittens });
     });
   });
 });

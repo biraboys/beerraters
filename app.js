@@ -33,10 +33,6 @@ mongoose.connect(
   `mongodb://${mongouser.user}:${mongouser.pass}@cluster0-shard-00-00-h3zej.mongodb.net:27017,cluster0-shard-00-01-h3zej.mongodb.net:27017,cluster0-shard-00-02-h3zej.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`
 );
 
-app.get('/users', function(req, res) {
-  res.send(res);
-});
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
