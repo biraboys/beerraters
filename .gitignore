@@ -1,5 +1,5 @@
 node_modules
 package-lock.json
-user.js
+login.js
 .vscode
 .DS_Store
