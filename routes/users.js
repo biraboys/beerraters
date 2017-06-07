@@ -1,7 +1,4 @@
-const express = require('express')
 const router = require('express-promise-router')()
-const mongoose = require('mongoose')
-
 const UsersController = require('../controllers/users')
 
 router.route('/')
@@ -10,5 +7,9 @@ router.route('/')
 
 router.route('/:userId')
   .get(UsersController.getUser)
+
+router.route('/:userId/reviews')
+  .get(UsersController.getUserReviews)
+  .post(UsersController.newUserReview)
 
 module.exports = router
