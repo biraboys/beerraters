@@ -7,14 +7,20 @@ module.exports = {
     res.status(200).render('users', {users})
   },
   newUser: async (req, res, next) => {
-    const newUser = new User(req.body)
-    const user = await newUser.save()
-    res.status(201).json(user)
+    const newUser = new User({
+      userName: req.body.userName,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password
+    })
+    await newUser.save()
+    res.status(200).redirect('login')
   },
   getUser: async (req, res, next) => {
-    const { userId } = req.params
-    const user = await User.findById(userId)
-    res.status(200).render('user', {user})
+    // const { userId } = req.params
+    // const user = await User.findById(userId)
+    // res.status(200).render('user', {user})
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
