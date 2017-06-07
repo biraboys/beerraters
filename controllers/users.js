@@ -39,7 +39,7 @@ module.exports = {
     res.status(201).json(newReview)
   },
   findUser: async (req, res, next) => {
-    const { userName } = req.params
+    const { userName } = req.params.userName
     const user = await User.findByName(userName)
     res.status(200).json(user)
   }
