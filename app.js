@@ -24,14 +24,14 @@ const index = require('./routes/index')
 const users = require('./routes/users')
 const beers = require('./routes/beers')
 const search = require('./routes/search')
-const login = require('./routes/login')
+// const login = require('./routes/login')
 const register = require('./routes/register')
 
 app.use('/', index)
 app.use('/users', users)
 app.use('/beers', beers)
 app.use('/search', search)
-app.use('/login', login)
+// app.use('/login', login)
 app.use('/register', register)
 
 // View engine setup
@@ -60,13 +60,6 @@ app.use((err, req, res, next) => {
 // Respond to self
   console.log(error)
 })
-
-// Start server
-const port = app.get('port') || 6889
-app.listen(port, () => console.log(`Server is listening on port ${port}`))
-
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 // Databse handling
 const db = mongoose.connection
