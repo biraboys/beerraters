@@ -8,4 +8,8 @@ router.route('/')
 router.route('/:userId')
   .get(UsersController.getUser)
 
+router.route('/:userId/reviews')
+  .get(UsersController.getUserReviews)
+  .post(UsersController.newUserReview)
+
 module.exports = router
