@@ -1,3 +1,4 @@
+// Requires for app
 const express = require('express')
 const path = require('path')
 // const favicon = require('serve-favicon')
@@ -52,7 +53,7 @@ app.use((err, req, res, next) => {
 })
 
 // Start server
-const port = app.get('port') || 6889
+const port = app.get('port') || 3000
 app.listen(port, () => console.log(`Server is listening on port ${port}`))
 
 // uncomment after placing your favicon in /public
@@ -69,7 +70,7 @@ db.once('open', function () {
 // Mongoose setup
 mongoose.Promise = global.Promise
 mongoose.connect(
-  `mongodb://${login.name}:${login.pass}@cluster0-shard-00-00-h3zej.mongodb.net:27017,cluster0-shard-00-01-h3zej.mongodb.net:27017,cluster0-shard-00-02-h3zej.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`
+  `mongodb://${login.name}:${login.pass}@cluster0-shard-00-00-h3zej.mongodb.net:27017,cluster0-shard-00-01-h3zej.mongodb.net:27017,cluster0-shard-00-02-h3zej.mongodb.net:27017/beerarino?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`
 )
 
 module.exports = app

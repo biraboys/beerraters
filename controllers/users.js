@@ -3,6 +3,7 @@ const User = require('../models/user')
 module.exports = {
   index: async (req, res, next) => {
     const users = await User.find({})
+    res.render('users', { users })
     res.status(200).json(users)
   },
   newUser: async (req, res, next) => {
@@ -13,6 +14,6 @@ module.exports = {
   getUser: async (req, res, next) => {
     const { userId } = req.params
     const user = await User.findById(userId)
-    res.status(200).json(user)
+    res.status(200).render('user', { user })
   }
 }

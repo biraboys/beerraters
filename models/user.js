@@ -6,6 +6,7 @@ const userSchema = new Schema({
   lastName: String,
   email: String,
   password: String,
+  role: Boolean,
   reviews: [
     {
       type: Schema.Types.ObjectId,
