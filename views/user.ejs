@@ -1,5 +1,8 @@
 <%- include header.ejs %>
-
- <h1><%= user.firstName %> <%= user.lastName %></h1>
-
+    <% if(user.role){
+        role = 'Admin';
+    } else {
+        role = 'User';
+    } %>
+    <h1><%= user.firstName + ' ' + user.lastName + ' - ' + role %></h1>
 <%- include footer.ejs %>

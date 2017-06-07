@@ -3,3 +3,5 @@ package-lock.json
 login.js
 .vscode
 .DS_Store
+user.js
+npm-debug.log

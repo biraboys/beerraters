@@ -1,5 +1,7 @@
+// Requires for app
 const express = require('express')
 const path = require('path')
+const mongoUser = require('./login.js')
 // const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
@@ -20,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Routes
 const index = require('./routes/index')
 const users = require('./routes/users')
+<<<<<<< HEAD
 const beers = require('./routes/beers')
 const search = require('./routes/search')
 const login = require('./login')
@@ -28,6 +31,14 @@ app.use('/', index)
 app.use('/users', users)
 app.use('/search', search)
 app.use('/beers', beers)
+=======
+const login = require('./routes/login')
+const register = require('./routes/register')
+app.use('/', index)
+app.use('/users', users)
+app.use('/login', login)
+app.use('/register', register)
+>>>>>>> cb77b2e98330a40d3522cd9f944acedbf16903e3
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -57,7 +68,7 @@ app.use((err, req, res, next) => {
 })
 
 // Start server
-const port = app.get('port') || 3000
+const port = app.get('port') || 6889
 app.listen(port, () => console.log(`Server is listening on port ${port}`))
 
 // uncomment after placing your favicon in /public
@@ -74,7 +85,7 @@ db.once('open', function () {
 // Mongoose setup
 mongoose.Promise = global.Promise
 mongoose.connect(
-  `mongodb://${login.name}:${login.pass}@cluster0-shard-00-00-h3zej.mongodb.net:27017,cluster0-shard-00-01-h3zej.mongodb.net:27017,cluster0-shard-00-02-h3zej.mongodb.net:27017/beerarino?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`
+  `mongodb://${mongoUser.name}:${mongoUser.pass}@cluster0-shard-00-00-h3zej.mongodb.net:27017,cluster0-shard-00-01-h3zej.mongodb.net:27017,cluster0-shard-00-02-h3zej.mongodb.net:27017/beerarino?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`
 )
 
 module.exports = app

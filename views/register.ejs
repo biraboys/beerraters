@@ -1,0 +1,23 @@
+<%- include header.ejs %>
+
+<div class="section hero">
+ <div class="container">
+    <div class="six columns">
+      <form action="/users" method="POST">
+        <label for="userName">Username:</label>
+        <input class="u-full-width" type="text" name="userName" required>
+        <label for="firstName">Firstname:</label>
+        <input class="u-full-width" type="text" name="firstName">
+        <label for="lastName">Lastname:</label>
+        <input class="u-full-width" type="text" name="lastName">
+        <label for="email">Email:</label>
+        <input class="u-full-width" type="text" name="email" required>
+        <label for="password">Password:</label>
+        <input class="u-full-width" type="password" name="password" required>
+        <input class="button-primary" type="submit" value="Register">
+      </form>
+    </div>
+ </div>
+</div>
+
+<%- include footer.ejs %>
