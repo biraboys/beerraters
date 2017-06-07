@@ -20,9 +20,14 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Routes
 const index = require('./routes/index')
 const users = require('./routes/users')
+const beers = require('./routes/beers')
+const search = require('./routes/search')
 const login = require('./login')
+
 app.use('/', index)
 app.use('/users', users)
+app.use('/search', search)
+app.use('/beers', beers)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))

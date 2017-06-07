@@ -17,6 +17,10 @@ const userSchema = new Schema({
   ]
 })
 
+userSchema.static('findByName', function (name, callback) {
+  return this.find({ firstName: name }, callback)
+})
+
 const User = mongoose.model('user', userSchema)
 
 module.exports = User
