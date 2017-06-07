@@ -22,23 +22,17 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Routes
 const index = require('./routes/index')
 const users = require('./routes/users')
-<<<<<<< HEAD
 const beers = require('./routes/beers')
 const search = require('./routes/search')
-const login = require('./login')
+const login = require('./routes/login')
+const register = require('./routes/register')
 
 app.use('/', index)
 app.use('/users', users)
-app.use('/search', search)
 app.use('/beers', beers)
-=======
-const login = require('./routes/login')
-const register = require('./routes/register')
-app.use('/', index)
-app.use('/users', users)
+app.use('/search', search)
 app.use('/login', login)
 app.use('/register', register)
->>>>>>> cb77b2e98330a40d3522cd9f944acedbf16903e3
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))
