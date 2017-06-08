@@ -61,13 +61,6 @@ app.use((err, req, res, next) => {
   console.log(error)
 })
 
-// Start server
-const port = app.get('port') || 6889
-app.listen(port, () => console.log(`Server is listening on port ${port}`))
-
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
 // Databse handling
 const db = mongoose.connection
 
