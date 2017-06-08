@@ -1,7 +1,7 @@
 // Requires for app
 const express = require('express')
 const path = require('path')
-const mongoUser = require('./login.js')
+const mongoUser = require('./mongodb-login.js')
 // const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
@@ -24,14 +24,14 @@ const index = require('./routes/index')
 const users = require('./routes/users')
 const beers = require('./routes/beers')
 const search = require('./routes/search')
-// const login = require('./routes/login')
+const login = require('./routes/login')
 const register = require('./routes/register')
 
 app.use('/', index)
 app.use('/users', users)
 app.use('/beers', beers)
 app.use('/search', search)
-// app.use('/login', login)
+app.use('/login', login)
 app.use('/register', register)
 
 // View engine setup
