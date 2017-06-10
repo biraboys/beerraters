@@ -13,5 +13,4 @@ router.route('/:userId/reviews')
   .get(UsersController.getUserReviews)
   .post(UsersController.newUserReview)
 
-
 module.exports = router
