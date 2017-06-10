@@ -10,7 +10,17 @@
           <div class="one-half column">
              <h1 class="hero-heading">@<%= user.username %></h1>
              <h1 class="hero-heading"><%= user.name %></h1>
-             <p class="">Member since <%= user.registered %></p> 
+             <p class="">Member since <%= user.registered %></p>
+             <div class="row">
+               <div class="one-half column">
+                   <h6 class="tc-blue">REVIEWS</h6>
+                    <p class="">167</p>
+               </div>
+               <div class="one-half column">
+                   <h6 class="tc-blue">RANK IN SWE</h6>
+                    <p class="">24</p>
+               </div>
+             </div>
             <a class="button button-primary" href="">Follow</a>
      </div>
      <div class="one-half column">
@@ -26,28 +36,65 @@
    <div class="row">
      <div class="one-third column">
        <div class="card">
-         <h2 class="value-multiplier">20000+</h2>
-         <h5 class="value-heading">Beers</h5>
-         <p class="value-description">Over 20000 beers to get your thirsty</p>
+         <h5 class="value-multiplier tc-blue">Average rating</h5>
+         <p class="value-description">3.2</p>
        </div>
        <br />
        <div class="card">
-         <h2 class="value-multiplier">20000+</h2>
-         <h5 class="value-heading">Beers</h5>
-         <p class="value-description">Over 20000 beers to get your thirsty</p>
+      <h5 class="value-multiplier tc-blue">Last Online</h5>
+         <p class="value-description">Today</p>
        </div>
        <br />
        <div class="card">
-         <h2 class="value-multiplier">20000+</h2>
-         <h5 class="value-heading">Beers</h5>
-         <p class="value-description">Over 20000 beers to get your thirsty</p>
+      <h5 class="value-multiplier tc-blue">Followers</h5>
+         <p class="value-description">200</p>
+       </div>
+       <br />
+           <div class="card">
+      <h5 class="value-multiplier tc-blue">Following</h5>
+         <p class="value-description">432</p>
        </div>
        <br />
      </div>
      <div class="two-thirds column card">
-       <h2 class="value-multiplier">Reviews</h2>
-       <h5 class="value-heading">Reviews</h5>
-       <p class="value-description">1200 reviews to help you select the right beer for your mood</p>
+       <nav class="navbar">
+      <div class="container">
+        <ul class="navbar-list">
+          <li class="navbar-item"><a class="navbar-link active" href="">Lastest Reviews</a></li>
+          <li class="navbar-item">
+            <a class="navbar-link" href="#">Top Ratings</a>
+          </li>
+          <li class="navbar-item"><a class="navbar-link" href="">Activity</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="row ta-left">
+        <div class="one-third column">
+            <img class="u-max-full-width" src="images/beer.png">
+        </div>
+        <div class="two-thirds column">
+          <h5 class="value-heading">Review 1</h5>
+          <p class="value-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+        </div>
+      </div>
+          <div class="row ta-left">
+        <div class="one-third column">
+            <img class="u-max-full-width" src="images/beer.png">
+        </div>
+        <div class="two-thirds column">
+          <h5 class="value-heading">Review 2</h5>
+          <p class="value-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+        </div>
+      </div>
+          <div class="row ta-left">
+        <div class="one-third column">
+            <img class="u-max-full-width" src="images/beer.png">
+        </div>
+        <div class="two-thirds column">
+          <h5 class="value-heading">Review 3</h5>
+          <p class="value-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+        </div>
+      </div>
      </div>
  </div>
 </div>

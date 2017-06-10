@@ -43,7 +43,7 @@
 }
 
 .bg-profile {
-  background-color: cornflowerblue;
+  background-color: rgba(100, 149, 237, 0.23);
   background-size: cover;
   padding-bottom: 5rem;
 }
@@ -213,7 +213,7 @@
     background: #fff;
     z-index: 99;
     border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee; }
+    border-bottom: 1px solid #eee;}
   .navbar-spacer {
     display: none; }
   .navbar > .container {
@@ -245,9 +245,10 @@
   /* Re-overiding the width 100% declaration to match size of % based container */
   .has-docked-nav .navbar > .container {
     width: 80%; }
+}
 
   /* Popover */
-  .popover.open {
+ /* .popover.open {
     display: block;
   }
   .popover {
@@ -313,4 +314,11 @@
   .popover-link:hover,
   .popover-item:first-child .popover-link:hover:after {
     border-bottom-color: #33C3F0; }
+}*/
+.ta-left {
+  text-align: left;
+}
+
+.tc-blue {
+  color: #39cef7;
 }
