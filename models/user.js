@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-// const passwordPlugin = require('mongoose-password-plugin')
 const Schema = mongoose.Schema
 const titlize = require('mongoose-title-case')
 const validate = require('mongoose-validator')
+const bcrypt = require('bcrypt')
 
 var nameValidator = [
   validate({
@@ -66,7 +66,14 @@ const userSchema = new Schema({
 userSchema.static('findByName', function (name, callback) {
   return this.find({ firstName: name }, callback)
 })
-// userSchema.plugin(passwordPlugin)
+
+userSchema.pre('save', function (next) {
+  if (this.password) {
+    var salt = bcrypt.genSaltSync(10)
+    this.password = bcrypt.hashSync(this.password, salt)
+  }
+  next()
+})
 
 userSchema.plugin(titlize, {
   paths: [ 'name' ]
