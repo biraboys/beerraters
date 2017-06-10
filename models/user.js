@@ -29,7 +29,7 @@ const userSchema = new Schema({
 })
 
 userSchema.static('findByName', function (name, callback) {
-  return this.find({ firstName: name }, callback)
+  return this.find({ username: name }, callback)
 })
 userSchema.plugin(passwordPlugin)
 

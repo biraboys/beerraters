@@ -1,8 +1,57 @@
 <%- include header.ejs %>
-    <% if(user.role){
-        role = 'Admin';
-    } else {
-        role = 'User';
-    } %>
-    <h1><%= user.firstName + ' ' + user.lastName + ' - ' + role %></h1>
+<div class="section hero">
+ <div class="container">
+   <div class="row">
+         <% if (user === undefined) { %>
+          <div class="one-half column">
+            <h1 class="hero-heading">Sorry could not found user</h1>
+          </div>
+            <% } else { %>
+          <div class="one-half column">
+             <h1 class="hero-heading">@<%= user.username %></h1>
+             <h1 class="hero-heading"><%= user.name %></h1>
+             <p class="">Member since <%= user.registered %></p> 
+            <a class="button button-primary" href="">Follow</a>
+     </div>
+     <div class="one-half column">
+       <img class="u-max-full-width" src="images/user-placeholder.png">
+     </div>
+      <% } %>  
+   </div>
+ </div>
+</div>
+
+<div class="section bg-profile">
+ <div class="container">
+   <div class="row">
+     <div class="one-third column">
+       <div class="card">
+         <h2 class="value-multiplier">20000+</h2>
+         <h5 class="value-heading">Beers</h5>
+         <p class="value-description">Over 20000 beers to get your thirsty</p>
+       </div>
+       <br />
+       <div class="card">
+         <h2 class="value-multiplier">20000+</h2>
+         <h5 class="value-heading">Beers</h5>
+         <p class="value-description">Over 20000 beers to get your thirsty</p>
+       </div>
+       <br />
+       <div class="card">
+         <h2 class="value-multiplier">20000+</h2>
+         <h5 class="value-heading">Beers</h5>
+         <p class="value-description">Over 20000 beers to get your thirsty</p>
+       </div>
+       <br />
+     </div>
+     <div class="two-thirds column card">
+       <h2 class="value-multiplier">Reviews</h2>
+       <h5 class="value-heading">Reviews</h5>
+       <p class="value-description">1200 reviews to help you select the right beer for your mood</p>
+     </div>
+ </div>
+</div>
+</div>
+
+
 <%- include footer.ejs %>

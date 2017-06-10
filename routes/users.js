@@ -7,7 +7,6 @@ router.route('/')
 
 router.route('/?search=')
   .get(UsersController.getUser)
-  .get(UsersController.getUser)
 
 router.route('/:userId/reviews')
   .get(UsersController.getUserReviews)

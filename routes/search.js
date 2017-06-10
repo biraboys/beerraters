@@ -5,8 +5,9 @@ router.route('/')
   .get((req, res, next) => {
     res.status(200).render('search')
   })
+  .post(UsersController.findUser)
 
-router.route('/:userName')
-  .get(UsersController.findUser)
+// router.route('/')
+//   .get(UsersController.findUser)
 
 module.exports = router

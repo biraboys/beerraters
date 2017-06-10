@@ -1,5 +1,48 @@
 <%- include header.ejs %>
-    <% users.forEach(function(user){
-        %> <h1><%= user.userName %></h1> <%
-    }); %>
+<div class="section hero">
+ <div class="container">
+   <div class="row">
+         <% if (users !== []) { %>
+          <div class="one-half column">
+             <h1 class="hero-heading">@<%= users[0].username %></h1>
+             <h1 class="hero-heading"><%= users[0].name %></h1>
+             <p class="">Member since <%= users[0].registered %></p> 
+            <a class="button button-primary" href="">Follow</a>
+     </div>
+     <div class="one-half column">
+       <img class="u-max-full-width" src="images/user-placeholder.png">
+     </div>
+      <% } %>
+      <% if (users === []) { %>
+      <div class="one-half column">
+       <h1 class="hero-heading">Sorry could not found user</h1>
+       </div>
+      <% } %>  
+   </div>
+ </div>
+</div>
+
+<div class="section values">
+ <div class="container">
+   <div class="row">
+     <div class="one-third column value">
+       <h2 class="value-multiplier">20000+</h2>
+       <h5 class="value-heading">Beers</h5>
+       <p class="value-description">Over 20000 beers to get your thirsty</p>
+     </div>
+     <div class="one-third column value">
+       <h2 class="value-multiplier">4200</h2>
+       <h5 class="value-heading">Reviews</h5>
+       <p class="value-description">1200 reviews to help you select the right beer for your mood</p>
+     </div>
+     <div class="one-third column value">
+       <h2 class="value-multiplier">3500</h2>
+       <h5 class="value-heading">Users</h5>
+       <p class="value-description">We are proud of our community that keeps growing</p>
+     </div>
+   </div>
+ </div>
+</div>
+
+
 <%- include footer.ejs %>

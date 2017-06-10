@@ -4,7 +4,8 @@ const Review = require('../models/review')
 module.exports = {
   index: async (req, res, next) => {
     const users = await User.find({})
-    res.status(200).render('users', {users})
+    res.status(200).json(users)
+    // res.status(200).render('users', {users})
   },
   newUser: async (req, res, next) => {
     const newUser = new User({
@@ -45,8 +46,10 @@ module.exports = {
     res.status(201).json(newReview)
   },
   findUser: async (req, res, next) => {
-    const { userName } = req.params
-    const user = await User.findByName(userName)
-    res.status(200).json(user)
+    const userName = req.body.userName
+    const userArr = await User.findByName(userName)
+    let user
+    if (userArr[0] !== undefined) user = userArr[0].toObject()
+    res.status(200).render('user', {user})
   }
 }
