@@ -9,14 +9,40 @@ module.exports = {
   },
   newUser: async (req, res, next) => {
     const newUser = new User({
-      userName: req.body.userName,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      username: req.body.username,
+      name: req.body.name,
       email: req.body.email,
       password: req.body.password
     })
-    await newUser.save()
-    res.status(200).redirect('login')
+    if (req.body.username === null || req.body.name === null || req.body.email === null || req.body.password === null || req.body.username === '' || req.body.name === '' || req.body.email === '' || req.body.password === '') {
+      res.json({ success: false, message: 'Ensure username, email and password were provided' })
+    } else {
+      await newUser.save((err) => {
+        if (err) {
+          if (err.errors != null) {
+            if (err.errors.name) {
+              res.json({ success: false, message: err.errors.name.message })
+            } else if (err.errors.email) {
+              res.json({ success: false, message: err.errors.email.message })
+            } else if (err.errors.username) {
+              res.json({ success: false, message: err.errors.username.message })
+            } else if (err.errors.password) {
+              res.json({ success: false, message: err.errors.password.message })
+            } else {
+              res.json({ success: false, message: err })
+            }
+          } else if (err) {
+            if (err.code === 11000) {
+              res.json({ success: false, message: 'Username or e-mail already taken.' })
+            } else {
+              res.json({ success: false, message: err })
+            }
+          }
+        } else {
+          res.json({ success: true, message: 'User created!' })
+        }
+      })
+    }
   },
   getUser: async (req, res, next) => {
     // const { userId } = req.params

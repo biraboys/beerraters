@@ -5,6 +5,5 @@ router.get('/', function (req, res, next) {
   res.render('register')
   .post(UsersController.newUser)
 })
-  // .post(UsersController.newUser)
 
 module.exports = router
