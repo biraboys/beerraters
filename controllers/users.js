@@ -15,33 +15,34 @@ module.exports = {
       password: req.body.password
     })
     if (req.body.username === null || req.body.name === null || req.body.email === null || req.body.password === null || req.body.username === '' || req.body.name === '' || req.body.email === '' || req.body.password === '') {
-      res.json({ success: false, message: 'Ensure username, email and password were provided' })
+      console.log({ success: false, message: 'Ensure username, email and password were provided' })
     } else {
       await newUser.save((err) => {
         if (err) {
           if (err.errors != null) {
             if (err.errors.name) {
-              res.json({ success: false, message: err.errors.name.message })
+              console.log({ success: false, message: err.errors.name.message })
             } else if (err.errors.email) {
-              res.json({ success: false, message: err.errors.email.message })
+              console.log({ success: false, message: err.errors.email.message })
             } else if (err.errors.username) {
-              res.json({ success: false, message: err.errors.username.message })
+              console.log({ success: false, message: err.errors.username.message })
             } else if (err.errors.password) {
-              res.json({ success: false, message: err.errors.password.message })
+              console.log({ success: false, message: err.errors.password.message })
             } else {
-              res.json({ success: false, message: err })
+              console.log({ success: false, message: err })
             }
           } else if (err) {
             if (err.code === 11000) {
-              res.json({ success: false, message: 'Username or e-mail already taken.' })
+              console.log({ success: false, message: 'Username or e-mail already taken.' })
             } else {
-              res.json({ success: false, message: err })
+              console.log({ success: false, message: err })
             }
           }
         } else {
-          res.json({ success: true, message: 'User created!' })
+          console.log({ success: true, message: 'User created!' })
         }
       })
+    res.redirect('/login')
     }
   },
   getUser: async (req, res, next) => {
@@ -72,7 +73,8 @@ module.exports = {
     res.status(201).json(newReview)
   },
   findUser: async (req, res, next) => {
-    const userName = req.body.userName
+    const userName = req.query.q
+    console.log(userName)
     const userArr = await User.findByName(userName)
     let user
     if (userArr[0] !== undefined) user = userArr[0].toObject()

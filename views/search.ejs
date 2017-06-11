@@ -2,14 +2,23 @@
 
 <div class="section hero">
  <div class="container">
-    <form method="POST">
+    <form action="/search/beers" method="GET" role="search" name="searchForm">
     <div class="row">
-        <div class="six columns">
-        <label for="exampleEmailInput">Search user</label>
-        <input class="u-full-width" type="text" placeholder="firstname" name="userName">
-        </div>
+        <label for="word">What are you after?</label>
+        <input class="u-full-width" type="text" placeholder="Search..." name="q" required>
     </div>
-    <input class="button-primary" type="submit" value="Submit">
+    <label for="word">Find</label>
+     <div class="row">
+         <div class="one-third column">
+             <a class="button button-primary search-btn" id="beer-search-btn">Beer</a>
+         </div>
+         <div class="one-third column">
+             <a class="button search-btn" id="brewery-search-btn">Brewery</a>
+         </div>
+         <div class="one-third column">
+             <a class="button search-btn" id="user-search-btn">User</a>
+         </div>
+    </div>
     </form>
  </div>
 </div>
