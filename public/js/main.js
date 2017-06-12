@@ -27,9 +27,9 @@ userSearch.addEventListener('click', function () {
   activeButtons(this)
 })
 
-// searchForm.q.addEventListener('keyup', e => {
-//   e.preventDefault()
-//   findBeer(searchForm)
+// searchForm.addEventListener('submit', () => {
+//   const searchResults = document.getElementById('search-results')
+//   searchResults.innerHTML = `Results for "${searchForm.q.value}"`
 // })
 
 // async function findBeer (searchForm) {

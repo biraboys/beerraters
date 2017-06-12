@@ -3,32 +3,20 @@
 <div class="section hero">
  <div class="container">
    <div class="row">
-		<% if (beer === undefined) { %>
-			<div class="one-half column">
-				<h1 class="hero-heading">Sorry, could not find beer!</h1>
-				<p>Add this beer to our database <a href="/addbeer">here!</a></p>
-				<form action="/search/beers" method="GET" role="search" name="searchForm">
-					<div class="row">
-						<label for="word">What are you after?</label>
-						<input class="u-full-width" type="text" placeholder="Search..." name="q" required>
-					</div>
-					<label for="word">Find</label>
-					<div class="row">
-						<div class="one-third column">
-							<a class="button button-primary search-btn" id="beer-search-btn">Beer</a>
-						</div>
-						<div class="one-third column">
-							<a class="button search-btn" id="brewery-search-btn">Brewery</a>
-						</div>
-						<div class="one-third column">
-							<a class="button search-btn" id="user-search-btn">User</a>
-						</div>
-					</div>
-				</form>
-			</div>
-		<% } else { %>
-			<h1><%= beer.name %></h1>
-		<% } %>
+         <% if (beer === undefined) { %>
+          <div class="one-half column">
+            <h1 class="hero-heading">Sorry could not found beer</h1>
+          </div>
+            <% } else { %>
+          <div class="one-half column">
+             <h1 class="hero-heading"><%= beer.name %></h1>
+             <h1 class="hero-heading"><%= beer.brewery_id %></h1>
+             <p class=""><%= beer.description %></p>
+     </div>
+     <div class="one-half column">
+       <img class="u-max-full-width" src="/images/beer.png">
+     </div>
+      <% } %>  
    </div>
  </div>
 </div>

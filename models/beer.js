@@ -37,14 +37,12 @@ const beerSchema = new Schema({
     // ref: 'country'
   }
 })
-beerSchema.static('findByName', function (beer, callback) {
-  const test = this.find({}, (err, beers) => {
-   const beerArr = beers.filter(function(element) {
-      if (element.name.includes(beer)) return element
-    })
+beerSchema.static('findByName', function (beerArr, beerName) {
+  beerArr = beerArr.filter(beer => {
+    if (beer.name.includes(beerName)) return beer
+  })
   return beerArr
 })
-return test
 
 const Beer = mongoose.model('beer', beerSchema)
 

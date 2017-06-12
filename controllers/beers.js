@@ -32,10 +32,10 @@ module.exports = {
   getBeer: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId)
-    const brewery = await Brewery.findById(beer.brewery_id)
+    // const brewery = await Brewery.findById(beer.brewery_id)
     // console.log(brewery)
-    // res.status(200).render('beer', {beer})
-    res.status(200).json(brewery)
+    res.status(200).render('beer', {beer})
+    // res.status(200).json(brewery)
   },
 //   getUserReviews: async (req, res, next) => {
 //     const { userId } = req.params
@@ -67,9 +67,9 @@ module.exports = {
   },
   findBeer: async(req, res, next) => {
     const beerName = req.query.q
-    const beers = await Beer.findByName(beerName)
-    // console.log(beers)
-    res.status(200).render('beers', {beers})
+    const allBeers = await Beer.find({})
+    const beers = await Beer.findByName(allBeers, beerName)
+    res.status(200).render('beers', {beers: beers, beerName: beerName})
     // let beer
     // if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
     // res.status(200).json(beer)
