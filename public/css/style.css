@@ -322,3 +322,15 @@
 .tc-blue {
   color: #39cef7;
 }
+
+.login-form {
+  padding-top: 5rem;
+}
+
+.register-form {
+  padding-top: 5rem;
+}
+
+.error-register-new-user {
+  color: red;
+}
