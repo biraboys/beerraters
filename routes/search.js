@@ -1,6 +1,8 @@
 const router = require('express-promise-router')()
 const UsersController = require('../controllers/users')
 const BeersController = require('../controllers/beers')
+const BreweriesController = require('../controllers/breweries')
+
 
 router.route('/')
   .get((req, res, next) => {
@@ -10,8 +12,8 @@ router.route('/')
 router.route('/users')
   .get(UsersController.findUser)
 
-// router.route('/breweries')
-//   .get(UsersController.findBrewery)
+router.route('/breweries')
+  .get(BreweriesController.findBrewery)
 
 router.route('/beers')
   .get(BeersController.findBeer)

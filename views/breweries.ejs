@@ -17,19 +17,19 @@
 							<a class="button search-btn" id="brewery-search-btn">Brewery</a>
 						</div>
 						<div class="one-third column">
-							<a class="button search-btn" id="user-search-btn">User</a>
+							<a class="button search-btn" id="brewerie-search-btn">User</a>
 						</div>
 					</div>
 				</form>
 				</div>
 				 <div class="row">
-		<% if (users.length < 1) { %>
-				<h1 class="hero-heading">Sorry, could not find user!</h1>
-				<p>Add this user to our database <a href="/adduser">here!</a></p>
+		<% if (breweries.length < 1) { %>
+				<h1 class="hero-heading">Sorry, could not find brewery!</h1>
+				<p>Add this brewery to our database <a href="/addbrewery">here!</a></p>
                 <% } else { %>
-				 <h4 class="hero-heading" id="search-results">Results for <strong>"<%= userName %>"</strong> </h4>
-                <% users.forEach(function(user){ %>
-                	<h1 class="hero-heading"><a href="/users/<%= user.id %>"><%= user.name %></a></h1>
+				 <h4 class="hero-heading" id="search-results">Results for <strong>"<%= breweryName %>"</strong> </h4>
+                <% breweries.forEach(function(brewery){ %>
+                	<h1 class="hero-heading"><a href="/breweries/<%= brewery.id %>"><%= brewery.name %></a></h1>
                     <% }); %>
                 <% } %>
 			</div>

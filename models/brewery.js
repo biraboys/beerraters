@@ -16,6 +16,15 @@ const brewerySchema = new Schema({
   created: { type: Date, default: Date.now }
 })
 
+
+brewerySchema.static('findByName', function (breweryArr, breweryName) {
+  breweryArr = breweryArr.filter(brewery => {
+    if (brewery.name.includes(breweryName)) return brewery
+  })
+  return breweryArr
+})
+
+
 const Brewery = mongoose.model('brewery', brewerySchema)
 
 module.exports = Brewery

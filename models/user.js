@@ -63,13 +63,15 @@ const userSchema = new Schema({
   reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }]
 })
 
-userSchema.static('findByName', function (name, callback) {
-  return this.find({ username: name }, callback)
+userSchema.static('findByName', function (userArr, userName) {
+  userArr = userArr.filter(user => {
+    if (user.username.includes(userName) || user.name.includes(userName)) return user
+  })
+  return userArr
 })
-
 userSchema.pre('save', function (next) {
   if (this.password) {
-    var salt = bcrypt.genSaltSync(10)
+    var salt = bcrypt.genSaltSync(10) 
     this.password = bcrypt.hashSync(this.password, salt)
   }
   next()
