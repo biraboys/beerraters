@@ -38,6 +38,10 @@ const beerSchema = new Schema({
   }
 })
 
+beerSchema.static('findByName', function (name, callback) {
+  return this.find({ name: name }, callback)
+})
+
 const Beer = mongoose.model('beer', beerSchema)
 
 module.exports = Beer

@@ -17,10 +17,16 @@ module.exports = {
     // res.status(200).render('categories', beerCategories)
     res.status(200).json(beerCategory)
   },
-  getBeer: async (req, res, next) => {
-    const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
+  findBeer: async (req, res, next) => {
+    const beerName = req.query.q
+    console.log(beerName)
+    const beerArr = await Beer.findByName(beerName)
+    let beer
+    if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
     res.status(200).render('beer', {beer})
+    // const { beerId } = req.params
+    // const beer = await Beer.findById(beerId)
+    // res.status(200).render('beer', {beer})
   },
 //   getUserReviews: async (req, res, next) => {
 //     const { userId } = req.params
