@@ -1,5 +1,5 @@
 const Brewery = require('../models/brewery')
-const json = require('../breweries.json')
+// const json = require('../breweries.json')
 
 module.exports = {
   index: async (req, res, next) => {

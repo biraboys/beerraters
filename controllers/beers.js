@@ -1,7 +1,7 @@
 const Beer = require('../models/beer')
 const Category = require('../models/category')
 const Brewery = require('../models/brewery')
-const json = require('../beers.json')
+// const json = require('../beers.json')
 
 module.exports = {
   index: async (req, res, next) => {
