@@ -37,7 +37,6 @@ const beerSchema = new Schema({
     // ref: 'country'
   }
 })
-
 beerSchema.static('findByName', function (beer, callback) {
   const test = this.find({}, (err, beers) => {
    const beerArr = beers.filter(function(element) {
@@ -46,7 +45,6 @@ beerSchema.static('findByName', function (beer, callback) {
   return beerArr
 })
 return test
-})
 
 const Beer = mongoose.model('beer', beerSchema)
 

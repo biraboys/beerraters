@@ -1,26 +1,28 @@
 <%- include header.ejs %>
 
 <div class="section hero">
- <div class="container">
-    <form action="/search/beers" method="GET" role="search" name="searchForm">
-    <div class="row">
-        <label for="word">What are you after?</label>
-        <input class="u-full-width" type="text" placeholder="Search..." name="q" required>
-    </div>
-    <label for="word">Find</label>
-     <div class="row">
-         <div class="one-third column">
-             <a class="button button-primary search-btn" id="beer-search-btn">Beer</a>
-         </div>
-         <div class="one-third column">
-             <a class="button search-btn" id="brewery-search-btn">Brewery</a>
-         </div>
-         <div class="one-third column">
-             <a class="button search-btn" id="user-search-btn">User</a>
-         </div>
-    </div>
-    </form>
- </div>
+	<div class="container">
+		<div class="one-half column">
+			<form action="/search/beers" method="GET" role="search" name="searchForm">
+				<div class="row">
+					<label for="word">What are you after?</label>
+					<input class="u-full-width" type="text" placeholder="Search..." name="q" required>
+				</div>
+				<label for="word">Find</label>
+				<div class="row">
+					<div class="one-third column">
+						<a class="button button-primary search-btn" id="beer-search-btn">Beer</a>
+					</div>
+					<div class="one-third column">
+						<a class="button search-btn" id="brewery-search-btn">Brewery</a>
+					</div>
+					<div class="one-third column">
+						<a class="button search-btn" id="user-search-btn">User</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <%- include footer.ejs %>
