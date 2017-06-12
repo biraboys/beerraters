@@ -73,7 +73,8 @@ module.exports = {
     res.status(201).json(newReview)
   },
   findUser: async (req, res, next) => {
-    const userName = req.body.userName
+    const userName = req.query.q
+    console.log(userName)
     const userArr = await User.findByName(userName)
     let user
     if (userArr[0] !== undefined) user = userArr[0].toObject()
