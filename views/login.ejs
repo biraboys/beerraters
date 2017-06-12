@@ -1,17 +1,18 @@
 <%- include header.ejs %>
 
-<div class="section hero">
- <div class="container">
+<div class="container login-form">
+  <div class="row">
     <div class="six columns">
-      <form action="/" method="POST">
+      <h4>Login</h4>
+      <form method="post">
         <label for="userName">Username:</label>
-        <input class="u-full-width" type="text" name="userName" required>
+        <input class="u-full-width" type="text" name="username" required>
         <label for="password">Password:</label>
         <input class="u-full-width" type="password" name="password" required>
-        <input class="button-primary" type="submit" value="Register">
+        <input class="button-primary" type="submit" value="Login">
       </form>
     </div>
- </div>
+  </div>
 </div>
 
 <%- include footer.ejs %>

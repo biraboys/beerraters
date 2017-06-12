@@ -15,31 +15,32 @@ module.exports = {
       password: req.body.password
     })
     if (req.body.username === null || req.body.name === null || req.body.email === null || req.body.password === null || req.body.username === '' || req.body.name === '' || req.body.email === '' || req.body.password === '') {
-      res.json({ success: false, message: 'Ensure username, email and password were provided' })
+      res.status(400).render('register', { success: false, message: 'Ensure username, name, email and password were provided' })
     } else {
       await newUser.save((err) => {
         if (err) {
           if (err.errors != null) {
             if (err.errors.name) {
-              res.json({ success: false, message: err.errors.name.message })
+              res.status(400).render('register', { success: false, message: err.errors.name.message })
             } else if (err.errors.email) {
-              res.json({ success: false, message: err.errors.email.message })
+              res.status(400).render('register', { success: false, message: err.errors.email.message })
             } else if (err.errors.username) {
-              res.json({ success: false, message: err.errors.username.message })
+              res.status(400).render('register', { success: false, message: err.errors.username.message })
             } else if (err.errors.password) {
-              res.json({ success: false, message: err.errors.password.message })
+              res.status(400).render('register', { success: false, message: err.errors.password.message })
             } else {
-              res.json({ success: false, message: err })
+              res.status(400).render('register', { success: false, message: err })
             }
           } else if (err) {
             if (err.code === 11000) {
-              res.json({ success: false, message: 'Username or e-mail already taken.' })
+              res.status(400).render('register', { success: false, message: 'Username or e-mail already taken.' })
             } else {
-              res.json({ success: false, message: err })
+              res.status(400).render('register', { success: false, message: err })
             }
           }
         } else {
-          res.json({ success: true, message: 'User created!' })
+          // console.log({ success: true, message: 'User created!' })
+          res.status(201).render('register', { success: true, message: 'User created!' })
         }
       })
     }
