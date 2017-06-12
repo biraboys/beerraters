@@ -15,27 +15,27 @@ module.exports = {
       password: req.body.password
     })
     if (req.body.username === null || req.body.name === null || req.body.email === null || req.body.password === null || req.body.username === '' || req.body.name === '' || req.body.email === '' || req.body.password === '') {
-      res.status(400).render('register', { success: false, message: 'Ensure username, name, email and password were provided' })
+      return res.status(400).render('register', { success: false, message: 'Ensure username, name, email and password were provided' })
     } else {
       await newUser.save((err) => {
         if (err) {
           if (err.errors != null) {
             if (err.errors.name) {
-              res.status(400).render('register', { success: false, message: err.errors.name.message })
+              return res.status(400).render('register', { success: false, message: err.errors.name.message })
             } else if (err.errors.email) {
-              res.status(400).render('register', { success: false, message: err.errors.email.message })
+              return res.status(400).render('register', { success: false, message: err.errors.email.message })
             } else if (err.errors.username) {
-              res.status(400).render('register', { success: false, message: err.errors.username.message })
+              return res.status(400).render('register', { success: false, message: err.errors.username.message })
             } else if (err.errors.password) {
-              res.status(400).render('register', { success: false, message: err.errors.password.message })
+              return res.status(400).render('register', { success: false, message: err.errors.password.message })
             } else {
-              res.status(400).render('register', { success: false, message: err })
+              return res.status(400).render('register', { success: false, message: err })
             }
           } else if (err) {
             if (err.code === 11000) {
-              res.status(400).render('register', { success: false, message: 'Username or e-mail already taken.' })
+              return res.status(400).render('register', { success: false, message: 'Username or e-mail already taken.' })
             } else {
-              res.status(400).render('register', { success: false, message: err })
+              return res.status(400).render('register', { success: false, message: err })
             }
           }
         } else {
