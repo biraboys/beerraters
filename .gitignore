@@ -4,3 +4,5 @@ mongodb-login.js
 .vscode
 .DS_Store
 npm-debug.log
+beers.json
+breweries.json

@@ -7,6 +7,7 @@ router.route('/')
 
 router.route('/:beerId')
   .get(BeersController.getBeer)
+  .patch(BeersController.updateBeer)
 
 router.route('/:beerId/category')
   .get(BeersController.getBeerCategory)

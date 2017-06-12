@@ -2,38 +2,18 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const brewerySchema = new Schema({
+  _id: {
+    type: Number,
+    required: true
+  },
   name: {
     type: String,
     required: true
   },
-  description: '',
-  ratings: Array,
-  average_rating: 0,
-  img_path: 'String',
-  reviews: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'review'
-    }
-  ],
-  created: { type: Date, default: Date.now },
-  updated: Date,
-  brewery_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'brewery'
-  },
-  category_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'category'
-  },
-  style_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'style'
-  },
-  country_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'country'
-  }
+  city: String,
+  country: String,
+  description: String,
+  created: { type: Date, default: Date.now }
 })
 
 const Brewery = mongoose.model('brewery', brewerySchema)

@@ -53,7 +53,8 @@ module.exports = {
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
     const userReviews = await User.findById(userId).populate('reviews')
-    res.status(200).render('reviews', userReviews)
+    // res.status(200).render('reviews', userReviews)
+    res.status(200).json(userReviews)
   },
   newUserReview: async (req, res, next) => {
     const { userId } = req.params
@@ -74,7 +75,6 @@ module.exports = {
   },
   findUser: async (req, res, next) => {
     const userName = req.query.q
-    console.log(userName)
     const userArr = await User.findByName(userName)
     let user
     if (userArr[0] !== undefined) user = userArr[0].toObject()

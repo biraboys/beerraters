@@ -14,15 +14,15 @@ function activeButtons (current) {
 }
 
 beerSearch.addEventListener('click', function () {
-  searchForm.action = 'http://localhost:6889/search/beers'
+  searchForm.action = '/search/beers'
   activeButtons(this)
 })
 
 brewerySearch.addEventListener('click', function () {
-  searchForm.action = 'http://localhost:6889/search/breweries'
+  searchForm.action = '/search/breweries'
   activeButtons(this)
 })
 userSearch.addEventListener('click', function () {
-  searchForm.action = 'http://localhost:6889/search/users'
+  searchForm.action = '/search/users'
   activeButtons(this)
 })

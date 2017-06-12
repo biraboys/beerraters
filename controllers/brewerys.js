@@ -1,10 +1,18 @@
 const Brewery = require('../models/brewery')
-// const Review = require('../models/review')
+const json = require('../breweries.json')
 
 module.exports = {
   index: async (req, res, next) => {
-    const brewerys = await Brewery.find({})
-    res.status(200).render('brewerys', {brewerys})
+    const firstBrewery = {
+      _id: json.breweries[806].id,
+      name: json.breweries[806].name,
+      city: json.breweries[806].city,
+      country: json.breweries[806].country,
+      description: json.breweries[806].descript
+    }
+    const newBrewery = new Brewery(firstBrewery)
+    const brewery = await newBrewery.save()
+    res.status(201).json(brewery)
   },
   newBrewery: async (req, res, next) => {
     const newBrewery = new Brewery(req.body)
