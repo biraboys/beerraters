@@ -1,5 +1,5 @@
 const router = require('express-promise-router')()
-const BrewerysController = require('../controllers/brewerys')
+const BrewerysController = require('../controllers/breweries')
 
 router.route('/')
   .get(BrewerysController.index)

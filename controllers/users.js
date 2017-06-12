@@ -47,9 +47,9 @@ module.exports = {
     }
   },
   getUser: async (req, res, next) => {
-    // const { userId } = req.params
-    // const user = await User.findById(userId)
-    // res.status(200).render('user', {user})
+    const { userId } = req.params
+    const user = await User.findById(userId)
+    res.status(200).render('user', {user})
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
@@ -76,9 +76,8 @@ module.exports = {
   },
   findUser: async (req, res, next) => {
     const userName = req.query.q
-    const userArr = await User.findByName(userName)
-    let user
-    if (userArr[0] !== undefined) user = userArr[0].toObject()
-    res.status(200).render('user', {user})
+    const allusers = await User.find({})
+    const users = await User.findByName(allusers, userName)
+    res.status(200).render('users', {users: users, userName: userName})
   }
 }

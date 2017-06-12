@@ -1,0 +1,24 @@
+<%- include header.ejs %>
+
+<div class="section hero">
+ <div class="container">
+   <div class="row">
+         <% if (brewery === undefined) { %>
+          <div class="one-half column">
+            <h1 class="hero-heading">Sorry could not found brewery</h1>
+          </div>
+            <% } else { %>
+          <div class="one-half column">
+             <h1 class="hero-heading"><%= brewery.name %></h1>
+             <h1 class="hero-heading"><%= brewery.city %></h1>
+             <p class=""><%= brewery.country %></p>
+     </div>
+     <div class="one-half column">
+       <img class="u-max-full-width" src="/images/brewery.jpg">
+     </div>
+      <% } %>  
+   </div>
+ </div>
+</div>
+
+<%- include footer.ejs %>

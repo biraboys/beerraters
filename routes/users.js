@@ -5,7 +5,7 @@ router.route('/')
   .get(UsersController.index)
   .post(UsersController.newUser)
 
-router.route('/search')
+router.route('/:userId')
   .get(UsersController.getUser)
 
 router.route('/:userId/reviews')

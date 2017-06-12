@@ -23,6 +23,15 @@ module.exports = {
     const { breweryId } = req.params
     const brewery = await Brewery.findById(breweryId)
     res.status(200).render('brewery', {brewery})
+  },
+  findBrewery: async(req, res, next) => {
+    const breweryName = req.query.q
+    const allBreweries = await Brewery.find({})
+    const breweries = await Brewery.findByName(allBreweries, breweryName)
+    res.status(200).render('breweries', {breweries: breweries, breweryName: breweryName})
+    // let beer
+    // if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
+    // res.status(200).json(beer)
   }
 //   getUserReviews: async (req, res, next) => {
 //     const { userId } = req.params
