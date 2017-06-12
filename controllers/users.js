@@ -21,7 +21,8 @@ module.exports = {
         if (err) {
           if (err.errors != null) {
             if (err.errors.name) {
-              res.status(400).render('register', { success: false, message: err.errors.name.message })
+              const message = { success: false, message: err.errors.name.message }
+              return res.send(message)
             } else if (err.errors.email) {
               res.status(400).render('register', { success: false, message: err.errors.email.message })
             } else if (err.errors.username) {

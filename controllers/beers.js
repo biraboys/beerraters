@@ -67,10 +67,11 @@ module.exports = {
   },
   findBeer: async(req, res, next) => {
     const beerName = req.query.q
-    const beerArr = await Beer.findByName(beerName)
-    let beer
-    if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
-    // res.status(200).render('user', {beer})
-    res.status(200).json(beer)
+    const beers = await Beer.findByName(beerName)
+    // console.log(beers)
+    res.status(200).render('beers', {beers})
+    // let beer
+    // if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
+    // res.status(200).json(beer)
   }
 }

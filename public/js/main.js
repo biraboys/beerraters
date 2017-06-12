@@ -26,3 +26,20 @@ userSearch.addEventListener('click', function () {
   searchForm.action = '/search/users'
   activeButtons(this)
 })
+
+// searchForm.q.addEventListener('keyup', e => {
+//   e.preventDefault()
+//   findBeer(searchForm)
+// })
+
+// async function findBeer (searchForm) {
+//   console.log(searchForm.action)
+//   const url = searchForm.action
+//   try {
+//     const response = await fetch(url)
+//     console.log(response)
+//     const beers = response.text()
+//     console.log(beers)
+//   } catch (err) {
+//     console.log(err)
+//   }
