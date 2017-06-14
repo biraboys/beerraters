@@ -9,8 +9,13 @@
           </div>
             <% } else { %>
           <div class="one-half column">
-             <h1 class="hero-heading"><%= beer.name %></h1>
-             <h1 class="hero-heading"><%= beer.brewery_id %></h1>
+             <h2><%= beer.name %></h2>
+             <% if (brewery) { %>
+             <h3><%= brewery.name %></h3>
+             <% } %>
+             <% if (country) { %>
+             <h4><%= country.name %> <img class="u-max-full-width" src="/images/flags/<%= country.flag %>"></h4>
+             <% } %>   
              <p class=""><%= beer.description %></p>
      </div>
      <div class="one-half column">

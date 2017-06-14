@@ -2,10 +2,14 @@ const router = require('express-promise-router')()
 const breweries = require('../breweries.json')
 const beers = require('../beers.json')
 const countries = require('../db/countries.json')
-// const styles = require('../db/styles.json')
+const categories = require('../db/categories.json')
+const styles = require('../db/styles.json')
 const Country = require('../models/country')
 const State = require('../models/state')
+const Style = require('../models/style')
+const Category = require('../models/category')
 const Brewery = require('../models/brewery')
+const Beer = require('../models/beer')
 
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' })
@@ -44,20 +48,69 @@ router.get('/db', function (req, res, next) {
 })
 
 router.get('/push', async function (req, res, next) {
-  const newBeers = beers.filter(beer => {
-    if (beer.brewery_id) return beer
-  })
-  // const mongoCountries = await Country.find({})
-  // newBreweries.forEach(brewery => {
-  //   mongoCountries.forEach(mongoCount => {
-  //     if (brewery.country === mongoCount.name) {
-  //       brewery.country_id = mongoCount._id
-  //     }
-  //   })
-  // })
 
+  const mongoBreweries = await Brewery.find({})
+  breweries.forEach(brewery => {
+    mongoBreweries.forEach(mongoCount => {
+      if (brewery.name === mongoCount.name) {
+        brewery.mongoId = mongoCount._id
+        brewery.country_id = mongoCount.country_id
+      }
+    })
+  })
+
+  beers.forEach(beer => {
+    breweries.forEach(brewery => {
+      if (beer.brewery_id === brewery.id) {
+        beer.brewery_mongoId = brewery.mongoId
+        beer.country_id = brewery.country_id
+      }
+    })
+  })
+
+ const mongoStyles = await Style.find({})
+  styles.forEach(style => {
+    mongoStyles.forEach(mongoCount => {
+      if (style.name === mongoCount.name) {
+        style.mongoId = mongoCount._id
+        style.category_id = mongoCount.category_id
+      }
+    })
+  })
+
+  beers.forEach(beer => {
+    styles.forEach(style => {
+      if (Number(beer.style_id) === Number(style.id)) {
+        beer.style_mongoId = style.mongoId
+        beer.category_monogId = style.category_id
+      }
+    })
+  })
+  beers.forEach(beer => {
+    if (beer.descript !== '') {
+      beer.description = beer.descript
+       if (beer.add_user !== '0' && isNaN(beer.add_user)) {
+      beer.description += beer.add_user
+        if (isNaN(beer.last_mod)) {
+      beer.description += beer.last_mod
+    }
+    }
+    }
+  })
+
+  // beers.forEach(beer => {
+  // const newBeer = new Beer({
+  //     name: beer.name,
+  //     description : beer.description,
+  //     category_id: beer.category_mongoId,
+  //     style_id: beer.style_mongoId,
+  //     brewery_id: beer.brewery_mongoId,
+  //     country_id: beer.country_id
+  //   })
+  //   newBeer.save()
+  // })
   // const mongoStates = await State.find({})
-  // newBreweries.forEach(brewery => {
+  // breweries.forEach(brewery => {
   //   mongoStates.forEach(mongoCount => {
   //     if (brewery.state === mongoCount.name) {
   //       brewery.state_id = mongoCount._id
@@ -65,8 +118,17 @@ router.get('/push', async function (req, res, next) {
   //   })
   // })
 
-  // newBreweries.forEach(brewery => {
-  //   if (brewery.state_id && brewery.country_id) {
+  //   const mongoCountries = await Country.find({})
+  // breweries.forEach(brewery => {
+  //   mongoCountries.forEach(mongoCount => {
+  //     if (brewery.country=== mongoCount.name) {
+  //       brewery.country_id = mongoCount._id
+  //     }
+  //   })
+  // })
+
+  // breweries.forEach(brewery => {
+  //   if (brewery.state_id || brewery.country_id) {
   //     const newBrewery = new Brewery({
   //       name: brewery.name,
   //       state_id: brewery.state_id,
@@ -124,7 +186,7 @@ router.get('/push', async function (req, res, next) {
 //   })
 
 //   const mongoStates = await State.find({})
-  res.json(newBeers)
+  res.json(beers)
 //   styles.forEach(style => {
 //  const newStyle = new Style({
 //       name: style.name,

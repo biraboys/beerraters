@@ -10,9 +10,12 @@
             <% } else { %>
           <div class="one-half column">
              <h2><%= brewery.name %></h2>
-             <h4><%= brewery.state_id %></h4>
-             <h4><%= brewery.country_id %></h4>
-             <!--<img class="u-max-full-width" src="/images/flags/<%= country.flag_32 %>">-->
+             <% if (state) { %>
+             <h3><%= state.name %></h3>
+             <% } %>
+             <% if (country) { %>
+             <h4><%= country.name %> <img class="u-max-full-width" src="/images/flags/<%= country.flag %>"></h4>
+             <% } %>   
      </div>
      <div class="one-half column">
        <img class="u-max-full-width" src="/images/brewery.jpg">

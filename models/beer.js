@@ -2,7 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const beerSchema = new Schema({
-  name: String,
+  name:
+  {
+    type: String,
+    required: true
+  },
   description: '',
   category_id:
   {
