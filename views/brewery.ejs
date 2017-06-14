@@ -9,9 +9,13 @@
           </div>
             <% } else { %>
           <div class="one-half column">
-             <h1 class="hero-heading"><%= brewery.name %></h1>
-             <h1 class="hero-heading"><%= brewery.city %></h1>
-             <p class=""><%= brewery.country %></p>
+             <h2><%= brewery.name %></h2>
+             <% if (state) { %>
+             <h3><%= state.name %></h3>
+             <% } %>
+             <% if (country) { %>
+             <h4><%= country.name %> <img class="u-max-full-width" src="/images/flags/<%= country.flag %>"></h4>
+             <% } %>   
      </div>
      <div class="one-half column">
        <img class="u-max-full-width" src="/images/brewery.jpg">

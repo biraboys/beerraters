@@ -1,20 +1,13 @@
 const Beer = require('../models/beer')
 const Category = require('../models/category')
 const Brewery = require('../models/brewery')
-// const json = require('../beers.json')
+const Country = require('../models/country')
+const Style = require('../models/style')
 
 module.exports = {
   index: async (req, res, next) => {
-    const firstBeer = {
-      name: json.beers[0].name,
-      brewery_id: Number(json.beers[0].brewery_id),
-      // category: json.beers[0].cat_id,
-      // style: json.beers[0].style_id,
-      description: json.beers[0].descript
-    }
-    const newBeer = new Beer(firstBeer)
-    const beer = await newBeer.save()
-    res.status(201).json(beer)
+    const beers = await Beer.find({})
+    res.status(201).json(beers)
     // const beers = await Beer.find({})
     // res.status(200).render('beers', {beers})
   },
@@ -32,10 +25,35 @@ module.exports = {
   getBeer: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId)
-    // const brewery = await Brewery.findById(beer.brewery_id)
-    // console.log(brewery)
-    res.status(200).render('beer', {beer})
+    let brewery,
+      country,
+      style,
+      category
+    if (beer.brewery_id) {
+      brewery = await Brewery.findById(beer.brewery_id)
+    }
+    if (beer.country_id) {
+      country = await Country.findById(brewery.country_id)
+    }
+    if (beer.style_id) {
+      style = await Style.findById(beer.style_id)
+      category = await Category.findById(style.category_id)
+    }
+    res.status(200).render('beer', {beer: beer, brewery: brewery, country: country, style: style, category: category})
     // res.status(200).json(brewery)
+  },
+  getBeerBrewery: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId)
+    const beerBrewery = await Brewery.find({_id: beer.brewery_id})
+    const beerCountry = beerBrewery[0].country
+    const ct = countries.filter(country => {
+      if (country.name.toLowerCase() === beerCountry.toLowerCase()) {
+        return country
+      }
+    })
+    const country = ct[0]
+    res.status(200).render('brewery', {brewery: beerBrewery[0], country: country})
   },
 //   getUserReviews: async (req, res, next) => {
 //     const { userId } = req.params

@@ -24,7 +24,7 @@
 				</div>
 				 <div class="row">
 		<% if (beers.length < 1) { %>
-				<h1 class="hero-heading">Sorry, could not find beer!</h1>
+				<h1 class="hero-heading">Sorry, could not find beer <strong>"<%= beerName %>"</strong></h1>
 				<p>Add this beer to our database <a href="/addbeer">here!</a></p>
                 <% } else { %>
 				 <h4 class="hero-heading" id="search-results">Results for <strong>"<%= beerName %>"</strong> </h4>

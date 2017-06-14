@@ -24,12 +24,12 @@
 				</div>
 				 <div class="row">
 		<% if (breweries.length < 1) { %>
-				<h1 class="hero-heading">Sorry, could not find brewery!</h1>
+				<h1 class="hero-heading">Sorry, could not find brewery <strong>"<%= breweryName %>"</strong></h1>
 				<p>Add this brewery to our database <a href="/addbrewery">here!</a></p>
                 <% } else { %>
-				 <h4 class="hero-heading" id="search-results">Results for <strong>"<%= breweryName %>"</strong> </h4>
+				 <h4 class="hero-heading" id="search-results">Results for <strong>"<%= breweryName %>"</strong></h4>
                 <% breweries.forEach(function(brewery){ %>
-                	<h1 class="hero-heading"><a href="/breweries/<%= brewery.id %>"><%= brewery.name %></a></h1>
+                	<h1 class="hero-heading"><a href="/breweries/<%= brewery._id %>"><%= brewery.name %></a></h1>
                     <% }); %>
                 <% } %>
 			</div>

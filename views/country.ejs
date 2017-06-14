@@ -1,0 +1,21 @@
+<%- include header.ejs %>
+
+<div class="section hero">
+ <div class="container">
+   <div class="row">
+         <% if (country === undefined) { %>
+          <div class="one-half column">
+            <h1 class="hero-heading">Sorry could not found country</h1>
+          </div>
+            <% } else { %>
+          <div class="one-half column">
+             <h1 class="hero-heading"><%= country.name %></h1>
+             <h1 class="hero-heading"><%= country.code3l %></h1>
+             <img class="u-max-full-width" src="/images/flags/<%= country.flag_32 %>">
+     </div>
+      <% } %>  
+   </div>
+ </div>
+</div>
+
+<%- include footer.ejs %>

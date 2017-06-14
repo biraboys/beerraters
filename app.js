@@ -66,6 +66,13 @@ app.use((err, req, res, next) => {
 // Databse handling
 const db = mongoose.connection
 
+const uri = 'mongodb://2.248.14.135:27017/beerarino?authSource=admin'
+
+const options = {
+  user: mongoUser.name,
+  pass: mongoUser.pass
+}
+
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function () {
   console.log('Connected to MongoDB')
@@ -73,8 +80,6 @@ db.once('open', function () {
 
 // Mongoose setup
 mongoose.Promise = global.Promise
-mongoose.connect(
-  `mongodb://${mongoUser.name}:${mongoUser.pass}@cluster0-shard-00-00-h3zej.mongodb.net:27017,cluster0-shard-00-01-h3zej.mongodb.net:27017,cluster0-shard-00-02-h3zej.mongodb.net:27017/beerarino?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`
-)
+mongoose.connect(uri, options)
 
 module.exports = app

@@ -1,18 +1,11 @@
 const Brewery = require('../models/brewery')
-// const json = require('../breweries.json')
+const State = require('../models/state')
+const Country = require('../models/country')
 
 module.exports = {
   index: async (req, res, next) => {
-    const firstBrewery = {
-      _id: json.breweries[806].id,
-      name: json.breweries[806].name,
-      city: json.breweries[806].city,
-      country: json.breweries[806].country,
-      description: json.breweries[806].descript
-    }
-    const newBrewery = new Brewery(firstBrewery)
-    const brewery = await newBrewery.save()
-    res.status(201).json(brewery)
+    const breweries = await Brewery.find({})
+    res.status(201).json(breweries)
   },
   newBrewery: async (req, res, next) => {
     const newBrewery = new Brewery(req.body)
@@ -22,7 +15,15 @@ module.exports = {
   getBrewery: async (req, res, next) => {
     const { breweryId } = req.params
     const brewery = await Brewery.findById(breweryId)
-    res.status(200).render('brewery', {brewery})
+    let state
+    let country
+    if (brewery.state_id) {
+      state = await State.findById(brewery.state_id)
+    }
+    if (brewery.country_id) {
+      country = await Country.findById(brewery.country_id)
+    }
+    res.status(200).render('brewery', {brewery: brewery, state: state, country: country})
   },
   findBrewery: async(req, res, next) => {
     const breweryName = req.query.q
