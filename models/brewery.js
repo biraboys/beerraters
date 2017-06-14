@@ -2,20 +2,18 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const brewerySchema = new Schema({
-  _id: {
-    type: Number,
-    required: true
+  name: String,
+  state_id:
+  {
+    type: Schema.Types.ObjectId,
+    ref: 'state'
   },
-  name: {
-    type: String,
-    required: true
-  },
-  city: String,
-  country: String,
-  description: String,
-  created: { type: Date, default: Date.now }
+  country_id:
+  {
+    type: Schema.Types.ObjectId,
+    ref: 'country'
+  }
 })
-
 
 brewerySchema.static('findByName', function (breweryArr, breweryName) {
   breweryArr = breweryArr.filter(brewery => {
@@ -23,7 +21,6 @@ brewerySchema.static('findByName', function (breweryArr, breweryName) {
   })
   return breweryArr
 })
-
 
 const Brewery = mongoose.model('brewery', brewerySchema)
 

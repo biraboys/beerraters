@@ -13,4 +13,7 @@ router.route('/:beerId/category')
   .get(BeersController.getBeerCategory)
   .post(BeersController.newBeerCategory)
 
+router.route('/:beerId/brewery')
+  .get(BeersController.getBeerBrewery)
+
 module.exports = router

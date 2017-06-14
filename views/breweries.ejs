@@ -29,7 +29,7 @@
                 <% } else { %>
 				 <h4 class="hero-heading" id="search-results">Results for <strong>"<%= breweryName %>"</strong> </h4>
                 <% breweries.forEach(function(brewery){ %>
-                	<h1 class="hero-heading"><a href="/breweries/<%= brewery.id %>"><%= brewery.name %></a></h1>
+                	<h1 class="hero-heading"><a href="/breweries/<%= brewery._id %>"><%= brewery.name %></a></h1>
                     <% }); %>
                 <% } %>
 			</div>

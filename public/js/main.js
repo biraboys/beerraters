@@ -26,12 +26,6 @@ userSearch.addEventListener('click', function () {
   searchForm.action = '/search/users'
   activeButtons(this)
 })
-
-// searchForm.addEventListener('submit', () => {
-//   const searchResults = document.getElementById('search-results')
-//   searchResults.innerHTML = `Results for "${searchForm.q.value}"`
-// })
-
 // async function findBeer (searchForm) {
 //   console.log(searchForm.action)
 //   const url = searchForm.action
@@ -43,3 +37,12 @@ userSearch.addEventListener('click', function () {
 //   } catch (err) {
 //     console.log(err)
 //   }
+
+searchForm.q.addEventListener('keyup', function () {
+  const errorContainer = document.getElementById('error-container')
+  if (this.value.length < 3) {
+    errorContainer.innerHTML = 'Search needs to be at least three characters long'
+  } else {
+    errorContainer.innerHTML = ''
+  }
+})

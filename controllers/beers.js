@@ -1,7 +1,6 @@
 const Beer = require('../models/beer')
 const Category = require('../models/category')
 const Brewery = require('../models/brewery')
-const json = require('../beers.json')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -36,6 +35,20 @@ module.exports = {
     // console.log(brewery)
     res.status(200).render('beer', {beer})
     // res.status(200).json(brewery)
+  },
+  getBeerBrewery: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId)
+    const beerBrewery = await Brewery.find({_id: beer.brewery_id})
+    console.log(beerBrewery)
+    const beerCountry = beerBrewery[0].country
+    const ct = countries.filter(country => {
+      if (country.name.toLowerCase() === beerCountry.toLowerCase()) {
+        return country
+      }
+    })
+    const country = ct[0]
+    res.status(200).render('brewery', {brewery: beerBrewery[0], country: country})
   },
 //   getUserReviews: async (req, res, next) => {
 //     const { userId } = req.params
