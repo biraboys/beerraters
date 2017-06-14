@@ -2,6 +2,7 @@ const Beer = require('../models/beer')
 const Category = require('../models/category')
 const Brewery = require('../models/brewery')
 const Country = require('../models/country')
+const Style = require('../models/style')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -24,15 +25,21 @@ module.exports = {
   getBeer: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId)
-    let brewery
-    let country
+    let brewery,
+      country,
+      style,
+      category
     if (beer.brewery_id) {
       brewery = await Brewery.findById(beer.brewery_id)
     }
     if (beer.country_id) {
       country = await Country.findById(brewery.country_id)
     }
-    res.status(200).render('beer', {beer: beer, brewery: brewery, country: country})
+    if (beer.style_id) {
+      style = await Style.findById(beer.style_id)
+      category = await Category.findById(style.category_id)
+    }
+    res.status(200).render('beer', {beer: beer, brewery: brewery, country: country, style: style, category: category})
     // res.status(200).json(brewery)
   },
   getBeerBrewery: async (req, res, next) => {

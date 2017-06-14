@@ -11,11 +11,14 @@
           <div class="one-half column">
              <h2><%= beer.name %></h2>
              <% if (brewery) { %>
-             <h3><%= brewery.name %></h3>
+             <h3><a href="/breweries/<%= brewery._id %>"><%= brewery.name %></a></h3>
              <% } %>
              <% if (country) { %>
              <h4><%= country.name %> <img class="u-max-full-width" src="/images/flags/<%= country.flag %>"></h4>
-             <% } %>   
+             <% } %>
+             <% if (style) { %>
+             <p><%= style.name %>, <%= category.name %></p>
+             <% } %>      
              <p class=""><%= beer.description %></p>
      </div>
      <div class="one-half column">
