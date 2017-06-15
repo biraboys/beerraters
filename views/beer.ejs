@@ -14,7 +14,7 @@
              <h3><a href="/breweries/<%= brewery._id %>"><%= brewery.name %></a></h3>
              <% } %>
              <% if (country) { %>
-             <h4><%= country.name %> <img class="u-max-full-width" src="/images/flags/<%= country.flag %>"></h4>
+             <h4><a href="/countries/<%= country._id %>"><%= country.name %></a></h4>
              <% } %>
              <% if (style) { %>
              <p><%= style.name %>, <%= category.name %></p>

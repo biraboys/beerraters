@@ -17,7 +17,7 @@ const brewerySchema = new Schema({
 
 brewerySchema.static('findByName', function (breweryArr, breweryName) {
   breweryArr = breweryArr.filter(brewery => {
-    if (brewery.name.includes(breweryName)) return brewery
+    if (brewery.name.toLowerCase().includes(breweryName.toLowerCase())) return brewery
   })
   return breweryArr
 })
