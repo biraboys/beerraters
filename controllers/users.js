@@ -8,11 +8,16 @@ module.exports = {
     // res.status(200).render('users', {users})
   },
   newUser: async (req, res, next) => {
+    const username = req.body.username
+    const name = req.body.name
+    const email = req.body.email
+    const password = req.body.password
+
     const newUser = new User({
-      username: req.body.username,
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password
+      username: username,
+      name: name,
+      email: email,
+      password: password
     })
     if (req.body.username === null || req.body.name === null || req.body.email === null || req.body.password === null || req.body.username === '' || req.body.name === '' || req.body.email === '' || req.body.password === '') {
       res.status(400).render('register', { success: false, message: 'Ensure username, name, email and password were provided' })
@@ -20,15 +25,19 @@ module.exports = {
       await newUser.save((err) => {
         if (err) {
           if (err.errors != null) {
+            let errorMessage
             if (err.errors.name) {
-              const message = { success: false, message: err.errors.name.message }
-              return res.send(message)
+              errorMessage = { success: false, message: err.errors.name.message, username: username, name: name, email: email }
+              res.status(400).render('register', errorMessage)
             } else if (err.errors.email) {
-              res.status(400).render('register', { success: false, message: err.errors.email.message })
+              errorMessage = { success: false, message: err.errors.email.message, username: username, name: name, email: email }
+              res.status(400).render('register', errorMessage)
             } else if (err.errors.username) {
-              res.status(400).render('register', { success: false, message: err.errors.username.message })
+              errorMessage = { success: false, message: err.errors.username.message, username: username, name: name, email: email }
+              res.status(400).render('register', errorMessage)
             } else if (err.errors.password) {
-              res.status(400).render('register', { success: false, message: err.errors.password.message })
+              errorMessage = { success: false, message: err.errors.password.message, username: username, name: name, email: email }
+              res.status(400).render('register', errorMessage)
             } else {
               res.status(400).render('register', { success: false, message: err })
             }
