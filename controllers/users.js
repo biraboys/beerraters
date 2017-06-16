@@ -80,10 +80,10 @@ module.exports = {
       if (bcrypt.compareSync(password, user.password)) {
         res.json({ user })
       } else {
-        res.status(400).render('login', { success: false, message: 'Password does not match.' })
+        res.status(400).render('login', { success: false, message: 'Password does not match.', username: username })
       }
     } else {
-      res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}` })
+      res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}`, username: username })
     }
   }
 }
