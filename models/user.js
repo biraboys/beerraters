@@ -69,6 +69,8 @@ userSchema.static('findByName', function (userArr, userName) {
   })
   return userArr
 })
+
+// Hash password
 userSchema.pre('save', function (next) {
   if (this.password) {
     var salt = bcrypt.genSaltSync(10)
@@ -77,6 +79,7 @@ userSchema.pre('save', function (next) {
   next()
 })
 
+// Titlize name
 userSchema.plugin(titlize, {
   paths: [ 'name' ]
 })

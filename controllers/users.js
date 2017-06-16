@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const Review = require('../models/review')
+const bcrypt = require('bcrypt')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -71,5 +72,18 @@ module.exports = {
     const allusers = await User.find({})
     const users = await User.findByName(allusers, userName)
     res.status(200).render('users', {users: users, userName: userName})
+  },
+  loginUser: async (req, res, next) => {
+    const [username, password] = [req.body.username, req.body.password]
+    const user = await User.findOne({username: username})
+    if (user) {
+      if (bcrypt.compareSync(password, user.password)) {
+        res.json({ user })
+      } else {
+        res.status(400).render('login', { success: false, message: 'Password does not match.' })
+      }
+    } else {
+      res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}` })
+    }
   }
 }

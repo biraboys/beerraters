@@ -10,6 +10,9 @@
         <label for="password">Password:</label>
         <input class="u-full-width" type="password" name="password" required>
         <input class="button-primary" type="submit" value="Login">
+        <% if (!success) { %>
+          <p class="error-register-new-user"><%= message %></p>
+        <% } %>
       </form>
     </div>
   </div>
