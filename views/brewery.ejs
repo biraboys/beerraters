@@ -11,11 +11,12 @@
           <div class="one-half column">
              <h2><%= brewery.name %></h2>
              <% if (state) { %>
-             <h3><%= state.name %></h3>
+             <h3><%= state.name %>
+              <% if (country) { %>
+              , <a href="/countries/<%= country._id %>"><%= country.name %></a></h3>
              <% } %>
-             <% if (country) { %>
-             <h4><%= country.name %> <img class="u-max-full-width" src="/images/flags/<%= country.flag %>"></h4>
-             <% } %>   
+             <% } %>
+
      </div>
      <div class="one-half column">
        <img class="u-max-full-width" src="/images/brewery.jpg">
