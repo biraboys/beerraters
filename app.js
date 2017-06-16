@@ -28,6 +28,7 @@ const countries = require('./routes/countries')
 const search = require('./routes/search')
 const login = require('./routes/login')
 const register = require('./routes/register')
+const facts = require('./routes/facts')
 
 app.use('/', index)
 app.use('/users', users)
@@ -37,6 +38,7 @@ app.use('/login', login)
 app.use('/register', register)
 app.use('/breweries', breweries)
 app.use('/countries', countries)
+app.use('/facts', facts)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))

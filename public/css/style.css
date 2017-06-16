@@ -7,11 +7,23 @@ body {
   flex-direction: column;
 }
 
+.notice-box {
+  background-color: rgba(205, 210, 220, 0.23);
+  padding: 1.5rem;
+}
 
+/* Main containers */
 .content {
   flex: 1 0 auto;
 }
 
+.bg-profile {
+  background-color: rgba(205, 210, 220, 0.23);
+  background-size: cover;
+  padding-bottom: 5rem;
+}
+
+/* Navs */
 
 .main-nav {
     list-style-type: none;
@@ -49,6 +61,7 @@ body {
     background-color: #1EAEDB;
 }
 
+/* Cards */
 .card {
     background: #fff;
     border: .1rem solid #f0f1f4;
@@ -56,13 +69,38 @@ body {
     display: block;
     box-shadow: 0 6px 18px 0 rgba(232,237,250,.5);
 }
-
-.bg-profile {
-  background-color: rgba(205, 210, 220, 0.23);
-  background-size: cover;
-  padding-bottom: 5rem;
+.card .card-header,
+.card .card-body,
+.card .card-footer {
+  padding: 1.5rem;
+  padding-bottom: 0;
 }
-
+.card .card-header:last-child,
+.card .card-body:last-child,
+.card .card-footer:last-child {
+  padding-bottom: 1.5rem;
+}
+.card .card-image {
+  padding-top: 1.5rem;
+}
+.card .card-image:first-child {
+  padding-top: 0;
+}
+.card .card-image:first-child img {
+  border-top-left-radius: .2rem;
+  border-top-right-radius: .2rem;
+}
+.card .card-image:last-child img {
+  border-bottom-left-radius: .2rem;
+  border-bottom-right-radius: .2rem;
+}
+.card .card-title {
+  font-size: 2rem;
+}
+.card .card-subtitle {
+  color: #bbc1cd;
+  font-size: 1.2rem;
+}
 
 /* Shared
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
