@@ -71,7 +71,7 @@ userSchema.static('findByName', function (userArr, userName) {
 })
 userSchema.pre('save', function (next) {
   if (this.password) {
-    var salt = bcrypt.genSaltSync(10) 
+    var salt = bcrypt.genSaltSync(10)
     this.password = bcrypt.hashSync(this.password, salt)
   }
   next()

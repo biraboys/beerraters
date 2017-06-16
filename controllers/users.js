@@ -8,10 +8,7 @@ module.exports = {
     // res.status(200).render('users', {users})
   },
   newUser: async (req, res, next) => {
-    const username = req.body.username
-    const name = req.body.name
-    const email = req.body.email
-    const password = req.body.password
+    const [username, name, email, password] = [req.body.username, req.body.name, req.body.email, req.body.password]
 
     const newUser = new User({
       username: username,
@@ -19,41 +16,27 @@ module.exports = {
       email: email,
       password: password
     })
-    if (req.body.username === null || req.body.name === null || req.body.email === null || req.body.password === null || req.body.username === '' || req.body.name === '' || req.body.email === '' || req.body.password === '') {
-      res.status(400).render('register', { success: false, message: 'Ensure username, name, email and password were provided' })
-    } else {
-      await newUser.save((err) => {
-        if (err) {
-          if (err.errors != null) {
-            let errorMessage
-            if (err.errors.name) {
-              errorMessage = { success: false, message: err.errors.name.message, username: username, name: name, email: email }
-              res.status(400).render('register', errorMessage)
-            } else if (err.errors.email) {
-              errorMessage = { success: false, message: err.errors.email.message, username: username, name: name, email: email }
-              res.status(400).render('register', errorMessage)
-            } else if (err.errors.username) {
-              errorMessage = { success: false, message: err.errors.username.message, username: username, name: name, email: email }
-              res.status(400).render('register', errorMessage)
-            } else if (err.errors.password) {
-              errorMessage = { success: false, message: err.errors.password.message, username: username, name: name, email: email }
-              res.status(400).render('register', errorMessage)
-            } else {
-              res.status(400).render('register', { success: false, message: err })
-            }
-          } else if (err) {
-            if (err.code === 11000) {
-              res.status(400).render('register', { success: false, message: 'Username or e-mail already taken.' })
-            } else {
-              res.status(400).render('register', { success: false, message: err })
-            }
-          }
+    await newUser.save(err => {
+      if (err.errors != null) {
+        let errorMessage = { success: false, username: username, name: name, email: email }
+        if (err.errors.name) {
+          errorMessage.message = err.errors.name.message
+        } else if (err.errors.email) {
+          errorMessage.message = err.errors.email.message
+        } else if (err.errors.username) {
+          errorMessage.message = err.errors.username.message
+        } else if (err.errors.password) {
+          errorMessage.message = err.errors.password.message
         } else {
-          // console.log({ success: true, message: 'User created!' })
-          res.status(201).render('register', { success: true, message: 'User created!' })
+          errorMessage.message = err
         }
-      })
-    }
+        res.status(400).render('register', errorMessage)
+      } else if (err.code === 11000) {
+        res.status(400).render('register', { success: false, message: 'Username or e-mail already taken.' })
+      } else {
+        res.status(201).render('register', { success: true, message: 'User created!' })
+      }
+    })
   },
   getUser: async (req, res, next) => {
     const { userId } = req.params
