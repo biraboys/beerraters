@@ -32,7 +32,7 @@ module.exports = {
         }
         res.status(400).render('register', errorMessage)
       } else if (err.code === 11000) {
-        res.status(400).render('register', { success: false, message: 'Username or e-mail already taken.' })
+        res.status(400).render('register', { success: false, message: 'Username or e-mail already taken.', username: username, name: name, email: email })
       } else {
         res.status(201).render('register', { success: true, message: 'User created!' })
       }
