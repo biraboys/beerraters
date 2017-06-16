@@ -2,11 +2,14 @@
 
 <div class="container login-form">
   <div class="row">
+     <% if (success) { %>
+        <p>User created successfully. Please log in.</p>
+      <% } %>
     <div class="six columns">
       <h4>Login</h4>
       <form method="post">
         <label for="userName">Username:</label>
-        <input class="u-full-width" type="text" name="username" required>
+        <input class="u-full-width" type="text" name="username" value="<%= username %>" required>
         <label for="password">Password:</label>
         <input class="u-full-width" type="password" name="password" required>
         <input class="button-primary" type="submit" value="Login">

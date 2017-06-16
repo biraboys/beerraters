@@ -5,15 +5,11 @@
 
 // async function getInputValues () {
 //   try {
-//     const response = await fetch('/register', {
-//       method: 'post'
+//     const response = await fetch('/loginr', {
+//       method: 'get'
 //     })
-//     const data = await response.text()
-//   register.username.value = 'hej'
-//     // const name = register.name.value
-//     // const email = register.email.value
-//     // await fillInputs(username, name, email)
-//     console.log(data)
+//     console.log(response)
+//     // window.location.href = '/login'
 //   } catch (e) {
 //     console.log(e)
 //   }

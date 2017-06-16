@@ -3,7 +3,7 @@ const router = require('express-promise-router')()
 
 router.route('/')
   .get((req, res, next) => {
-    res.render('login', { success: '', message: '' })
+    res.render('login', { success: '', username: '' })
   })
 
 module.exports = router
