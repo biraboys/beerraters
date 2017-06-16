@@ -12,5 +12,6 @@ router.route('/:username')
     const { username } = req.params
     res.render('login', { success: true, username: username })
   })
+  .post(UsersController.loginUser)
 
 module.exports = router
