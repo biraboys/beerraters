@@ -7,4 +7,11 @@ router.route('/')
   })
   .post(UsersController.newUser)
 
+router.route('/:username')
+  .get((req, res, next) => {
+    const { username } = req.params
+    res.render('login', { success: true, username: username })
+  })
+  .post(UsersController.loginUser)
+
 module.exports = router

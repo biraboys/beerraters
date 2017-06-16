@@ -10,7 +10,6 @@ module.exports = {
   },
   newUser: async (req, res, next) => {
     const [username, name, email, password] = [req.body.username, req.body.name, req.body.email, req.body.password]
-
     const newUser = new User({
       username: username,
       name: name,
@@ -18,24 +17,28 @@ module.exports = {
       password: password
     })
     await newUser.save(err => {
-      if (err.errors != null) {
-        let errorMessage = { success: false, username: username, name: name, email: email }
-        if (err.errors.name) {
-          errorMessage.message = err.errors.name.message
-        } else if (err.errors.email) {
-          errorMessage.message = err.errors.email.message
-        } else if (err.errors.username) {
-          errorMessage.message = err.errors.username.message
-        } else if (err.errors.password) {
-          errorMessage.message = err.errors.password.message
+      if (err) {
+        const errorMessage = { success: false, username: username, name: name, email: email }
+        if (err.errors != null) {
+          if (err.errors.name) {
+            errorMessage.message = err.errors.name.message
+          } else if (err.errors.email) {
+            errorMessage.message = err.errors.email.message
+          } else if (err.errors.username) {
+            errorMessage.message = err.errors.username.message
+          } else if (err.errors.password) {
+            errorMessage.message = err.errors.password.message
+          } else {
+            errorMessage.message = err
+          }
+        } else if (err.code === 11000) {
+          errorMessage.message = 'Username or e-mail already taken.'
         } else {
           errorMessage.message = err
         }
         res.status(400).render('register', errorMessage)
-      } else if (err.code === 11000) {
-        res.status(400).render('register', { success: false, message: 'Username or e-mail already taken.', username: username, name: name, email: email })
       } else {
-        res.status(201).render('register', { success: true, message: 'User created!' })
+        res.redirect(`/register/${username}`)
       }
     })
   },
