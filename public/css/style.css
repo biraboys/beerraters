@@ -7,6 +7,7 @@ body {
   flex-direction: column;
 }
 
+
 /* Images */
 
 .img-responsive {
@@ -135,4 +136,15 @@ body {
 /* Margins and paddings */
 .mt-1 {
   margin-top: 1rem;
+}
+
+/* Icons */
+
+.material-icons.grey {
+  color: #E8EDFA
+}
+
+/* Positioning */
+.va-middle {
+  vertical-align: middle;
 }

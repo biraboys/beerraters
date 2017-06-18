@@ -35,9 +35,20 @@
                     </a>
                     <a class="tooltip tooltip-bottom" data-tooltip="Rate">
                       <img src="/icons/ratings-grey.svg" alt="Rating" />
-                    </a> 
+                    </a>
+                    <a class="tooltip tooltip-bottom" data-tooltip="Edit">
+                      <img src="/icons/edit-grey.svg" alt="Edit" />
+                    </a>  
                   </div>
                   <div class="card-title"><%= beer.name %></div>
+                  <div class="card-title">
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star_half</i>
+                    <i class="material-icons md-24 grey va-middle">star</i>                    
+                    <span class="va-middle">4.6</span>
+                  </div>
                     <% if (style) { %>
                       <div class="card-subtitle">
                         <%= style.name %>, <%= category.name %>
@@ -55,7 +66,6 @@
                         </a>
                     <% } %>  
                       </div>
-                 
                 </div>
                 <div class="card-body">
                  <%= beer.description %>
