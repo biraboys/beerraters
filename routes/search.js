@@ -3,7 +3,6 @@ const UsersController = require('../controllers/users')
 const BeersController = require('../controllers/beers')
 const BreweriesController = require('../controllers/breweries')
 
-
 router.route('/')
   .get((req, res, next) => {
     res.status(200).render('search')

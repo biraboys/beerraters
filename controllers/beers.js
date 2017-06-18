@@ -83,6 +83,19 @@ module.exports = {
     const beerName = req.query.q
     const allBeers = await Beer.find({})
     const beers = await Beer.findByName(allBeers, beerName)
+    for (let beer of beers) {
+      if (beer.brewery_id) {
+        beer.brewery = await Brewery.findById(beer.brewery_id)
+      }
+      if (beer.style_id) {
+        beer.style = await Style.findById(beer.style_id)
+        beer.category = await Category.findById(beer.category_id)
+      }
+      if (beer.country_id) {
+        beer.country = await Country.findById(beer.country_id)
+      }
+    }
+
     res.status(200).render('beers', { beers: beers, beerName: beerName })
     // let beer
     // if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
