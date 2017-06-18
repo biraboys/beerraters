@@ -1,0 +1,124 @@
+/*! Spectre.css | MIT License | github.com/picturepan2/spectre */
+/* Manually forked from Normalize.css */
+/* normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
+/**
+
+/* Cards */
+.card {
+    background: #fff;
+    border: .1rem solid #f0f1f4;
+    border-radius: .2rem;
+    display: block;
+    box-shadow: 0 6px 18px 0 rgba(232,237,250,.5);
+}
+.card .card-header,
+.card .card-body,
+.card .card-footer {
+  padding: 1.5rem;
+  padding-bottom: 0;
+}
+.card .card-header:last-child,
+.card .card-body:last-child,
+.card .card-footer:last-child {
+  padding-bottom: 1.5rem;
+}
+.card .card-image {
+  padding-top: 1.5rem;
+}
+.card .card-image:first-child {
+  padding-top: 0;
+}
+.card .card-image:first-child img {
+  border-top-left-radius: .2rem;
+  border-top-right-radius: .2rem;
+}
+.card .card-image:last-child img {
+  border-bottom-left-radius: .2rem;
+  border-bottom-right-radius: .2rem;
+}
+.card .card-title {
+  font-size: 2rem;
+}
+.card .card-subtitle {
+  color: #bbc1cd;
+  font-size: 1.2rem;
+}
+
+/* Tooltips */
+.tooltip {
+  position: relative;
+}
+.tooltip::after {
+  background: rgba(69, 77, 93, .9);
+  border-radius: .2rem;
+  bottom: 100%;
+  color: #fff;
+  content: attr(data-tooltip);
+  display: block;
+  font-size: 1.2rem;
+  left: 50%;
+  max-width: 32rem;
+  opacity: 0;
+  overflow: hidden;
+  padding: .4rem .8rem;
+  pointer-events: none;
+  position: absolute;
+  text-overflow: ellipsis;
+  -webkit-transform: translate(-50%, 1rem);
+  -ms-transform: translate(-50%, 1rem);
+  transform: translate(-50%, 1rem);
+  transition: all .2s ease;
+  white-space: nowrap;
+  z-index: 200;
+}
+.tooltip:focus::after,
+.tooltip:hover::after {
+  opacity: 1;
+  -webkit-transform: translate(-50%, -.5rem);
+  -ms-transform: translate(-50%, -.5rem);
+  transform: translate(-50%, -.5rem);
+}
+.tooltip[disabled],
+.tooltip.disabled {
+  pointer-events: auto;
+}
+.tooltip.tooltip-right::after {
+  bottom: 50%;
+  left: 100%;
+  -webkit-transform: translate(-1rem, 50%);
+  -ms-transform: translate(-1rem, 50%);
+  transform: translate(-1rem, 50%);
+}
+.tooltip.tooltip-right:focus::after,
+.tooltip.tooltip-right:hover::after {
+  -webkit-transform: translate(.5rem, 50%);
+  -ms-transform: translate(.5rem, 50%);
+  transform: translate(.5rem, 50%);
+}
+.tooltip.tooltip-bottom::after {
+  bottom: auto;
+  top: 100%;
+  -webkit-transform: translate(-50%, -1rem);
+  -ms-transform: translate(-50%, -1rem);
+  transform: translate(-50%, -1rem);
+}
+.tooltip.tooltip-bottom:focus::after,
+.tooltip.tooltip-bottom:hover::after {
+  -webkit-transform: translate(-50%, .5rem);
+  -ms-transform: translate(-50%, .5rem);
+  transform: translate(-50%, .5rem);
+}
+.tooltip.tooltip-left::after {
+  bottom: 50%;
+  left: auto;
+  right: 100%;
+  -webkit-transform: translate(1rem, 50%);
+  -ms-transform: translate(1rem, 50%);
+  transform: translate(1rem, 50%);
+}
+.tooltip.tooltip-left:focus::after,
+.tooltip.tooltip-left:hover::after {
+  -webkit-transform: translate(-.5rem, 50%);
+  -ms-transform: translate(-.5rem, 50%);
+  transform: translate(-.5rem, 50%);
+}

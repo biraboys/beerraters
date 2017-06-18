@@ -4,7 +4,7 @@ const titlize = require('mongoose-title-case')
 const validate = require('mongoose-validator')
 const bcrypt = require('bcrypt')
 
-var nameValidator = [
+const nameValidator = [
   validate({
     validator: 'matches',
     arguments: /^(([a-zA-ZåäöÅÄÖ]{3,20})+[ ]+([a-zA-ZåäöÅÄÖ]{3,20})+)+$/,
@@ -17,7 +17,7 @@ var nameValidator = [
   })
 ]
 
-var emailValidator = [
+const emailValidator = [
   validate({
     validator: 'isEmail',
     message: 'Not a valid e-mail.'
@@ -29,7 +29,7 @@ var emailValidator = [
   })
 ]
 
-var usernameValidator = [
+const usernameValidator = [
   validate({
     validator: 'isLength',
     arguments: [3, 25],
@@ -41,7 +41,7 @@ var usernameValidator = [
   })
 ]
 
-var passwordValidator = [
+const passwordValidator = [
   validate({
     validator: 'matches',
     arguments: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{8,35}$/,
@@ -60,7 +60,8 @@ const userSchema = new Schema({
   email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
   password: { type: String, required: true, validate: passwordValidator },
   registered: { type: Date, default: Date.now },
-  reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }]
+  reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
+  ratings: [{ type: Schema.Types.ObjectId, ref: 'rating' }]
 })
 
 userSchema.static('findByName', function (userArr, userName) {
@@ -73,7 +74,7 @@ userSchema.static('findByName', function (userArr, userName) {
 // Hash password
 userSchema.pre('save', function (next) {
   if (this.password) {
-    var salt = bcrypt.genSaltSync(10)
+    const salt = bcrypt.genSaltSync(10)
     this.password = bcrypt.hashSync(this.password, salt)
   }
   next()

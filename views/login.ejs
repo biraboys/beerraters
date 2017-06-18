@@ -15,6 +15,9 @@
         <input class="button-primary" type="submit" value="Login">
       </form>
     </div>
+      <% if (!success) { %>
+          <p class="error-register-new-user"><%= message %></p>
+        <% } %>
   </div>
 </div>
 

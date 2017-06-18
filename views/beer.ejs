@@ -8,22 +8,90 @@
             <h1 class="hero-heading">Sorry could not found beer</h1>
           </div>
             <% } else { %>
-          <div class="one-half column">
-             <h2><%= beer.name %></h2>
-             <% if (brewery) { %>
-             <h3><a href="/breweries/<%= brewery._id %>"><%= brewery.name %></a></h3>
-             <% } %>
-             <% if (country) { %>
-             <h4><a href="/countries/<%= country._id %>"><%= country.name %></a></h4>
-             <% } %>
-             <% if (style) { %>
-             <p><%= style.name %>, <%= category.name %></p>
-             <% } %>      
-             <p class=""><%= beer.description %></p>
+            <div class="two-thirds column">
+            <div class="card">
+              <div class="card-image">
+                <div class="row">
+                  <div class="six image-column">
+                    <img class="u-max-full-width" src="/images/beer-1.png">
+                  </div>
+                  <div class="three image-column">
+                    <img class="u-max-full-width" src="/images/beer-2.jpg">
+                    <img class="u-max-full-width" src="/images/beer-3.jpg">
+                  </div>
+                    <div class="three image-column">
+                    <img class="u-max-full-width" src="/images/beer-4.jpg">
+                    <img class="u-max-full-width" src="/images/beer-5.jpg">
+                  </div>
+                </div>
+              </div>
+                <div class="card-header">
+                  <div class="u-pull-right mt-1">
+                     <a class="tooltip tooltip-bottom" data-tooltip="Drank it?">
+                      <img src="/icons/consumes-grey.svg" alt="Consume" /> 
+                    </a> 
+                    <a class="tooltip tooltip-bottom" data-tooltip="Review">
+                      <img src="/icons/reviews-grey.svg" alt="Review" />
+                    </a>
+                    <a class="tooltip tooltip-bottom" data-tooltip="Rate">
+                      <img src="/icons/ratings-grey.svg" alt="Rating" />
+                    </a> 
+                  </div>
+                  <div class="card-title"><%= beer.name %></div>
+                    <% if (style) { %>
+                      <div class="card-subtitle">
+                        <%= style.name %>, <%= category.name %>
+                      </div>
+                    <% } %>
+                      <div class="card-subtitle">
+                    <% if (brewery) { %>
+                        <a class="card-link" href="/breweries/<%= brewery._id %>">
+                          <%= brewery.name %>
+                        </a>
+                    <% } %>
+                    <% if (country) { %>
+                        <a class="card-link" href="/countries/<%= country._id %>">
+                          <%= country.code %>
+                        </a>
+                    <% } %>  
+                      </div>
+                 
+                </div>
+                <div class="card-body">
+                 <%= beer.description %>
+                </div>
+           </div>
      </div>
-     <div class="one-half column">
-       <img class="u-max-full-width" src="/images/beer.png">
+     <div class="one-third column">
+       <div class="card">
+         <div class="card-body">
+           <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+             <img src="/icons/reviews.svg" alt="Reviews" />
+             <figcaption>Reviews</figcaption>
+             <figcaption>200</figcaption>
+           </figure>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-body">
+           <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+             <img src="/icons/ratings.svg" alt="Ratings" />
+             <figcaption>Ratings</figcaption>
+             <figcaption>500</figcaption>
+           </figure>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-body">
+           <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+             <img src="/icons/consumes.svg" alt="Consumes" />
+             <figcaption>Consumes</figcaption>
+             <figcaption>4000</figcaption>
+           </figure>
+         </div>
+       </div>
      </div>
+   </div>
       <% } %>  
    </div>
  </div>
