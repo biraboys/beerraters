@@ -34,7 +34,7 @@ module.exports = {
       style = await Style.findById(beer.style_id)
       category = await Category.findById(style.category_id)
     }
-    res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category })
+    res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
   },
   getBeerBrewery: async (req, res, next) => {
     const { beerId } = req.params
@@ -49,7 +49,7 @@ module.exports = {
     const country = ct[0]
     res
       .status(200)
-      .render('brewery', { brewery: beerBrewery[0], country: country })
+      .render('brewery', { brewery: beerBrewery[0], country: country, session: req.session.user })
   },
   //   getUserReviews: async (req, res, next) => {
   //     const { userId } = req.params
@@ -96,7 +96,7 @@ module.exports = {
       }
     }
 
-    res.status(200).render('beers', { beers: beers, beerName: beerName })
+    res.status(200).render('beers', { beers: beers, beerName: beerName, session: req.session.user })
     // let beer
     // if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
     // res.status(200).json(beer)

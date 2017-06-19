@@ -23,13 +23,13 @@ module.exports = {
     if (brewery.country_id) {
       country = await Country.findById(brewery.country_id)
     }
-    res.status(200).render('brewery', {brewery: brewery, state: state, country: country})
+    res.status(200).render('brewery', { brewery: brewery, state: state, country: country, session: req.session.user })
   },
   findBrewery: async(req, res, next) => {
     const breweryName = req.query.q
     const allBreweries = await Brewery.find({})
     const breweries = await Brewery.findByName(allBreweries, breweryName)
-    res.status(200).render('breweries', {breweries: breweries, breweryName: breweryName})
+    res.status(200).render('breweries', { breweries: breweries, breweryName: breweryName, session: req.session.user })
     // let beer
     // if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
     // res.status(200).json(beer)

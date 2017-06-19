@@ -3,7 +3,7 @@ const Beer = require('../models/beer')
 const fetch = require('node-fetch')
 
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' })
+  res.render('index', { session: req.session.user })
 })
 
 // router.get('/push', async function (req, res, next) {

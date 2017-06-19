@@ -133,6 +133,10 @@ body {
   color: red;
 }
 
+.logout {
+  display: inline;
+}
+
 /* Margins and paddings */
 .mt-1 {
   margin-top: 1rem;
@@ -147,4 +151,3 @@ body {
 /* Positioning */
 .va-middle {
   vertical-align: middle;
-}

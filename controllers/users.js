@@ -36,7 +36,7 @@ module.exports = {
         } else {
           errorMessage.message = err
         }
-        res.status(400).render('register', errorMessage)
+        res.status(400).render('register', { errorMessage, session: req.session.user })
       } else {
         res.redirect(`/register/${username}`)
       }
@@ -45,7 +45,7 @@ module.exports = {
   getUser: async (req, res, next) => {
     const { userId } = req.params
     const user = await User.findById(userId)
-    res.status(200).render('user', {user})
+    res.status(200).render('user', { user, session: req.session.user })
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
@@ -74,19 +74,21 @@ module.exports = {
     const userName = req.query.q
     const allusers = await User.find({})
     const users = await User.findByName(allusers, userName)
-    res.status(200).render('users', {users: users, userName: userName})
+    res.status(200).render('users', { users: users, userName: userName, session: req.session.user })
   },
   loginUser: async (req, res, next) => {
     const [username, password] = [req.body.username, req.body.password]
-    const user = await User.findOne({username: username})
+    const user = await User.findOne({ username: username.toLowerCase() })
     if (user) {
       if (bcrypt.compareSync(password, user.password)) {
-        res.json({ user })
+        const userSession = { _id: user._id, user: user.username }
+        req.session.user = userSession
+        res.redirect('/')
       } else {
-        res.status(400).render('login', { success: false, message: 'Password does not match.', username: username })
+        res.status(400).render('login', { success: false, message: 'Password does not match.', username: username, session: req.session.user })
       }
     } else {
-      res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}`, username: username })
+      res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}`, username: username, session: req.session.user })
     }
   }
 }

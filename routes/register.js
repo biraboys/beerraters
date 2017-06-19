@@ -3,14 +3,14 @@ const UsersController = require('../controllers/users')
 
 router.route('/')
   .get((req, res, next) => {
-    res.render('register', { success: '', message: '', username: '', name: '', email: '' })
+    res.render('register', { success: '', message: '', username: '', name: '', email: '', session: req.session.user })
   })
   .post(UsersController.newUser)
 
 router.route('/:username')
   .get((req, res, next) => {
     const { username } = req.params
-    res.render('login', { success: true, username: username })
+    res.render('login', { success: true, username: username, session: req.session.user })
   })
   .post(UsersController.loginUser)
 

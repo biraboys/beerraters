@@ -5,7 +5,7 @@ const BreweriesController = require('../controllers/breweries')
 
 router.route('/')
   .get((req, res, next) => {
-    res.status(200).render('search')
+    res.status(200).render('search', { session: req.session.user })
   })
 
 router.route('/users')
