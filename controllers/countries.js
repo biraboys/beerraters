@@ -10,6 +10,6 @@ module.exports = {
     const country = await Country.findById(countryId)
     const breweriesAmount = country.breweries.length
     const beersAmount = country.beers.length
-    res.status(200).render('country', {country: country, breweries: breweriesAmount, beers: beersAmount})
+    res.status(200).render('country', { country: country, breweries: breweriesAmount, beers: beersAmount, session: req.session.user })
   }
 }

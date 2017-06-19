@@ -23,7 +23,12 @@ const beerSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'country'
   },
-  ratings: Array,
+  ratings: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'rating'
+    }
+  ],
   avg_rating: Number,
   reviews: [
     {
