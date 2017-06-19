@@ -7,15 +7,23 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
 
 const app = express()
 
 // Middleware
 app.use(logger('dev'))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({
-  extended: false
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(session({
+  secret: `3'bn6p<B?J&&[!'S`,
+  saveUninitialized: false,
+  resave: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection, ttl: 14 * 24 * 60 * 60 })
 }))
+
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -29,6 +37,7 @@ const search = require('./routes/search')
 const login = require('./routes/login')
 const register = require('./routes/register')
 const facts = require('./routes/facts')
+const logout = require('./routes/logout')
 
 app.use('/', index)
 app.use('/users', users)
@@ -39,6 +48,7 @@ app.use('/register', register)
 app.use('/breweries', breweries)
 app.use('/countries', countries)
 app.use('/facts', facts)
+app.use('/logout', logout)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))

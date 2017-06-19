@@ -1,7 +1,6 @@
 const router = require('express-promise-router')()
 const CountriesController = require('../controllers/countries')
 
-
 router.route('/')
   .get(CountriesController.index)
 

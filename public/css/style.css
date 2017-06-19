@@ -387,3 +387,7 @@ body {
 .error-register-new-user {
   color: red;
 }
+
+.logout {
+  display: inline;
+}
