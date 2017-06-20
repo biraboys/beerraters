@@ -7,7 +7,7 @@
 		<form action="/search/beers" method="GET" role="search" name="searchForm">
 			<div class="row">
 				<label for="word">What are you after?</label>
-				<input class="u-full-width" type="text" placeholder="Search..." name="q" required>
+				<input class="u-full-width" type="text" placeholder="Search..." name="q" pattern=".{2,}" required>
 			</div>
 			<label for="word">Find</label>
 			<div class="row">
@@ -47,13 +47,13 @@
                   			</div>
 						  <% if (beer.style) { %>
                       <div class="card-subtitle">
-                        <%= beer.style.name %>
+                        <%= beer.style.name%>
                       </div>
                     <% } %>
                     <% if (beer.brewery) { %>
                       <div class="card-subtitle">
                         <a class="card-link" href="/breweries/<%= beer.brewery_id %>">
-                          <%= beer.brewery.name %>
+                          <%= beer.brewery.name%>
                         </a>
 					</div>
                     <% } %>
@@ -76,6 +76,5 @@
    </div>
  </div>
  </div>
-</div>
 
 <%- include footer.ejs %>

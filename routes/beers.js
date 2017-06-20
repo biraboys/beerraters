@@ -6,7 +6,7 @@ router.route('/')
   .post(BeersController.newBeer)
 
 router.route('/:beerId')
-  .get(BeersController.getBeer)
+  .get(BeersController.renderBeer)
   .patch(BeersController.updateBeer)
 
 router.route('/:beerId/category')
@@ -15,5 +15,8 @@ router.route('/:beerId/category')
 
 router.route('/:beerId/brewery')
   .get(BeersController.getBeerBrewery)
+
+router.route('/fetch/:beerId')
+  .get(BeersController.getBeer)
 
 module.exports = router

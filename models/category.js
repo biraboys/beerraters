@@ -15,7 +15,6 @@ categorySchema.static('findByName', function (categoryName, callback) {
   return this.find({ name: categoryName }, callback)
 })
 
-
 const Category = mongoose.model('category', categorySchema)
 
 module.exports = Category
