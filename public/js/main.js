@@ -161,7 +161,7 @@ function displayErrorMessage (beerName) {
   const errorMessage = `
     <div class="row">
       <h1 class="hero-heading">Sorry, could not find beer <strong>"${beerName}"</strong></h1>
-      <p>Add this beer to our database <a href="/addbeer">here!</a></p>
+      <p>Add this beer to our database <a href="/beers/add">here!</a></p>
     </div>
   `
   clearContent(resultsContainer)

@@ -3,14 +3,52 @@ const Category = require('../models/category')
 const Brewery = require('../models/brewery')
 const Country = require('../models/country')
 const Style = require('../models/style')
+const Type = require('../models/type')
 
 module.exports = {
   index: async (req, res, next) => {
     const beers = await Beer.find({})
     res.status(200).json(beers)
   },
+  addBeer: async (req, res, next) => {
+    const countries = await Country.find({})
+    const types = await Type.find({})
+    const styles = await Style.find({})
+    const breweries = await Brewery.find({})
+    countries.sort((a, b) => {
+      return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
+    })
+    types.sort((a, b) => {
+      return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
+    })
+    styles.sort((a, b) => {
+      return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
+    })
+    breweries.sort((a, b) => {
+      return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
+    })
+    if (!req.session.user) {
+      res.redirect('/login')
+    } else {
+      res.render('addbeer', {session: req.session.user, countries: countries, types: types, styles: styles, breweries: breweries})
+    }
+  },
   newBeer: async (req, res, next) => {
-    const newBeer = new Beer(req.body)
+    const [name, type, style, brewery, country, image, description] = [req.body.name, req.body.type, req.body.style, req.body.brewery, req.body.country, req.body.image, req.body.description]
+    const typeId = await Type.findOne({name: type}, '_id')
+    console.log(typeId)
+    const styleId = await Style.findOne({name: style}, '_id')
+    const breweryId = await Brewery.findOne({name: brewery}, '_id')
+    const countryId = await Country.findOne({name: country}, '_id')
+    const newBeer = new Beer({
+      name: name,
+      type_id: typeId,
+      style_id: styleId,
+      brewery_id: breweryId,
+      country_id: countryId,
+      image: image,
+      description: description
+    })
     const beer = await newBeer.save()
     res.status(201).json(beer)
   },

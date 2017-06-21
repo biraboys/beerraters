@@ -5,6 +5,10 @@ router.route('/')
   .get(BeersController.index)
   .post(BeersController.newBeer)
 
+router.route('/add')
+  .get(BeersController.addBeer)
+  .post(BeersController.newBeer)
+
 router.route('/:beerId')
   .get(BeersController.renderBeer)
   .patch(BeersController.updateBeer)
