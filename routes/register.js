@@ -3,7 +3,7 @@ const UsersController = require('../controllers/users')
 
 router.route('/')
   .get((req, res, next) => {
-    res.render('register', { success: '', message: '', username: '', name: '', email: '', session: req.session.user })
+    res.render('register', { errorMessage: '', session: req.session.user })
   })
   .post(UsersController.newUser)
 

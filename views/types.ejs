@@ -1,0 +1,10 @@
+<%- include header.ejs %>
+<ul>
+<% types.forEach(function(type){
+ %> 
+ <li><a href="/types/<%= type._id %>"><%= type.name %></a></li>
+ <%
+}); %>
+</ul>
+
+<%- include footer.ejs %>

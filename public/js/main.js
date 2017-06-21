@@ -7,9 +7,9 @@ const beerContainer = document.getElementById('beer-container')
 const resultsContainer = document.getElementById('results-container')
 const loadingContainer = document.getElementById('loading-container')
 
-if (localStorage.getItem('beers') !== null) {
-  const oldSearch = JSON.parse(localStorage.getItem('beers'))
-  beerContainer.innerHTML = oldSearch
+if (sessionStorage.getItem('lastSearch') !== null) {
+  const lastSearch = JSON.parse(sessionStorage.getItem('lastSearch'))
+  beerContainer.innerHTML = lastSearch
 }
 
 function activeButtons (current) {
@@ -58,6 +58,7 @@ async function getInputValues (beerName) {
     const response = await fetch(`/search/beers/?q=${beerName}`)
     const beers = await response.json()
     if (beers.length < 1) {
+      clearContent(beerContainer)
       displayErrorMessage(beerName)
     } else {
       displayResultCount(beerName, beers.length)
@@ -153,7 +154,7 @@ function generateBeerCard (beerObj) {
 
 function displayBeer (beerCard) {
   addContent(beerContainer, beerCard)
-  localStorage.setItem('beers', JSON.stringify(beerContainer.innerHTML))
+  sessionStorage.setItem('lastSearch', JSON.stringify(beerContainer.innerHTML))
 }
 
 function displayErrorMessage (beerName) {

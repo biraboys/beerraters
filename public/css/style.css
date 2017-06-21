@@ -5,6 +5,7 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 
@@ -32,7 +33,7 @@ body {
   padding: 1.5rem;
 }
 
-div[class*="flex-"] {
+[class*="flex-"] {
   display: flex;
 }
 
@@ -154,6 +155,11 @@ div[class*="flex-"] {
   margin-top: 1rem;
 }
 
+.mt-10 {
+  margin-top: 10rem;
+}
+
+
 /* Icons */
 
 .material-icons.grey {
@@ -163,4 +169,27 @@ div[class*="flex-"] {
 /* Positioning */
 .va-middle {
   vertical-align: middle;
+}
+
+/* Height and width */
+.vw-100 {
+  width: 100vw;
+}
+
+.h-40 {
+  height: 40rem;
+}
+
+.h-2 {
+  height: 2rem;
+}
+
+.vh-100 {
+  height: 100vh
+}
+
+/* Cards */
+.type-card {
+  box-shadow: none;
+  border-radius: 0;
 }
