@@ -3,7 +3,6 @@ const Category = require('../models/category')
 const Brewery = require('../models/brewery')
 const Country = require('../models/country')
 const Style = require('../models/style')
-const Type = require('../models/type')
 const {sortByName} = require('../helpers/helpers')
 
 module.exports = {

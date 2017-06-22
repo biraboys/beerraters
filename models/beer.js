@@ -8,16 +8,10 @@ const beerSchema = new Schema({
     required: true
   },
   description: '',
-  type_id:
+  category_id:
   {
     type: Schema.Types.ObjectId,
-    ref: 'type',
-    required: true
-  },
-  style_id:
-  {
-    type: Schema.Types.ObjectId,
-    ref: 'style',
+    ref: 'category',
     required: true
   },
   brewery_id:
