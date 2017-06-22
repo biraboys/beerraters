@@ -34,22 +34,22 @@ router.get('/categories', async function (req, res, next) {
   res.json(placeholder)
 })
 
-// router.get('/push', async function (req, res, next) {
-//   const title = 'Dortmunder Export'
-//   const style = await Style.findOne({name: title})
-//   const wikiTitle = title.replace(/\s/g, '%20')
-//   const response = await fetch(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Dortmunder_Export`)
-//   const parse = await response.json()
-//   if (parse.query) {
-//     const data = parse.query.pages
-//     const extract = data[Object.keys(data)[0]].extract
-//     if (extract !== undefined) {
-//       const clean = extract.replace(/ *\([^)]*\) */g, ' ').replace(/\n/g, ' ').replace(/\s(?=,)[\s,\s]/g, '')
-//       style.description = clean
-//       await style.save()
-//       res.json(style.description)
-//     }
-//   }
-// })
+router.get('/push', async function (req, res, next) {
+  const title = 'Malt liquor'
+  const style = await Style.findOne({name: title})
+  const wikiTitle = title.replace(/\s/g, '%20')
+  const response = await fetch(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Malt_liquor`)
+  const parse = await response.json()
+  if (parse.query) {
+    const data = parse.query.pages
+    const extract = data[Object.keys(data)[0]].extract
+    if (extract !== undefined) {
+      const clean = extract.replace(/ *\([^)]*\) */g, ' ').replace(/\n/g, ' ').replace(/\s(?=,)[\s,\s]/g, '')
+      style.description = clean
+      await style.save()
+      res.json(style.description)
+    }
+  }
+})
 
 module.exports = router

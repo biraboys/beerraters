@@ -6,10 +6,10 @@
     <form method="post" name="addbeer">
       <label for="name">Name</label>
       <input class="u-full-width" type="text" name="name" id="name" required>
-      <label for="type">Type</label>
-      <select class="u-full-width" id="type" name="type" required>
-        <% types.forEach(function(type, index) { %> 
-        <option value="<%= type.name %>"><%= type.name %></option>
+      <label for="category">Category</label>
+      <select class="u-full-width" id="category" name="category" required>
+        <% categories.forEach(function(category, index) { %> 
+        <option value="<%= category.name %>"><%= category.name %></option>
       <% }); %>
       </select>
       <label for="style">Style</label>
