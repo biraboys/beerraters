@@ -38,6 +38,7 @@ const login = require('./routes/login')
 const register = require('./routes/register')
 const facts = require('./routes/facts')
 const logout = require('./routes/logout')
+const addbeer = require('./routes/addbeer')
 
 app.use('/', index)
 app.use('/users', users)
@@ -49,6 +50,7 @@ app.use('/breweries', breweries)
 app.use('/countries', countries)
 app.use('/facts', facts)
 app.use('/logout', logout)
+app.use('/addbeer', addbeer)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))

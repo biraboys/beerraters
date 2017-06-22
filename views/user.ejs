@@ -1,33 +1,50 @@
 <%- include header.ejs %>
+
 <div class="section hero">
  <div class="container">
    <div class="row">
-         <% if (user === undefined) { %>
+    <% if (user === undefined) { %>
+    <div class="one-half column">
+      <h1 class="hero-heading">Sorry could not found user</h1>
+    </div>
+      <% } else { %>
+    <div class="one-half column">
+        <h1 class="hero-heading">@<%= user.username %></h1>
+        <h1 class="hero-heading"><%= user.name %></h1>
+        <p class="">Member since <%= user.registered %></p>
+        <div class="row">
           <div class="one-half column">
-            <h1 class="hero-heading">Sorry could not found user</h1>
+              <h6 class="tc-blue">REVIEWS</h6>
+              <p class="">167</p>
           </div>
-            <% } else { %>
           <div class="one-half column">
-             <h1 class="hero-heading">@<%= user.username %></h1>
-             <h1 class="hero-heading"><%= user.name %></h1>
-             <p class="">Member since <%= user.registered %></p>
-             <div class="row">
-               <div class="one-half column">
-                   <h6 class="tc-blue">REVIEWS</h6>
-                    <p class="">167</p>
-               </div>
-               <div class="one-half column">
-                   <h6 class="tc-blue">RANK IN SWE</h6>
-                    <p class="">24</p>
-               </div>
-             </div>
-            <a class="button button-primary" href="">Follow</a>
+              <h6 class="tc-blue">RANK IN SWE</h6>
+              <p class="">24</p>
+          </div>
+        </div>
+        
+      <% if (user.description.about) { %>
+        <p><%= user.description.about %></p>
+      <% } else { %>
+        <p>User has no description yet.</p>
+      <% } %>
+
+      <% if (session && session._id === id) { %>
+        <a class="button button-primary" href="/users/<%= session._id %>/edit">Edit my profile</a>
+      <% } else { %>
+        <a class="button button-primary" href="">Follow</a>
+      <% } %>
      </div>
-     <div class="one-half column">
-       <img class="u-max-full-width" src="/images/user-placeholder.png">
-     </div>
-      <% } %>  
-   </div>
+    <div class="one-half column profile-img-container">
+      <% console.log(user.profileImg.path) %>
+      <% if (user.profileImg.path) { %>
+        <img src="/<%= user.profileImg.path %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+      <% } else { %>
+        <img src="/images/user-placeholder.png" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+      <% } %>
+    </div>
+      <% } %>
+      </div>
  </div>
 </div>
 
@@ -99,6 +116,5 @@
  </div>
 </div>
 </div>
-
 
 <%- include footer.ejs %>

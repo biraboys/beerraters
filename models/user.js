@@ -61,8 +61,10 @@ const userSchema = new Schema({
   password: { type: String, required: true, validate: passwordValidator },
   registered: { type: Date, default: Date.now },
   reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
-  ratings: [{ type: Schema.Types.ObjectId, ref: 'rating' }]
-})
+  ratings: [{ type: Schema.Types.ObjectId, ref: 'rating' }],
+  profileImg: { type: Schema.Types.Mixed, default: {} },
+  description: { type: Schema.Types.Mixed, default: {} }
+}, { minimize: false })
 
 userSchema.static('findByName', function (userArr, userName) {
   userArr = userArr.filter(user => {

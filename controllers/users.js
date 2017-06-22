@@ -45,7 +45,8 @@ module.exports = {
   getUser: async (req, res, next) => {
     const { userId } = req.params
     const user = await User.findById(userId)
-    res.status(200).render('user', { user, session: req.session.user })
+    const profileId = user.id
+    res.status(200).render('user', { user, session: req.session.user, id: profileId })
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
@@ -81,7 +82,7 @@ module.exports = {
     const user = await User.findOne({ username: username.toLowerCase() })
     if (user) {
       if (bcrypt.compareSync(password, user.password)) {
-        const userSession = { _id: user._id, user: user.username }
+        const userSession = { _id: user._id }
         req.session.user = userSession
         res.redirect('/')
       } else {
@@ -89,6 +90,16 @@ module.exports = {
       }
     } else {
       res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}`, username: username, session: req.session.user })
+    }
+  },
+  editProfile: async (req, res) => {
+    const [path, description] = [req.file.path, req.body.description]
+    const user = await User.findById(req.session.user._id)
+    if (path) {
+      await user.update({ profileImg: { path: path } })
+    }
+    if (description.length > 10) {
+      await user.update({ description: { about: description } })
     }
   }
 }

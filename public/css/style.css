@@ -151,3 +151,62 @@ body {
 .va-middle {
   vertical-align: middle;
 }
+
+/* Profile Image */
+/*#upload_link {
+  text-decoration: none;
+}
+
+#upload {
+  display: none;
+}
+
+.profile-img-container {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.profile-img-container img {width:100%;}
+
+
+.profile-img-container:hover {
+    opacity: 0.5;
+}
+
+.profile-img-container:hover a {
+    opacity: 1;
+    top: 0;
+    z-index: 500;
+}
+
+.profile-img-container:hover a .upload-text {
+    top: 50%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 2rem;
+}
+
+.profile-img-container:hover a span {
+    top: 65%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+.profile-img-container a {
+    display: block;
+    position: absolute;
+    top: -100%;
+    opacity: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    color: inherit;
+}
+*/
+
