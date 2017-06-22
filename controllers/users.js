@@ -18,7 +18,7 @@ module.exports = {
     })
     await newUser.save(err => {
       if (err) {
-        const errorMessage = { success: false, username: username, name: name, email: email }
+        const errorMessage = { success: false, username: username, name: name, email: email}
         if (err.errors != null) {
           if (err.errors.name) {
             errorMessage.message = err.errors.name.message
@@ -36,7 +36,7 @@ module.exports = {
         } else {
           errorMessage.message = err
         }
-        res.status(400).render('register', { errorMessage, session: req.session.user })
+        res.status(400).render('register', {errorMessage, session: req.session.user})
       } else {
         res.redirect(`/register/${username}`)
       }

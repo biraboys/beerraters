@@ -5,7 +5,9 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
+
 
 /* Images */
 
@@ -31,9 +33,23 @@ body {
   padding: 1.5rem;
 }
 
-.flex-center {
+[class*="flex-"] {
   display: flex;
+}
+
+
+.flex-center {
   justify-content: center;
+  align-items: center;
+}
+
+.flex-end {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.flex-start {
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -56,14 +72,12 @@ body {
 }
 
 /* Navs */
-
 .main-nav {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
     border: 1px solid #e7e7e7;
-    background-color: #f3f3f3;
 }
 
 .nav-item {
@@ -141,6 +155,11 @@ body {
   margin-top: 1rem;
 }
 
+.mt-10 {
+  margin-top: 10rem;
+}
+
+
 /* Icons */
 
 .material-icons.grey {
@@ -210,3 +229,25 @@ body {
 }
 */
 
+/* Height and width */
+.vw-100 {
+  width: 100vw;
+}
+
+.h-40 {
+  height: 40rem;
+}
+
+.h-2 {
+  height: 2rem;
+}
+
+.vh-100 {
+  height: 100vh
+}
+
+/* Cards */
+.style-card {
+  box-shadow: none;
+  border-radius: 0;
+}

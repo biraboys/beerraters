@@ -1,11 +1,45 @@
 <%- include header.ejs %>
 
-<div class="section hero">
- <div class="container">
-   <div class="row">
+<div class="container register-form">
+  <div class="six columns">
+    <h4>Add beer</h4>
+    <form method="post" name="addbeer">
+      <label for="name">Name</label>
+      <input class="u-full-width" type="text" name="name" id="name" required>
+      <label for="type">Type</label>
+      <select class="u-full-width" id="type" name="type" required>
+        <% types.forEach(function(type, index) { %> 
+        <option value="<%= type.name %>"><%= type.name %></option>
+      <% }); %>
+      </select>
+      <label for="style">Style</label>
+     <select class="u-full-width" id="style" name="style" required>
+        <% styles.forEach(function(style, index) { %> 
+        <option value="<%= style.name %>"><%= style.name %></option>
+      <% }); %>
+      <option value="other">Other</option>
+      </select>
+      <label for="brewery">Brewery</label>
+      <select class="u-full-width" id="brewery" name="brewery" required>
+        <% breweries.forEach(function(brewery, index) { %> 
+        <option value="<%= brewery.name %>"><%= brewery.name %></option>
+      <% }); %>
+      <option value="other">Other</option>
+      </select>
+      <label for="country">Country</label>
+      <select class="u-full-width" id="country" name="country" required>
+        <% countries.forEach(function(country, index) { %> 
+        <option value="<%= country.name %>"><%= country.name %></option>
+      <% }); %>
+      </select>
+      <label for="image">Image</label>
+      <input class="u-full-width" type="text" name="image" id="image">
+      <label for="description">Description</label>
+      <textarea class="u-full-width" id="description" name="description"></textarea>
 
-   </div>
- </div>
+      <input class="button-primary" type="submit" value="Add" id="add-beer-btn">
+    </form>
+  </div>
 </div>
 
 <%- include footer.ejs %>
