@@ -3,12 +3,11 @@ const Schema = mongoose.Schema
 
 const categorySchema = new Schema({
   name: String,
-  styles: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'style'
-    }
-  ]
+  style_id:
+  {
+    type: Schema.Types.ObjectId,
+    ref: 'style'
+  }
 })
 
 categorySchema.static('findByName', function (categoryName, callback) {

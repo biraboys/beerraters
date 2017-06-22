@@ -1,6 +1,5 @@
 const router = require('express-promise-router')()
-const Type = require('../models/type')
-const fetch = require('node-fetch')
+// const fetch = require('node-fetch')
 
 router.get('/', function (req, res, next) {
   res.render('index', { session: req.session.user })
