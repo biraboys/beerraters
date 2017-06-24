@@ -104,5 +104,8 @@ module.exports = {
     if (req.file.filename !== undefined) {
       await user.update({ profileImg: req.file.filename })
     }
+  },
+  followUser: async (req, res, next) => {
+    // cosnt user = 
   }
 }
