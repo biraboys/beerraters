@@ -65,7 +65,7 @@ async function getInputValues (beerName) {
       clearContent(beerContainer)
     }
     beers.forEach(async (beer, index) => {
-      if (index <= 50) {
+      if (index <= 50) {    
         const beerObj = await getBeerInfo(beer)
         const beerCard = generateBeerCard(beerObj)
         await displayBeer(beerCard)

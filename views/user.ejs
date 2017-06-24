@@ -1,104 +1,277 @@
 <%- include header.ejs %>
 <div class="section hero">
  <div class="container">
-   <div class="row">
+   <div class="row flex-column flex-center">
          <% if (user === undefined) { %>
           <div class="one-half column">
             <h1 class="hero-heading">Sorry could not found user</h1>
           </div>
             <% } else { %>
           <div class="one-half column">
-             <h1 class="hero-heading">@<%= user.username %></h1>
-             <h1 class="hero-heading"><%= user.name %></h1>
-             <p class="">Member since <%= user.registered %></p>
-             <div class="row">
-               <div class="one-half column">
-                   <h6 class="tc-blue">REVIEWS</h6>
-                    <p class="">167</p>
-               </div>
-               <div class="one-half column">
-                   <h6 class="tc-blue">RANK IN SWE</h6>
-                    <p class="">24</p>
-               </div>
-             </div>
-            <a class="button button-primary" href="">Follow</a>
-     </div>
-     <div class="one-half column">
-       <img class="u-max-full-width" src="/images/user-placeholder.png">
-     </div>
+            <div class="card">
+              <div class="card-header flex-center flex-column">
+                <figure class="avatar avatar-xl">
+                  <img src="/images/user-placeholder.png" />
+                </figure>
+                <div class="card-title">
+                  @<%= user.username %>
+                  <img src="/images/flags/SE-32.png" />
+                </div>
+                <div class="card-title">
+                  <%= user.name %>
+                </div>
+                <div class="card-subtitle">
+                  Member since <%= user.registered %>
+                </div>
+                  <div class="card-subtitle">
+                  222 followers
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="one-half column ta-center">
+                      <h6 class="tc-blue">CONTRIBUTIONS</h6>
+                        <p class="">167</p>
+                  </div>
+                  <div class="one-half column ta-center">
+                      <h6 class="tc-blue">RANK</h6>
+                        <p class="">24</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer flex-center flex-column">
+                <a class="button button-primary" href="">Follow</a>
+              </div>
+          </div>
+        </div>
+
+ <div class="container mt-10">
+   <div class="row">
+            <div class="card">
+              <div class="accordion">
+                <div class="accordion-item">
+                  <input type="radio" id="accordion-1" name="accordion-radio" hidden="" checked="">
+                  <label class="accordion-header hand" for="accordion-1">
+                    Reviews
+                  </label>
+                  <div class="accordion-body">
+                 <div class="tile">
+                <div class="tile-icon">
+                  <figure class="avatar avatar-lg">
+                    <img src="/images/beer-1.png">
+                  </figure>
+                </div>
+                <div class="tile-content">
+                  <p class="tile-title">Heineken</p>
+                  <p class="tile-subtitle">Earth's Mightiest Heroes joined forces to take on threats that were too big for any one hero to tackle...</p>
+                </div>
+              </div>
+                    <div class="tile">
+                <div class="tile-icon">
+                  <figure class="avatar avatar-lg">
+                    <img src="/images/beer-2.jpg">
+                  </figure>
+                </div>
+                <div class="tile-content">
+                  <p class="tile-title">Pilsner Urquell</p>
+                  <p class="tile-subtitle">Earth's Mightiest Heroes joined forces to take on threats that were too big for any one hero to tackle...</p>
+                </div>
+              </div>
+                    <div class="tile">
+                <div class="tile-icon">
+                  <figure class="avatar avatar-lg">
+                    <img src="/images/beer-3.jpg">
+                  </figure>
+                </div>
+                <div class="tile-content">
+                  <p class="tile-title">Omnipollo</p>
+                  <p class="tile-subtitle">Earth's Mightiest Heroes joined forces to take on threats that were too big for any one hero to tackle...</p>
+                </div>
+              </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <input type="radio" id="accordion-2" name="accordion-radio" hidden="">
+                  <label class="accordion-header hand" for="accordion-2">
+                    Top Rated
+                  </label>
+                  <div class="accordion-body">
+               <div class="filter">
+                <input type="radio" id="tag-action" class="filter-tag" name="filter-radio" hidden="" checked="">
+              	<input type="radio" id="tag-roleplaying" class="filter-tag" name="filter-radio" hidden="">
+                <input type="radio" id="tag-shooter" class="filter-tag" name="filter-radio" hidden="">
+
+                <div class="filter-nav">
+                  <label class="chip" for="tag-action">Beer</label>
+                  <label class="chip" for="tag-shooter">Style</label>
+                  <label class="chip" for="tag-roleplaying">Country</label>
+                </div>
+                <div class="filter-body row">
+                  <div class="one-third column ml-0" data-tag="tag-action">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">Pilsner Urquell</div>
+                              <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>                    
+                    <span class="va-middle">5</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="one-third column ml-0" data-tag="tag-action">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">Omnipollo</div>
+                              <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star_half</i>
+                    <i class="material-icons md-24 grey va-middle">star</i>                    
+                    <span class="va-middle">4.5</span>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="one-third column ml-0" data-tag="tag-action">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">Heineken</div>
+                              <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 va-middle">star</i>
+                    <i class="material-icons md-24 grey va-middle">star</i>                    
+                    <span class="va-middle">4</span>
+                    </div>
+                  </div>
+                  </div>
+                   <div class="one-third column ml-0" data-tag="tag-shooter">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">Pale lager</div>
+                        <div class="card-subtitle">4.5 average | 2234 ratings</div>
+                    </div>
+                  </div>
+                  </div>
+                     <div class="one-third column ml-0" data-tag="tag-shooter">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">Dortmunder Export</div>
+                        <div class="card-subtitle">4.3 average | 1211 ratings</div>
+                    </div>
+                  </div>
+                  </div>
+                     <div class="one-third column ml-0" data-tag="tag-shooter">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">Stout</div>
+                        <div class="card-subtitle">4.1 average | 623 ratings</div>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="one-third column ml-0" data-tag="tag-roleplaying">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">Sweden</div>
+                        <div class="card-subtitle">4.3 average | 1000 ratings</div>
+                      </div>
+                  </div>
+                  </div>
+                  <div class="one-third column ml-0" data-tag="tag-roleplaying">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">Belgium</div>
+                        <div class="card-subtitle">4.2 average | 834 ratings</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="one-third column ml-0" data-tag="tag-roleplaying">
+                    <div class="filter-item card">
+                      <div class="card-header">
+                        <div class="card-title">United States</div>
+                        <div class="card-subtitle">3.9 average | 654 ratings</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <input type="radio" id="accordion-3" name="accordion-radio" hidden="">
+                  <label class="accordion-header hand" for="accordion-3">
+                    Gallery
+                  </label>
+                  <div class="accordion-body h-40">
+           <div class="carousel">
+                <input type="radio" id="slide-1" name="carousel-radio" hidden="" class="carousel-locator" checked="">
+                <input type="radio" id="slide-2" name="carousel-radio" hidden="" class="carousel-locator">
+                <input type="radio" id="slide-3" name="carousel-radio" hidden="" class="carousel-locator">
+                <input type="radio" id="slide-4" name="carousel-radio" hidden="" class="carousel-locator">
+                <div class="carousel-container">
+                  <figure class="carousel-item">
+                    <label class="item-prev btn btn-action btn-lg" for="slide-4">
+                      <i class="icon icon-arrow-left"></i>
+                    </label>
+                    <label class="item-next btn btn-action btn-lg" for="slide-2">
+                      <i class="icon icon-arrow-right"></i>
+                    </label>
+                    <img src="/images/beer-1.png" class="img-full rounded" alt="macOS Yosemite Wallpaper">
+                  </figure>
+
+                  <figure class="carousel-item">
+                    <label class="item-prev btn btn-action btn-lg" for="slide-1">
+                      <i class="icon icon-arrow-left"></i>
+                    </label>
+                    <label class="item-next btn btn-action btn-lg" for="slide-3">
+                      <i class="icon icon-arrow-right"></i>
+                    </label>
+                    <img src="/images/beer-2.jpg" class="img-full rounded" alt="macOS Yosemite Wallpaper">
+                  </figure>
+
+                  <figure class="carousel-item">
+                    <label class="item-prev btn btn-action btn-lg" for="slide-2">
+                      <i class="icon icon-arrow-left"></i>
+                    </label>
+                    <label class="item-next btn btn-action btn-lg" for="slide-4">
+                      <i class="icon icon-arrow-right"></i>
+                    </label>
+                    <img src="/images/beer-3.jpg" class="img-full rounded" alt="macOS Yosemite Wallpaper">
+                  </figure>
+
+                  <figure class="carousel-item">
+                    <label class="item-prev btn btn-action btn-lg" for="slide-3">
+                      <i class="icon icon-arrow-left"></i>
+                    </label>
+                    <label class="item-next btn btn-action btn-lg" for="slide-1">
+                      <i class="icon icon-arrow-right"></i>
+                    </label>
+                    <img src="/images/beer-4.jpg" class="img-full rounded" alt="macOS Yosemite Wallpaper">
+                  </figure>
+                </div>
+                <div class="carousel-nav">
+                  <label class="nav-item text-hide hand" for="slide-1">1</label>
+                  <label class="nav-item text-hide hand" for="slide-2">2</label>
+                  <label class="nav-item text-hide hand" for="slide-3">3</label>
+                  <label class="nav-item text-hide hand" for="slide-4">4</label>
+                </div>
+              </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+ </div>
+ </div>
+
       <% } %>  
    </div>
  </div>
 </div>
 
-<div class="section bg-profile">
- <div class="container">
-   <div class="row">
-     <div class="one-third column">
-       <div class="card">
-         <h5 class="value-multiplier tc-blue">Average rating</h5>
-         <p class="value-description">3.2</p>
-       </div>
-       <br />
-       <div class="card">
-      <h5 class="value-multiplier tc-blue">Last Online</h5>
-         <p class="value-description">Today</p>
-       </div>
-       <br />
-       <div class="card">
-      <h5 class="value-multiplier tc-blue">Followers</h5>
-         <p class="value-description">200</p>
-       </div>
-       <br />
-           <div class="card">
-      <h5 class="value-multiplier tc-blue">Following</h5>
-         <p class="value-description">432</p>
-       </div>
-       <br />
-     </div>
-     <div class="two-thirds column card">
-       <nav class="navbar">
-      <div class="container">
-        <ul class="navbar-list">
-          <li class="navbar-item"><a class="navbar-link active" href="">Lastest Reviews</a></li>
-          <li class="navbar-item">
-            <a class="navbar-link" href="#">Top Ratings</a>
-          </li>
-          <li class="navbar-item"><a class="navbar-link" href="">Activity</a></li>
-        </ul>
-      </div>
-    </nav>
-    <div class="row ta-left">
-        <div class="one-third column">
-            <img class="u-max-full-width" src="/images/beer.png">
-        </div>
-        <div class="two-thirds column">
-          <h5 class="value-heading">Review 1</h5>
-          <p class="value-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-        </div>
-      </div>
-          <div class="row ta-left">
-        <div class="one-third column">
-            <img class="u-max-full-width" src="/images/beer.png">
-        </div>
-        <div class="two-thirds column">
-          <h5 class="value-heading">Review 2</h5>
-          <p class="value-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-        </div>
-      </div>
-          <div class="row ta-left">
-        <div class="one-third column">
-            <img class="u-max-full-width" src="/images/beer.png">
-        </div>
-        <div class="two-thirds column">
-          <h5 class="value-heading">Review 3</h5>
-          <p class="value-description">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-        </div>
-      </div>
-     </div>
- </div>
-</div>
-</div>
+
+
 
 
 <%- include footer.ejs %>

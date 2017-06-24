@@ -11,10 +11,10 @@ body {
 
 /* Images */
 
-.img-responsive {
+.img-full {
   display: block;
   height: auto;
-  max-width: 100%;
+  width: 100%;
 }
 
 /* Containers */
@@ -157,6 +157,10 @@ body {
 
 .mt-10 {
   margin-top: 10rem;
+}
+
+.ml-0 {
+  margin-left: 0;
 }
 
 

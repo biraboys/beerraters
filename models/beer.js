@@ -11,8 +11,7 @@ const beerSchema = new Schema({
   style_id:
   {
     type: Schema.Types.ObjectId,
-    ref: 'style',
-    required: true
+    ref: 'category'
   },
   category_id:
   {
