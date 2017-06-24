@@ -6,10 +6,14 @@ const searchButtonArr = Array.from(document.getElementsByClassName('search-btn')
 const beerContainer = document.getElementById('beer-container')
 const resultsContainer = document.getElementById('results-container')
 const loadingContainer = document.getElementById('loading-container')
+const pageNavigation = document.getElementById('page-navigation')
 
-if (sessionStorage.getItem('lastSearch') !== null) {
-  const lastSearch = JSON.parse(sessionStorage.getItem('lastSearch'))
-  beerContainer.innerHTML = lastSearch
+if (sessionStorage.getItem('beerCards') !== null) {
+  const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
+  const resultMessage = JSON.parse(sessionStorage.getItem('resultMessage'))
+  const beersJSON = JSON.parse(sessionStorage.getItem('beersJSON'))
+  resultsContainer.innerHTML = resultMessage
+  beerContainer.innerHTML = beerCards
 }
 
 function activeButtons (current) {
@@ -57,12 +61,15 @@ async function getInputValues (beerName) {
   try {
     const response = await fetch(`/search/beers/?q=${beerName}`)
     const beers = await response.json()
+    let pages = 1
     if (beers.length < 1) {
       clearContent(beerContainer)
       displayErrorMessage(beerName)
     } else {
+      pages = Math.ceil(beers.length / 50)
       displayResultCount(beerName, beers.length)
       clearContent(beerContainer)
+      sessionStorage.setItem('beersJSON', JSON.stringify(beers))
     }
     beers.forEach(async (beer, index) => {
       if (index <= 50) {    
@@ -71,6 +78,11 @@ async function getInputValues (beerName) {
         await displayBeer(beerCard)
       }
     })
+
+    if (beers.length > 50) {
+      const button = `<button>Next</button>`
+      addContent(pageNavigation, button)
+    }
   } catch (e) {
     console.log(e)
   }
@@ -154,7 +166,7 @@ function generateBeerCard (beerObj) {
 
 function displayBeer (beerCard) {
   addContent(beerContainer, beerCard)
-  sessionStorage.setItem('lastSearch', JSON.stringify(beerContainer.innerHTML))
+  sessionStorage.setItem('beerCards', JSON.stringify(beerContainer.innerHTML))
 }
 
 function displayErrorMessage (beerName) {
@@ -182,6 +194,7 @@ function displayResultCount (beerName, resultAmount) {
   `
   clearContent(resultsContainer)
   addContent(resultsContainer, resultMessage)
+  sessionStorage.setItem('resultMessage', JSON.stringify(resultsContainer.innerHTML))
 }
 
 function addContent (element, content) {
