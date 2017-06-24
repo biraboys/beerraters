@@ -23,8 +23,8 @@
           </div>
         </div>
         
-      <% if (user.description.about) { %>
-        <p><%= user.description.about %></p>
+      <% if (user.description) { %>
+        <p><%= user.description %></p>
       <% } else { %>
         <p>User has no description yet.</p>
       <% } %>
@@ -36,9 +36,8 @@
       <% } %>
      </div>
     <div class="one-half column profile-img-container">
-      <% console.log(user.profileImg.path) %>
-      <% if (user.profileImg.path) { %>
-        <img src="/<%= user.profileImg.path %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+      <% if (user.profileImg !== null) { %>
+        <img src="/public/uploads/<%= user.profileImg %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
       <% } else { %>
         <img src="/images/user-placeholder.png" class="u-max-full-width img-thumbnail img-circle img-responsive" />
       <% } %>

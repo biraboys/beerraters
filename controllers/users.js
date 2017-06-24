@@ -14,11 +14,15 @@ module.exports = {
       username: username,
       name: name,
       email: email,
-      password: password
+      password: password,
+      following: [],
+      followers: [],
+      description: '',
+      profileImg: ''
     })
     await newUser.save(err => {
       if (err) {
-        const errorMessage = { success: false, username: username, name: name, email: email}
+        const errorMessage = { success: false, username: username, name: name, email: email }
         if (err.errors != null) {
           if (err.errors.name) {
             errorMessage.message = err.errors.name.message
@@ -92,14 +96,13 @@ module.exports = {
       res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}`, username: username, session: req.session.user })
     }
   },
-  editProfile: async (req, res) => {
-    const [path, description] = [req.file.path, req.body.description]
+  editProfile: async (req, res, next) => {
     const user = await User.findById(req.session.user._id)
-    if (path) {
-      await user.update({ profileImg: { path: path } })
+    if (req.body.description !== undefined) {
+      await user.update({ description: req.body.description })
     }
-    if (description.length > 10) {
-      await user.update({ description: { about: description } })
+    if (req.file.filename !== undefined) {
+      await user.update({ profileImg: req.file.filename })
     }
   }
 }

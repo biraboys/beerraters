@@ -30,7 +30,6 @@ router.post('/:userId/edit', function (req, res) {
     }
     UsersController.editProfile(req)
     res.json({ success: true, message: 'Image uploaded!' })
-    res.end()
   })
 })
 
