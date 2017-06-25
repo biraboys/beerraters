@@ -13,9 +13,11 @@ const pageNavigation = document.getElementById('page-navigation')
 if (sessionStorage.getItem('beerCards') !== null) {
   const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
   const resultMessage = JSON.parse(sessionStorage.getItem('resultMessage'))
+  const navigationButtons = JSON.parse(sessionStorage.getItem('navigationButtons'))
   const beersJSON = JSON.parse(sessionStorage.getItem('beersJSON'))
   resultsContainer.innerHTML = resultMessage
   beerContainer.innerHTML = beerCards
+  pageNavigation.innerHTML = navigationButtons
 }
 
 // Search buttons and form
@@ -225,7 +227,7 @@ function generateButtons (beersAmount, beers) {
   endValue += 50
 
   if (endValue > beersAmount) {
-    startValue = 51
+    startValue = 50
     endValue = beersAmount
     newBeerCards(beersAmount, beers, startValue, endValue)
     const button = generateButton('back')
@@ -244,46 +246,73 @@ function generateButtons (beersAmount, beers) {
         generateButtons(beersAmount, beers)
       })
     })
+  } else {
+    startValue = 51
+    endValue = 100
+    newBeerCards(beersAmount, beers, startValue, endValue)
+    generateOtherButtons(beersAmount, beers)
   }
-  // } else if (beersAmount > endValue) {
-  //   const button = generateButton('forward')
-  //   addContent(pageNavigation, button)
-  // }
-  // newBeerCards(beersAmount, beers, startValue, endValue)
+  sessionStorage.setItem('navigationButtons', JSON.stringify(pageNavigation.innerHTML))
 }
 
-function buttonCalculations(direction, startValue, endValue, beersAmount) {
-  if (direction === "next") {
-      startValue = endValue + 1
-      endValue += 50
-      if (endValue > beersAmount) {
-        endValue = beersAmount
-      }   
+function generateOtherButtons (beersAmount, beers) {
+  let startValue = Number(document.getElementById('start-value').innerHTML)
+  let endValue = Number(document.getElementById('end-value').innerHTML)
+  let button
+  clearContent(pageNavigation)
+  if (startValue !== 1) {
+    let button = generateButton('back')
+    addContent(pageNavigation, button)
+  }
+  if (endValue !== beersAmount) {
+    button = generateButton('next')
+    addContent(pageNavigation, button)
+  }
+  const prevBtn = document.getElementById('prev-btn')
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const calculation = buttonCalculations('back', startValue, endValue, beersAmount)
+      startValue = calculation.startValue
+      endValue = calculation.endValue
+      newBeerCards(beersAmount, beers, startValue, endValue)
+      generateOtherButtons(beersAmount, beers)
+    })
+  }
+  const nextBtn = document.getElementById('next-btn')
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const calculation = buttonCalculations('next', startValue, endValue, beersAmount)
+      startValue = calculation.startValue
+      endValue = calculation.endValue
+      newBeerCards(beersAmount, beers, startValue, endValue)
+      generateOtherButtons(beersAmount, beers)
+    })
+  }
+  sessionStorage.setItem('navigationButtons', JSON.stringify(pageNavigation.innerHTML))
+}
+
+function buttonCalculations (direction, startValue, endValue, beersAmount) {
+  if (direction === 'next') {
+    startValue += 50
+    endValue += 50
+    if (endValue > beersAmount) {
+      endValue = beersAmount
+    }
   } else {
-        endValue -= 50
-        if (endValue < 50) {
-          endValue = 50
-        }
-        startValue -= 50
-        if (startValue < 1) {
-          startValue = 1
-        }
+    endValue -= 50
+    if (endValue < 50) {
+      endValue = 50
+    }
+    startValue -= 50
+    if (startValue < 1) {
+      startValue = 1
+    }
   }
   return {
     endValue: endValue,
     startValue: startValue
   }
 }
-  // nextBtn.addEventListener('click', () => {
-  //     addContent(pageNavigation, button)
-  //     const prevBtn = document.getElementById('prev-btn')
-  //     prevBtn.addEventListener('click', () => {
-        
-   
-  //       newBeerCards(beersAmount, beers, startValue, endValue)
-  //     })
-  //   }
-  //   newBeerCards(beersAmount, beers, startValue, endValue)
 
 async function newBeerCards (beersAmount, beers, startValue, endValue) {
   const currentBeers = beers.slice(startValue, endValue)
