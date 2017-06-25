@@ -61,7 +61,11 @@ const userSchema = new Schema({
   password: { type: String, required: true, validate: passwordValidator },
   registered: { type: Date, default: Date.now },
   reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
-  ratings: [{ type: Schema.Types.ObjectId, ref: 'rating' }]
+  ratings: [{ type: Schema.Types.ObjectId, ref: 'rating' }],
+  following: [],
+  followers: [],
+  description: { type: String },
+  profileImg: { type: String }
 })
 
 userSchema.static('findByName', function (userArr, userName) {

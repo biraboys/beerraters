@@ -1,4 +1,5 @@
 <%- include header.ejs %>
+
 <div class="section hero">
  <div class="container">
    <div class="row flex-column flex-center">
@@ -11,7 +12,11 @@
             <div class="card">
               <div class="card-header flex-center flex-column">
                 <figure class="avatar avatar-xl">
-                  <img src="/images/user-placeholder.png" />
+                  <% if (user.profileImg) { %>
+                    <img src="/public/uploads/<%= user.profileImg %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+                  <% } else { %>
+                    <img src="/images/user-placeholder.png" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+                  <% } %>
                 </figure>
                 <div class="card-title">
                   @<%= user.username %>
@@ -40,7 +45,16 @@
                 </div>
               </div>
               <div class="card-footer flex-center flex-column">
-                <a class="button button-primary" href="">Follow</a>
+                <% if (session && session._id === user.id) { %>
+                  <a class="button button-primary" href="/users/<%= session._id %>/edit">Edit my profile</a>
+                <% } else { %>
+                  <a class="button button-primary" id="follow" data-id="<%= user._id %>" href="">Follow</a>
+                <% } %>
+                <% if (user.description) { %>
+                  <p><%= user.description %></p>
+                <% } else { %>
+                  <p>User has no description yet.</p>
+                <% } %>
               </div>
           </div>
         </div>
@@ -271,6 +285,7 @@
 </div>
 
 <%- include footer.ejs %>
+<script src="/js/user.js"></script>
 
 </body>
 </html>

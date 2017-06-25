@@ -1,0 +1,16 @@
+<%- include header.ejs %>
+
+<div class="container register-form">
+  <div class="six columns">
+    <h4>Edit profile</h4>
+    <form method="post" enctype="multipart/form-data">
+			<label for="username">Set profile image:</label>
+      <input class="u-full-width" type="file" name="profileImage">
+			<label for="description">Write something about yourself:</label>
+      <textarea class="u-full-width" name="description"></textarea>
+      <input class="button-primary" type="submit" value="Save">
+    </form>
+  </div>
+</div>
+
+<%- include footer.ejs %>

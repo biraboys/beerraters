@@ -14,11 +14,15 @@ module.exports = {
       username: username,
       name: name,
       email: email,
-      password: password
+      password: password,
+      following: [],
+      followers: [],
+      description: '',
+      profileImg: ''
     })
     await newUser.save(err => {
       if (err) {
-        const errorMessage = { success: false, username: username, name: name, email: email}
+        const errorMessage = { success: false, username: username, name: name, email: email }
         if (err.errors != null) {
           if (err.errors.name) {
             errorMessage.message = err.errors.name.message
@@ -45,7 +49,8 @@ module.exports = {
   getUser: async (req, res, next) => {
     const { userId } = req.params
     const user = await User.findById(userId)
-    res.status(200).render('user', { user, session: req.session.user })
+    const profileId = user.id
+    res.status(200).render('user', { user, session: req.session.user, id: profileId })
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
@@ -81,7 +86,7 @@ module.exports = {
     const user = await User.findOne({ username: username.toLowerCase() })
     if (user) {
       if (bcrypt.compareSync(password, user.password)) {
-        const userSession = { _id: user._id, user: user.username }
+        const userSession = { _id: user._id }
         req.session.user = userSession
         res.redirect('/')
       } else {
@@ -90,5 +95,27 @@ module.exports = {
     } else {
       res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}`, username: username, session: req.session.user })
     }
+  },
+  editProfile: async (req, res, next) => {
+    const user = await User.findById(req.session.user._id)
+    if (req.body.description !== undefined) {
+      await user.update({ description: req.body.description })
+    }
+    if (req.file.filename !== undefined) {
+      await user.update({ profileImg: req.file.filename })
+    }
+  },
+  followUser: async (req, res, next) => {
+    console.log(req.session.user)
+    const { userId } = req.params
+    const user = await User.findById(userId)
+    res.json(user.username)
+    console.log(user._id)
+  },
+  unfollowUser: async (req, res, next) => {
+    const { userId } = req.params
+    const user = await User.findById(userId)
+    res.json(user.username)
+    console.log(user._id)
   }
 }
