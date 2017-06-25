@@ -5,7 +5,7 @@ router.route('/')
     req.session.destroy((err) => {
       res.redirect('/')
       if (req.session === undefined) {
-        console.log('hej')
+        console.log('logged out')
       }
     })
   })

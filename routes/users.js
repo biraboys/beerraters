@@ -19,6 +19,20 @@ router.route('/')
 router.route('/:userId')
   .get(UsersController.getUser)
 
+router.post('/:userId/follow', function (req, res, next) {
+  if (req.session.user) {
+    const response = UsersController.followUser
+    console.log(response)
+  } else {
+    console.log('not allowed..')
+  }
+})
+// router.route('/:userId/follow')
+//   .post(UsersController.followUser)
+
+router.route('/:userId/unfollow')
+  .post(UsersController.unfollowUser)
+
 router.route('/:userId/reviews')
   .get(UsersController.getUserReviews)
   .post(UsersController.newUserReview)
