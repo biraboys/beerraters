@@ -78,16 +78,18 @@ async function getInputValues (beerName) {
       }
       displayResultCount(beerName, beers.length, startValue, endValue)
       clearContent(beerContainer)
-      addPageButtons(beers.length, beers)
       sessionStorage.setItem('beersJSON', JSON.stringify(beers))
-    }
-    beers.forEach(async (beer, index) => {
-      if (index <= 50) {
-        const beerObj = await getBeerInfo(beer)
-        const beerCard = generateBeerCard(beerObj)
-        await displayBeer(beerCard)
+      beers.forEach(async (beer, index) => {
+        if (index <= 50) {
+          const beerObj = await getBeerInfo(beer)
+          const beerCard = generateBeerCard(beerObj)
+          await displayBeer(beerCard)
+        }
+      })
+      if (beers.length > 50) {
+        addNextButton(beers.length, beers)
       }
-    })
+    }
   } catch (e) {
     console.log(e)
   }
@@ -204,39 +206,84 @@ function clearContent (element) {
   element.innerHTML = ''
 }
 
-function addPageButtons (beersAmount, beers) {
+function addNextButton (beersAmount, beers) {
+  clearContent(pageNavigation)
+  const button = generateButton('next')
+  addContent(pageNavigation, button)
+
+  const nextBtn = document.getElementById('next-btn')
+  nextBtn.addEventListener('click', () => {
+    generateButtons(beersAmount, beers)
+  })
+}
+
+function generateButtons (beersAmount, beers) {
   let startValue = Number(document.getElementById('start-value').innerHTML)
   let endValue = Number(document.getElementById('end-value').innerHTML)
 
-  if (beersAmount > 50) {
-    let button = `<a class="button u-pull-right" id="next-btn">Next</button>`
-    if (startValue !== 1) {
-      button += `<a class="button" id="prev-btn">Previous</button>`
-    }
+  clearContent(pageNavigation)
+  endValue += 50
+
+  if (endValue > beersAmount) {
+    startValue = 51
+    endValue = beersAmount
+    newBeerCards(beersAmount, beers, startValue, endValue)
+    const button = generateButton('back')
     addContent(pageNavigation, button)
-    const nextBtn = document.getElementById('next-btn')
-    nextBtn.addEventListener('click', () => {
+    const calculation = buttonCalculations('back', startValue, endValue, beersAmount)
+    const prevBtn = document.getElementById('prev-btn')
+    prevBtn.addEventListener('click', () => {
+      startValue = calculation.startValue
+      endValue = calculation.endValue
+      newBeerCards(beersAmount, beers, startValue, endValue)
+      clearContent(pageNavigation)
+      const button = generateButton('next')
+      addContent(pageNavigation, button)
+      const nextBtn = document.getElementById('next-btn')
+      nextBtn.addEventListener('click', () => {
+        generateButtons(beersAmount, beers)
+      })
+    })
+  }
+  // } else if (beersAmount > endValue) {
+  //   const button = generateButton('forward')
+  //   addContent(pageNavigation, button)
+  // }
+  // newBeerCards(beersAmount, beers, startValue, endValue)
+}
+
+function buttonCalculations(direction, startValue, endValue, beersAmount) {
+  if (direction === "next") {
       startValue = endValue + 1
       endValue += 50
       if (endValue > beersAmount) {
         endValue = beersAmount
-        const button = `<a class="button" id="prev-btn">Previous</button>`
-        clearContent(pageNavigation)
-        addContent(pageNavigation, button)
-        const prevBtn = document.getElementById('prev-btn')
-        prevBtn.addEventListener('click', () => {
-          startValue -= 50
-          if (startValue < 1) {
-            startValue = 1
-          }
-          endValue -= 50
-          newBeerCards(beersAmount, beers, startValue, endValue)
-        })
-      }
-      newBeerCards(beersAmount, beers, startValue, endValue)
-    })
+      }   
+  } else {
+        endValue -= 50
+        if (endValue < 50) {
+          endValue = 50
+        }
+        startValue -= 50
+        if (startValue < 1) {
+          startValue = 1
+        }
+  }
+  return {
+    endValue: endValue,
+    startValue: startValue
   }
 }
+  // nextBtn.addEventListener('click', () => {
+  //     addContent(pageNavigation, button)
+  //     const prevBtn = document.getElementById('prev-btn')
+  //     prevBtn.addEventListener('click', () => {
+        
+   
+  //       newBeerCards(beersAmount, beers, startValue, endValue)
+  //     })
+  //   }
+  //   newBeerCards(beersAmount, beers, startValue, endValue)
 
 async function newBeerCards (beersAmount, beers, startValue, endValue) {
   const currentBeers = beers.slice(startValue, endValue)
@@ -248,4 +295,14 @@ async function newBeerCards (beersAmount, beers, startValue, endValue) {
     await displayBeer(beerCard)
   })
   window.scrollTo(0, 50)
+}
+
+function generateButton (direction) {
+  let button
+  if (direction === 'back') {
+    button = `<a class="button" id="prev-btn">Previous</button>`
+  } else {
+    button = `<a class="button u-pull-right" id="next-btn">Next</button>`
+  }
+  return button
 }
