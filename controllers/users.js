@@ -106,11 +106,10 @@ module.exports = {
     }
   },
   followUser: async (req, res, next) => {
-    console.log(req.session.user)
     const { userId } = req.params
     const user = await User.findById(userId)
-    res.json(user.username)
-    console.log(user._id)
+    console.log(user)
+    console.log(req.session)
   },
   unfollowUser: async (req, res, next) => {
     const { userId } = req.params

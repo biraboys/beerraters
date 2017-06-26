@@ -21,7 +21,11 @@ app.use(session({
   secret: `3'bn6p<B?J&&[!'S`,
   saveUninitialized: false,
   resave: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection, ttl: 14 * 24 * 60 * 60 })
+  cookie: { secure: !true },
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 14 * 24 * 60 * 60
+  })
 }))
 
 app.use(cookieParser())

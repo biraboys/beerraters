@@ -11,7 +11,6 @@ async function followUser () {
     const response = await fetch(`/users/${id}/follow`, {
       method: 'post'
     })
-    console.log(response)
     follow.innerHTML = 'Unfollow'
   } else {
     follow.innerHTML = 'Follow'
