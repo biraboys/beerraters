@@ -3,7 +3,7 @@ const multer = require('multer')
 const UsersController = require('../controllers/users')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/')
+    cb(null, '/public/uploads/')
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + '.jpg')
@@ -18,16 +18,9 @@ router.route('/')
 
 router.route('/:userId')
   .get(UsersController.getUser)
-
-router.post('/:userId/follow', function (req, res, next) {
-  UsersController.followUser(req)
-})
-
-router.route('/:userId/follow')
-  .get(UsersController.followUser)
   
-// router.route('/:userId/follow')
-//   .post(UsersController.followUser)
+router.route('/:userId/follow')
+  .post(UsersController.followUser)
 
 router.route('/:userId/unfollow')
   .post(UsersController.unfollowUser)

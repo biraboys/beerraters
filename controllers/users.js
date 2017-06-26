@@ -2,7 +2,7 @@ const User = require('../models/user')
 const Review = require('../models/review')
 const bcrypt = require('bcrypt')
 
-module.exports = {
+const controller = module.exports = {
   index: async (req, res, next) => {
     const users = await User.find({})
     res.status(200).json(users)
@@ -40,7 +40,7 @@ module.exports = {
         } else {
           errorMessage.message = err
         }
-        res.status(400).render('register', {errorMessage, session: req.session.user})
+        res.status(400).render('register', { errorMessage, session: req.session.user })
       } else {
         res.redirect(`/register/${username}`)
       }
@@ -50,7 +50,17 @@ module.exports = {
     const { userId } = req.params
     const user = await User.findById(userId)
     const profileId = user.id
-    res.status(200).render('user', { following: '', follower: '', user, session: req.session.user, id: profileId })
+    if (req.session.user) {
+      const session = await User.findById(req.session.user._id)
+      const follow = await controller.checkIfFollowed(user._id, session)
+      const amount = user.followers.length
+      console.log(amount)
+      res.status(200).render('user', { followers: amount, follower: follow, user, session: req.session.user, id: profileId })
+    } else {
+      const amount = user.followers.length
+      console.log(amount)
+      res.status(200).render('user', { followers: amount, follower: false, user, session: req.session.user, id: profileId })
+    }
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
@@ -106,14 +116,37 @@ module.exports = {
     }
   },
   followUser: async (req, res, next) => {
-    const { userId } = req.params
-    const user = await User.findById(userId)
-    res.render('user', {following: user.username, session: req.session.user})
+    if (req.session.user) {
+      const { userId } = req.params
+      const user = await User.findById(userId)
+      const session = await User.findById(req.session.user._id)
+      const following = session.following
+      if (following.indexOf(user._id) > -1) {
+        // User is already following this user
+        controller.unfollowUser(req, res, next, session, user)
+      } else {
+        // User is not following and will now follow this user
+        await User.findOneAndUpdate({ _id: session._id }, { $push: { following: user._id } })
+        await User.findOneAndUpdate({ _id: user._id }, { $push: { followers: session._id } })
+        res.status(200).send()
+      }
+    } else if (!req.session.user) {
+      res.status(401).send()
+    }
   },
-  unfollowUser: async (req, res, next) => {
-    const { userId } = req.params
-    const user = await User.findById(userId)
-    res.json(user.username)
-    console.log(user._id)
+  unfollowUser: async (req, res, next, session, user) => {
+    await User.findOneAndUpdate({ _id: session._id }, { $pull: { following: user._id } })
+    await User.findOneAndUpdate({ _id: user._id }, { $pull: { followers: session._id } })
+    res.status(200).send()
+  },
+  checkIfFollowed: async (user, session) => {
+    const following = session.following
+    if (following.indexOf(user) > -1) {
+      const follower = true
+      return follower
+    } else {
+      const follower = false
+      return follower
+    }
   }
 }
