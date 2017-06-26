@@ -3,20 +3,21 @@ const fetch = require('node-fetch')
 const Category = require('../models/category')
 const Style = require('../models/style')
 const Beer = require('../models/beer')
+const oldStyles = require('../styles.json')
 
 router.get('/', function (req, res, next) {
   res.render('index', { session: req.session.user })
 })
 
 // router.get('/change', async function (req, res, next) {
-//   const beers = await Beer.find({})
-//   beers.forEach(async beer => {
-//       if (beer.style_id) {
-//           beer.category_id = beer.style._id
-//           await beer.save()
-//     }
-//       })
-//   res.end()
+//   const test = await Category.findById('594b7fdc9516412191f9aec4')
+//   console.log(test)
+//   const categories = []
+//   oldStyles.forEach(async style => {
+//     const mongoStyle = await Category.findOne({name: style.style_name})
+//     categories.push(mongoStyle)
+//   })
+//   res.json(categories)
 // })
 
 // router.get('/categories', async function (req, res, next) {

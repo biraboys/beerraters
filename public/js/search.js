@@ -109,11 +109,13 @@ async function getBeerInfo (beer) {
 }
 
 function generateBeerCard (beerObj) {
-  let styleName, styleLink, breweryName, breweryLink, countryFlag, countryCode, countryLink
-  if (beerObj.style) {
+  let categoryName, styleName, styleLink, breweryName, breweryLink, countryFlag, countryCode, countryLink
+  if (beerObj.category) {
+    categoryName = beerObj.category.name
     styleName = beerObj.style.name
     styleLink = `/styles/${beerObj.style._id}`
   } else {
+    categoryName = ''
     styleName = ''
     styleLink = '#'
   }
@@ -157,6 +159,7 @@ function generateBeerCard (beerObj) {
                 <span class="va-middle">4.6</span>
               </div>
               <div class="card-subtitle">
+               <a class="card-link">${categoryName}</a>
                <a class="card-link" href="${styleLink}">${styleName}</a>
               </div>
               <div class="card-subtitle">
