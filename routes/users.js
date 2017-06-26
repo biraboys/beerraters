@@ -22,9 +22,6 @@ router.route('/:userId')
 router.route('/:userId/follow')
   .post(UsersController.followUser)
 
-router.route('/:userId/unfollow')
-  .post(UsersController.unfollowUser)
-
 router.route('/:userId/reviews')
   .get(UsersController.getUserReviews)
   .post(UsersController.newUserReview)
