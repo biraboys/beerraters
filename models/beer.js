@@ -8,11 +8,6 @@ const beerSchema = new Schema({
     required: true
   },
   description: '',
-  style_id:
-  {
-    type: Schema.Types.ObjectId,
-    ref: 'category'
-  },
   category_id:
   {
     type: Schema.Types.ObjectId,
@@ -26,8 +21,7 @@ const beerSchema = new Schema({
   country_id:
   {
     type: Schema.Types.ObjectId,
-    ref: 'country',
-    required: true
+    ref: 'country'
   },
   ratings: [
     {
@@ -40,6 +34,12 @@ const beerSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'review'
+    }
+  ],
+  consumes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'user'
     }
   ]
 })

@@ -1,6 +1,10 @@
 <%- include header.ejs %>
 
 <div class="section hero">
+  <% if (following) { %>
+  <p><%= following %></p>
+  <p><%= follower %></p>
+  <% } %>
  <div class="container">
    <div class="row flex-column flex-center">
          <% if (user === undefined) { %>

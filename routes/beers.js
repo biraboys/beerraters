@@ -13,6 +13,10 @@ router.route('/:beerId')
   .get(BeersController.renderBeer)
   .patch(BeersController.updateBeer)
 
+router.route('/:beerId/consume')
+  .get(BeersController.checkIfConsumed)
+  .post(BeersController.consumeBeer)
+
 router.route('/:beerId/category')
   .get(BeersController.getBeerCategory)
   .post(BeersController.newBeerCategory)

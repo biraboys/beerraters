@@ -1,7 +1,6 @@
 const follow = document.getElementById('follow')
 
 follow.addEventListener('click', function (e) {
-  e.preventDefault()
   followUser()
 })
 
@@ -11,6 +10,9 @@ async function followUser () {
     const response = await fetch(`/users/${id}/follow`, {
       method: 'post'
     })
+    const response = await fetch(`/users/${id}/follow`)
+    window.location = `/users/${id}/follow`
+    console.log(response)
     follow.innerHTML = 'Unfollow'
   } else {
     follow.innerHTML = 'Follow'

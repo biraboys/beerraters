@@ -3,6 +3,8 @@ const Category = require('../models/category')
 const Brewery = require('../models/brewery')
 const Country = require('../models/country')
 const Style = require('../models/style')
+const User = require('../models/user')
+const Session = require('../models/session')
 const {sortByName} = require('../helpers/helpers')
 
 module.exports = {
@@ -70,9 +72,9 @@ module.exports = {
     if (beer.country_id) {
       country = await Country.findOne({_id: beer.country_id}, 'code flag')
     }
-    if (beer.style_id) {
-      style = await Style.findOne({_id: beer.style_id}, 'name category_id')
-      // category = await Category.findOne({_id: style.category_id}, 'name')
+    if (beer.category_id) {
+      category = await Category.findById(beer.category_id)
+      style = await Style.findOne({_id: category.style_id}, 'name')
     }
     res.json({ beer: beer, brewery: brewery, country: country, style: style, category: category })
   },
@@ -138,6 +140,62 @@ module.exports = {
     if (beer.style_id) {
       style = await Style.findOne({_id: beer.style_id}, 'name')
     }
+    if (beer.category_id) {
+      category = await Category.findOne({_id: beer.category_id}, 'name')
+    }
     res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
+  },
+  consumeBeer: async (req, res, next) => {
+    if (!req.session) {
+      res.redirect('/login')
+    } else {
+      const sessionId = req.sessionID
+      const sessions = await Session.find({})
+      const match = sessions.filter(mongo => {
+        if (mongo._id === sessionId) {
+          return mongo
+        }
+      })
+
+      const userId = JSON.parse(match[0].session).user._id
+      const user = await User.findById(userId)
+
+      const { beerId } = req.params
+      const beer = await Beer.findById(beerId)
+      const beerConsumes = beer.consumes
+
+      const exists = beerConsumes.indexOf(userId)
+
+      if (exists === -1) {
+        beer.consumes.push(user)
+        await beer.save()
+        res.redirect('/')
+      } else {
+        res.send('Already consumed, you thirsty bastard!')
+      }
+    }
+  },
+  checkIfConsumed: async (req, res, next) => {
+    const sessionId = req.sessionID
+    const sessions = await Session.find({})
+    const match = sessions.filter(mongo => {
+      if (mongo._id === sessionId) {
+        return mongo
+      }
+    })
+
+    const userId = JSON.parse(match[0].session).user._id
+
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId)
+    const beerConsumes = beer.consumes
+
+    const exists = beerConsumes.indexOf(userId)
+
+    if (exists === -1) {
+      res.send('Not consumed')
+    } else {
+      res.send('Consumed')
+    }
   }
 }

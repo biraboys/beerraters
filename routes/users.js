@@ -22,6 +22,10 @@ router.route('/:userId')
 router.post('/:userId/follow', function (req, res, next) {
   UsersController.followUser(req)
 })
+
+router.route('/:userId/follow')
+  .get(UsersController.followUser)
+  
 // router.route('/:userId/follow')
 //   .post(UsersController.followUser)
 

@@ -50,7 +50,7 @@ module.exports = {
     const { userId } = req.params
     const user = await User.findById(userId)
     const profileId = user.id
-    res.status(200).render('user', { user, session: req.session.user, id: profileId })
+    res.status(200).render('user', { following: '', follower: '', user, session: req.session.user, id: profileId })
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
@@ -108,8 +108,7 @@ module.exports = {
   followUser: async (req, res, next) => {
     const { userId } = req.params
     const user = await User.findById(userId)
-    console.log(user)
-    console.log(req.session)
+    res.render('user', {following: user.username, session: req.session.user})
   },
   unfollowUser: async (req, res, next) => {
     const { userId } = req.params
