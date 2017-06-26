@@ -35,6 +35,12 @@ const beerSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'review'
     }
+  ],
+  consumes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'user'
+    }
   ]
 })
 

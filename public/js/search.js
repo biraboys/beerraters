@@ -140,12 +140,12 @@ function generateBeerCard (beerObj) {
     <div class="row" style="padding: 0.5rem;">
       <div class="card">
         <div class="row">
-          <div class="one-half column">
+          <div class="one-third column">
             <div class="card-image">
               <img class="u-max-full-width" src="/images/search-beer.jpg">
             </div>
           </div>
-          <div class="one-half column">
+          <div class="two-thirds column">
             <div class="card-header">
               <div class="card-title">
                 <a class="card-link" href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a>
@@ -158,16 +158,22 @@ function generateBeerCard (beerObj) {
                 <i class="material-icons md-18 grey va-middle">star</i>                    
                 <span class="va-middle">4.6</span>
               </div>
-              <div class="card-subtitle">
-               <a class="card-link">${categoryName}</a>
-               <a class="card-link" href="${styleLink}">${styleName}</a>
+              <div class="card-subtitle row">
+                <div class="one-half column">
+                  <a class="card-link">${categoryName}</a>
+                </div>
+                <div class="one-half column">
+                  <a class="card-link" href="${styleLink}">${styleName}</a>
+                </div>
               </div>
-              <div class="card-subtitle">
-               <a class="card-link" href="${breweryLink}">${breweryName}</a>
-              </div>
-              <div class="card-subtitle">
-               <a class="card-link" href="${countryLink}">${countryCode}</a>   
-                ${countryFlag}
+              <div class="card-subtitle row">
+                <div class="one-half column">
+                 <a class="card-link" href="${breweryLink}">${breweryName}</a>
+                </div>
+                <div class="one-half column">
+                  <a class="card-link" href="${countryLink}">${countryCode}</a>   
+                  ${countryFlag}
+                </div>
               </div>
             </div>
           </div>

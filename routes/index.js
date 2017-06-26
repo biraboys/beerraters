@@ -3,12 +3,10 @@ const fetch = require('node-fetch')
 const Category = require('../models/category')
 const Style = require('../models/style')
 const Beer = require('../models/beer')
-const oldStyles = require('../styles.json')
 
 router.get('/', function (req, res, next) {
   res.render('index', { session: req.session.user })
 })
-
 // router.get('/change', async function (req, res, next) {
 //   const test = await Category.findById('594b7fdc9516412191f9aec4')
 //   console.log(test)
