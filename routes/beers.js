@@ -24,6 +24,12 @@ router.route('/:beerId/category')
 router.route('/:beerId/brewery')
   .get(BeersController.getBeerBrewery)
 
+router.route('/:beerId/description')
+  .post(BeersController.addBeerDescription)
+
+router.route('/:beerId/rating')
+  .post(BeersController.addBeerRating)
+
 router.route('/fetch/:beerId')
   .get(BeersController.getBeer)
 
