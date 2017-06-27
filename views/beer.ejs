@@ -9,6 +9,36 @@
           </div>
             <% } else { %>
             <div class="two-thirds column">
+              <div class="modal modal-sm" id="rating-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-container" id="rating-modal-body">
+                  <div class="modal-header">
+                    <button class="btn btn-clear u-pull-right" id="close-modal-btn"></button>
+                    <div class="modal-header u-cf">
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>  
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
+                    </div>                      
+                  </div>
+                </div>
+                </div>
             <div class="card">
               <div class="card-image">
                 <div class="row">
@@ -26,6 +56,7 @@
                 </div>
               </div>
                 <div class="card-header">
+                  <% if (session) { %>
                   <div class="u-pull-right mt-1">
                      <a class="tooltip tooltip-bottom" id="consume-link" data-tooltip="Drank it?">
                       <img src="/icons/consumes-grey.svg" id="consume-icon" alt="Consume" /> 
@@ -33,25 +64,42 @@
                     <a class="tooltip tooltip-bottom" data-tooltip="Review">
                       <img src="/icons/reviews-grey.svg" alt="Review" />
                     </a>
-                    <a class="tooltip tooltip-bottom" data-tooltip="Rate">
+                    <a class="tooltip tooltip-bottom" id="rating-link" data-tooltip="Rate">
                       <img src="/icons/ratings-grey.svg" alt="Rating" />
                     </a>
-                    <a class="tooltip tooltip-bottom" data-tooltip="Edit">
+                    <a class="tooltip tooltip-bottom" id="edit-link" data-tooltip="Edit">
                       <img src="/icons/edit-grey.svg" alt="Edit" />
                     </a>  
                   </div>
+                  <% } %>
                   <div class="card-title"><%= beer.name %></div>
+                  <% if (beer.avg_rating) { %>
                   <div class="card-title">
                     <i class="material-icons md-24 va-middle">star</i>
                     <i class="material-icons md-24 va-middle">star</i>
                     <i class="material-icons md-24 va-middle">star</i>
                     <i class="material-icons md-24 va-middle">star_half</i>
                     <i class="material-icons md-24 grey va-middle">star</i>                    
-                    <span class="va-middle">4.6</span>
+                    <span class="va-middle"><%= beer.avg_rating %></span>
                   </div>
+                  <% } else { %>
+                  <div class="card-title">
+                    <i class="material-icons md-24 grey va-middle">star</i>
+                    <i class="material-icons md-24 grey va-middle">star</i>
+                    <i class="material-icons md-24 grey va-middle">star</i>
+                    <i class="material-icons md-24 grey va-middle">star</i>
+                    <i class="material-icons md-24 grey va-middle">star</i>                    
+                    <span class="va-middle">N/A</span>
+                  </div>
+                  <% } %>
                     <% if (style) { %>
                       <div class="card-subtitle">
                         <%= style.name %>
+                      </div>
+                    <% } %>
+                      <% if (category) { %>
+                      <div class="card-subtitle">
+                        <%= category.name %>
                       </div>
                     <% } %>
                       <div class="card-subtitle">
@@ -71,6 +119,16 @@
                  <%= beer.description %>
                 </div>
            </div>
+            <% if (session) { %>
+           <form method="POST" action="/beers/<%= beer._id %>/description" class="mt-1" name="beerDescription" hidden>
+             <label for="beer-description">Description</label>
+             <textarea class="u-full-width" placeholder="There ones was a beer..." id="beer-description" name="description">
+               <%= beer.description %>
+             </textarea>
+             <input class="button-primary" type="submit" value="Submit">
+             <input type="button" value="Cancel" id="cancel-description-btn">
+           </form>  
+           <% } %>  
      </div>
      <div class="one-third column">
        <div class="card">
@@ -78,7 +136,7 @@
            <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
              <img src="/icons/reviews.svg" alt="Reviews" />
              <figcaption>Reviews</figcaption>
-             <figcaption>200</figcaption>
+             <figcaption><%= beer.reviews.length %></figcaption>
            </figure>
          </div>
        </div>
@@ -87,7 +145,7 @@
            <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
              <img src="/icons/ratings.svg" alt="Ratings" />
              <figcaption>Ratings</figcaption>
-             <figcaption>500</figcaption>
+             <figcaption><%= beer.ratings.length %></figcaption>
            </figure>
          </div>
        </div>
@@ -96,11 +154,11 @@
            <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
              <img src="/icons/consumes.svg" alt="Consumes" />
              <figcaption>Consumes</figcaption>
-             <figcaption>4000</figcaption>
+             <figcaption><%= beer.consumes.length %></figcaption>
            </figure>
          </div>
        </div>
-     </div>
+     </div>   
    </div>
       <% } %>  
    </div>

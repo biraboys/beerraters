@@ -197,5 +197,31 @@ module.exports = {
     } else {
       res.send('Consumed')
     }
+  },
+  addBeerDescription: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId)
+    const description = req.body.description
+    beer.description = description
+    await beer.save()
+    res.redirect(`/beers/${beerId}`)
+  },
+  addBeerRating: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId)
+    const rating = req.body.rating
+    const userId = req.session.user._id
+    const user = await User.findById(userId)
+    const ratings = user.ratings
+    const exists = ratings.indexOf(beerId)
+
+    if (exists === -1) {
+      beer.ratings.push(rating)
+      await beer.save()
+      await User.findOneAndUpdate({ _id: userId }, { $push: { ratings: beerId } })
+      res.send(`Not Rated`)
+    } else {
+      res.send('Already Rated')
+    }
   }
 }
