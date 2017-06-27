@@ -212,13 +212,16 @@ module.exports = {
     const rating = req.body.rating
     const userId = req.session.user._id
     const user = await User.findById(userId)
-
-    beer.ratings.push(rating)
-    await beer.save()
-    user.ratings.push(beerId)
     const ratings = user.ratings
-    await user.update({ratings: ratings})
+    const exists = ratings.indexOf(beerId)
 
-    res.redirect(`/beers/${beerId}`)
+    if (exists === -1) {
+      beer.ratings.push(rating)
+      await beer.save()
+      await User.findOneAndUpdate({ _id: userId }, { $push: { ratings: beerId } })
+      res.send(`Not Rated`)
+    } else {
+      res.send('Already Rated')
+    }
   }
 }

@@ -8,6 +8,7 @@ const ratingModal = document.getElementById('rating-modal')
 const beerDescriptionForm = document.forms.beerDescription
 const cancelButton = document.getElementById('cancel-description-btn')
 const closeModal = document.getElementById('close-modal-btn')
+const ratingModalBody = document.getElementById('rating-modal-body')
 const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
 
 ratingSymbols.forEach((symbol, index) => {
@@ -49,7 +50,23 @@ async function postRating (index) {
       }),
       credentials: 'same-origin'
     })
-    console.log(response)
+    const text = await response.text()
+    if (text === 'Already Rated') {
+      ratingModalBody.innerHTML = `
+      <div class="toast toast-error">
+        Error! You have already rated this beer.
+      </div>
+      `
+    } else {
+      ratingModal.innerHTML = `
+      <div class="toast toast-success">
+        Success! You rated this beer ${rating}.
+      </div>
+      `
+    }
+    setTimeout(() => {
+      ratingModal.classList.remove('active')
+    }, 1000)
   } catch (err) {
     console.log(err)
   }
