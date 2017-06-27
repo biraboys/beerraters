@@ -1,10 +1,12 @@
 const follow = document.getElementById('follow')
 const followers = document.getElementById('followers')
 
-follow.addEventListener('click', function (e) {
-  e.preventDefault()
-  followUser()
-})
+if (follow) {
+  follow.addEventListener('click', function (e) {
+    e.preventDefault()
+    followUser()
+  })
+}
 
 async function followUser () {
   const id = follow.dataset.id

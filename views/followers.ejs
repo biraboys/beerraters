@@ -2,6 +2,15 @@
 
 <div class="section hero">
 	<div class="container">
+		<div class="container">
+			<div class="row flex-row flex-center">
+				<div class="one-half column">
+					<% if (followers.length === 0) { %>
+						<p><a href="/users/<%= user.id %>"><%= user.username %></a> has no followers yet :'(</p>
+					<% } else { %>
+				</div>
+			</div>
+		</div>
 		<div class="row flex-row flex-center">
 			<div class="one-half column">
 				<p>Showing <a href="/users/<%= user.id %>"><%= user.username %></a>'s followers...</p>
@@ -42,6 +51,7 @@
 			</div>
 		</div>
 	</div>
+	<% } %>
 </div>
 
 <%- include footer.ejs %>

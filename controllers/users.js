@@ -124,7 +124,7 @@ const controller = module.exports = {
       const following = session.following
       if (following.indexOf(user._id) > -1) {
         // User is already following this user
-        controller.unfollowUser(req, res, next, session, user)
+        controller.unfollowUser(res, session, user)
       } else {
         // User is not following and will now follow this user
         await User.findOneAndUpdate({ _id: session._id }, { $push: { following: user._id } })
@@ -135,7 +135,7 @@ const controller = module.exports = {
       res.status(401).send()
     }
   },
-  unfollowUser: async (req, res, next, session, user) => {
+  unfollowUser: async (res, session, user) => {
     await User.findOneAndUpdate({ _id: session._id }, { $pull: { following: user._id } })
     await User.findOneAndUpdate({ _id: user._id }, { $pull: { followers: session._id } })
     res.status(200).send()

@@ -29,11 +29,7 @@
                   Member since <%= user.registered.toDateString() %>
                 </div>
                   <div class="card-subtitle">
-                    <% if (user.followers.length > 0) { %>
-                      <a href="/users/<%= user._id %>/followers"><span id="followers"><%= followers %></span> follower(s)</a>
-                    <% } else { %>
-                      <span id="followers"><%= followers %></span> follower(s)
-                    <% } %>
+                    <a href="/users/<%= user._id %>/followers"><span id="followers"><%= followers %></span> follower(s)</a>
                 </div>
               </div>
               <div class="card-body">

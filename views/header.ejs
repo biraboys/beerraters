@@ -47,9 +47,7 @@
           <li class="nav-item"><a class="nav-link" href="/register">Sign Up</a></li>
         <% } else { %>
           <li class="nav-item"><a class="nav-link" id="user-session-id" href="/users/<%= session._id %>">My profile</a></li>
-          <form method="post" action="/logout" class="logout">
-            <input class="button-primary" type="submit" value="Logout">
-          </form>
+          <li class="nav-item"><a class="nav-link" href="" id="logout">Logout</a></li>
         <% } %>
       </div>
     </ul>
