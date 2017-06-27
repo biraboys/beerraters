@@ -40,4 +40,7 @@ router.get('/:userId/edit', function (req, res) {
   res.render('edit', { session: req.session.user })
 })
 
+router.route('/:userId/followers')
+  .get(UsersController.getUserFollowers)
+
 module.exports = router

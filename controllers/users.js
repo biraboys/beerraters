@@ -1,6 +1,7 @@
 const User = require('../models/user')
 const Review = require('../models/review')
 const bcrypt = require('bcrypt')
+const mongoose = require('mongoose')
 
 const controller = module.exports = {
   index: async (req, res, next) => {
@@ -148,5 +149,18 @@ const controller = module.exports = {
       const follower = false
       return follower
     }
+  },
+  getUserFollowers: async (req, res, next) => {
+    const { userId } = req.params
+    const user = await User.findById(userId)
+    const currentUser = { username: user.username, id: user._id }
+
+    const followers = await User.find({ '_id': user.followers }, { password: 0, following: 0, description: 0, email: 0, ratings: 0, reviews: 0, consumes: 0 }, (err, result) => {
+      if (err) {
+        console.log(err)
+      }
+      return result
+    })
+    res.status(200).render('followers', { user: currentUser, followers: followers, session: req.session.user })
   }
 }

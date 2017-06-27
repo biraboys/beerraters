@@ -26,10 +26,14 @@
                   <%= user.name %>
                 </div>
                 <div class="card-subtitle">
-                  Member since <%= user.registered %>
+                  Member since <%= user.registered.toDateString() %>
                 </div>
                   <div class="card-subtitle">
-                  <span id="followers"><%= followers %></span> follower(s)
+                    <% if (user.followers.length > 0) { %>
+                      <a href="/users/<%= user._id %>/followers"><span id="followers"><%= followers %></span> follower(s)</a>
+                    <% } else { %>
+                      <span id="followers"><%= followers %></span> follower(s)
+                    <% } %>
                 </div>
               </div>
               <div class="card-body">

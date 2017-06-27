@@ -263,3 +263,11 @@ a {
   box-shadow: none;
   border-radius: 0;
 }
+
+#follow-row {
+  display: flex;
+}
+
+#follow-card {
+  margin: 0px 10px 0px 10px;
+}
