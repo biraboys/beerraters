@@ -58,7 +58,7 @@ async function postRating (index) {
       </div>
       `
     } else {
-      ratingModal.innerHTML = `
+      ratingModalBody.innerHTML = `
       <div class="toast toast-success">
         Success! You rated this beer ${rating}.
       </div>

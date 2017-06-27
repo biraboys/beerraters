@@ -149,15 +149,16 @@ module.exports = {
     if (!req.session) {
       res.redirect('/login')
     } else {
-      const sessionId = req.sessionID
-      const sessions = await Session.find({})
-      const match = sessions.filter(mongo => {
-        if (mongo._id === sessionId) {
-          return mongo
-        }
-      })
+      // const sessionId = req.sessionID
+      // const sessions = await Session.find({})
+      // const match = sessions.filter(mongo => {
+      //   if (mongo._id === sessionId) {
+      //     return mongo
+      //   }
+      // })
 
-      const userId = JSON.parse(match[0].session).user._id
+      // const userId = JSON.parse(match[0].session).user._id
+      const userId = req.session.user._id
       const user = await User.findById(userId)
 
       const { beerId } = req.params
@@ -169,6 +170,7 @@ module.exports = {
       if (exists === -1) {
         beer.consumes.push(user)
         await beer.save()
+        await User.findOneAndUpdate({ _id: userId }, { $push: { consumes: beerId } })
         res.redirect('/')
       } else {
         res.send('Already consumed, you thirsty bastard!')
@@ -216,7 +218,7 @@ module.exports = {
     const exists = ratings.indexOf(beerId)
 
     if (exists === -1) {
-      beer.ratings.push(rating)
+      beer.ratings.push({rating: rating, user: user})
       await beer.save()
       await User.findOneAndUpdate({ _id: userId }, { $push: { ratings: beerId } })
       res.send(`Not Rated`)
