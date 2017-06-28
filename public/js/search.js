@@ -80,7 +80,7 @@ async function getInputValues (beerName) {
       }
       displayResultCount(beerName, beers.length, startValue, endValue)
       clearContent(beerContainer)
-      sessionStorage.setItem('beersJSON', JSON.stringify(beers))
+      clearContent(pageNavigation)
       beers.forEach(async (beer, index) => {
         if (index <= 50) {
           const beerObj = await getBeerInfo(beer)
@@ -92,6 +92,10 @@ async function getInputValues (beerName) {
         addNextButton(beers.length, beers)
       }
     }
+    sessionStorage.setItem('beersJSON', JSON.stringify(beers))
+    sessionStorage.setItem('beerCards', JSON.stringify(beerContainer.innerHTML))
+    sessionStorage.setItem('resultMessage', JSON.stringify(resultsContainer.innerHTML))
+    sessionStorage.setItem('navigationButtons', JSON.stringify(pageNavigation.innerHTML))
   } catch (e) {
     console.log(e)
   }
@@ -109,7 +113,7 @@ async function getBeerInfo (beer) {
 }
 
 function generateBeerCard (beerObj) {
-  let categoryName, styleName, styleLink, breweryName, breweryLink, countryFlag, countryCode, countryLink
+  let categoryName, styleName, styleLink, breweryName, breweryLink, countryFlag, countryCode, countryLink, rating
   if (beerObj.category) {
     categoryName = beerObj.category.name
     styleName = beerObj.style.name
@@ -135,6 +139,91 @@ function generateBeerCard (beerObj) {
   } else {
     [countryFlag, countryCode] = ['', '']
     countryLink = '#'
+  } if (beerObj.rating) {
+    let numberType, blackStars, greyStars
+    rating = ''
+    beerObj.rating % 1 === 0 ? numberType = 'int' : numberType = 'float'
+    switch (numberType) {
+      case 'int':
+        blackStars = beerObj.rating / 1
+        for (let i = 1; i <= blackStars; i++) {
+          rating += `
+        <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          <path d="M0 0h24v24H0z" fill="none"/>
+        </svg>
+        `
+        }
+        greyStars = 5 - blackStars
+        for (let i = 1; i <= greyStars; i++) {
+          rating += `
+        <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          <path d="M0 0h24v24H0z" fill="none"/>
+        </svg>
+        `
+        }
+        break
+      case 'float':
+        blackStars = beerObj.rating / 1
+        for (let i = 1; i <= Math.floor(blackStars); i++) {
+          rating += `
+        <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          <path d="M0 0h24v24H0z" fill="none"/>
+        </svg>
+        `
+        }
+        rating += `
+         <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <defs>
+            <path d="M0 0h24v24H0V0z" id="a"/>
+          </defs>
+          <clipPath id="b">
+            <use overflow="visible" xlink:href="#a"/>
+          </clipPath>
+          <path clip-path="url(#b)" d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4V6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/>
+        </svg>
+        `
+        greyStars = Math.floor(5 - blackStars)
+        for (let i = 1; i <= greyStars; i++) {
+          rating += `
+        <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          <path d="M0 0h24v24H0z" fill="none"/>
+        </svg>
+        `
+        }
+        break
+    }
+
+    rating += `
+    <span class="va-middle card-subtitle">${beerObj.rating}</span>
+    `
+  } else {
+    rating = `
+     <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+    <span class="card-subtitle">N/A</span>
+    `
   }
   const beerCard = `
     <div class="row" style="padding: 0.5rem;">
@@ -150,34 +239,22 @@ function generateBeerCard (beerObj) {
               <div class="card-title">
                 <a class="card-link" href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a>
               </div> 
-              <div class="card-title">
-                <i class="material-icons md-18 va-middle">star</i>
-                <i class="material-icons md-18 va-middle">star</i>
-                <i class="material-icons md-18 va-middle">star</i>
-                <i class="material-icons md-18 va-middle">star_half</i>
-                <i class="material-icons md-18 grey va-middle">star</i>                    
-                <span class="va-middle">4.6</span>
+              <div class="card-title">                  
+                ${rating}
               </div>
-              <div class="card-subtitle row">
-                <div class="one-half column">
+              <div class="card-subtitle">
                   <a class="card-link">${categoryName}</a>
-                </div>
-                <div class="one-half column">
                   <a class="card-link" href="${styleLink}">${styleName}</a>
-                </div>
               </div>
-              <div class="card-subtitle row">
-                <div class="one-half column">
+              <div class="card-subtitle">
                  <a class="card-link" href="${breweryLink}">${breweryName}</a>
-                </div>
-                <div class="one-half column">
-                  <a class="card-link" href="${countryLink}">${countryCode}</a>   
+                 <a class="card-link" href="${countryLink}">${countryCode}</a>   
                   ${countryFlag}
-                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
       `
   return beerCard
 }
@@ -231,8 +308,6 @@ function addNextButton (beersAmount, beers) {
 function generateButtons (beersAmount, beers) {
   let startValue = Number(document.getElementById('start-value').innerHTML)
   let endValue = Number(document.getElementById('end-value').innerHTML)
-
-  clearContent(pageNavigation)
   endValue += 50
 
   if (endValue > beersAmount) {

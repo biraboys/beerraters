@@ -65,7 +65,7 @@ module.exports = {
   getBeer: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId)
-    let brewery, country, style, category
+    let brewery, country, style, category, rating
     if (beer.brewery_id) {
       brewery = await Brewery.findOne({_id: beer.brewery_id}, 'name')
     }
@@ -76,7 +76,10 @@ module.exports = {
       category = await Category.findById(beer.category_id)
       style = await Style.findOne({_id: category.style_id}, 'name')
     }
-    res.json({ beer: beer, brewery: brewery, country: country, style: style, category: category })
+    if (beer.avg_rating) {
+      rating = beer.avg_rating
+    }
+    res.json({ beer: beer, brewery: brewery, country: country, style: style, category: category, rating: rating })
   },
   getBeerBrewery: async (req, res, next) => {
     const { beerId } = req.params
