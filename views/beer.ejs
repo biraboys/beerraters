@@ -73,25 +73,31 @@
                   </div>
                   <% } %>
                   <div class="card-title"><%= beer.name %></div>
-                  <% if (beer.avg_rating) { %>
-                  <div class="card-title">
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star_half</i>
-                    <i class="material-icons md-24 grey va-middle">star</i>                    
-                    <span class="va-middle"><%= beer.avg_rating %></span>
-                  </div>
-                  <% } else { %>
-                  <div class="card-title">
-                    <i class="material-icons md-24 grey va-middle">star</i>
-                    <i class="material-icons md-24 grey va-middle">star</i>
-                    <i class="material-icons md-24 grey va-middle">star</i>
-                    <i class="material-icons md-24 grey va-middle">star</i>
-                    <i class="material-icons md-24 grey va-middle">star</i>                    
-                    <span class="va-middle">N/A</span>
-                  </div>
+                  <div class="card-title" id="rating-container">
+                  <% if (!beer.avg_rating) { %>
+                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      <path d="M0 0h24v24H0z" fill="none"/>
+                    </svg>
+                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      <path d="M0 0h24v24H0z" fill="none"/>
+                    </svg>
+                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      <path d="M0 0h24v24H0z" fill="none"/>
+                    </svg>
+                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      <path d="M0 0h24v24H0z" fill="none"/>
+                    </svg>
+                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      <path d="M0 0h24v24H0z" fill="none"/>
+                    </svg>                   
+                    <span class="card-subtitle">N/A</span>
                   <% } %>
+                  </div>
                     <% if (style) { %>
                       <div class="card-subtitle">
                         <%= style.name %>

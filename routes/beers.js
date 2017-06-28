@@ -28,6 +28,7 @@ router.route('/:beerId/description')
   .post(BeersController.addBeerDescription)
 
 router.route('/:beerId/rating')
+  .get(BeersController.getAverageRating)
   .post(BeersController.addBeerRating)
 
 router.route('/fetch/:beerId')

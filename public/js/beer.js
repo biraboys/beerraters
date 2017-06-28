@@ -72,8 +72,6 @@ async function postRating (index) {
   }
 }
 
-window.onload = checkIfConsume()
-
 consumeLink.onclick = () => {
   postConsume()
 }
@@ -127,3 +125,80 @@ async function checkIfConsume () {
     console.log(err)
   }
 }
+
+async function avgRatingSymbols () {
+  const ratingContainer = document.getElementById('rating-container')
+  try {
+    const response = await fetch(`/beers/${beerId}/rating`, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    const rating = await response.json()
+    if (rating !== 0) {
+      let numberType
+      rating % 1 === 0 ? numberType = 'int' : numberType = 'float'
+      switch (numberType) {
+        case 'int':
+          for (let i = 1; i <= rating; i++) {
+            ratingContainer.innerHTML += `
+          <svg class="va-middle avg-rating-star" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+          </svg>
+        `
+          }
+          const ratingStarsAmount = document.getElementsByClassName('avg-rating-star').length
+          for (let i = ratingStarsAmount; i < 5; i++) {
+            ratingContainer.innerHTML += `
+          <svg class="va-middle avg-rating-star" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+          </svg>
+        `
+          }
+          ratingContainer.innerHTML += `
+          <span class="va-middle card-subtitle">${rating}</span>
+          `
+          break
+        case 'float':
+          for (let i = 1; i <= rating; i++) {
+            ratingContainer.innerHTML += `
+          <svg class="va-middle avg-rating-star" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+          </svg>
+        `
+          }
+          ratingContainer.innerHTML += `
+        <svg class="va-middle avg-rating-star" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <defs>
+            <path d="M0 0h24v24H0V0z" id="a"/>
+          </defs>
+          <clipPath id="b">
+            <use overflow="visible" xlink:href="#a"/>
+          </clipPath>
+          <path clip-path="url(#b)" d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4V6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/>
+        </svg>
+         `
+          const ratingStarsAmountFloat = document.getElementsByClassName('avg-rating-star').length
+          for (let i = ratingStarsAmountFloat; i < 5; i++) {
+            ratingContainer.innerHTML += `
+          <svg class="va-middle avg-rating-star" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+          </svg>
+        `
+          }
+          ratingContainer.innerHTML += `
+          <span class="va-middle card-subtitle">${rating}</span>
+          `
+          break
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+checkIfConsume()
+avgRatingSymbols()

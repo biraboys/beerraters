@@ -219,11 +219,26 @@ module.exports = {
 
     if (exists === -1) {
       beer.ratings.push({rating: rating, user: user})
+      let avgRating = 0
+      for (const obj of beer.ratings) {
+        avgRating += obj.rating
+      }
+      avgRating = (avgRating / beer.ratings.length).toFixed(1)
+      beer.avg_rating = avgRating
       await beer.save()
       await User.findOneAndUpdate({ _id: userId }, { $push: { ratings: beerId } })
       res.send(`Not Rated`)
     } else {
       res.send('Already Rated')
+    }
+  },
+  getAverageRating: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId)
+    if (beer.avg_rating) {
+      res.json(beer.avg_rating)
+    } else {
+      res.json(0)
     }
   }
 }
