@@ -137,11 +137,9 @@ module.exports = {
     if (beer.country_id) {
       country = await Country.findOne({_id: beer.country_id}, 'code flag')
     }
-    if (beer.style_id) {
-      style = await Style.findOne({_id: beer.style_id}, 'name')
-    }
     if (beer.category_id) {
-      category = await Category.findOne({_id: beer.category_id}, 'name')
+      category = await Category.findOne({_id: beer.category_id}, 'name style_id')
+      style = await Style.findOne({_id: category.style_id}, 'name')
     }
     res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
   },

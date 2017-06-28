@@ -100,7 +100,9 @@
                   </div>
                     <% if (style) { %>
                       <div class="card-subtitle">
-                        <%= style.name %>
+                        <a class="card-link" href="/styles/<%= style._id %>">
+                          <%= style.name %>
+                        </a>
                       </div>
                     <% } %>
                       <% if (category) { %>

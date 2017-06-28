@@ -7,4 +7,7 @@ router.route('/')
 router.route('/:countryId')
   .get(CountriesController.getCountry)
 
+router.route('/:countryName/breweries')
+  .get(CountriesController.getBreweries)
+
 module.exports = router

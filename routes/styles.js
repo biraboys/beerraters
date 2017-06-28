@@ -7,4 +7,7 @@ router.route('/')
 router.route('/:styleId')
   .get(StylesController.getStyle)
 
+router.route('/:styleName/categories')
+  .get(StylesController.getCategories)
+
 module.exports = router
