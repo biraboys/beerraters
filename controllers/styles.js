@@ -4,9 +4,9 @@ const {sortByName} = require('../helpers/helpers')
 
 module.exports = {
   index: async (req, res, next) => {
-    const styles = await Style.find({})
+    const styles = await Style.find({}, 'name')
     sortByName(styles)
-    res.status(200).render('styles', { styles: styles, session: req.session.user })
+    res.json(styles)
   },
   getStyle: async (req, res, next) => {
     const { styleId } = req.params

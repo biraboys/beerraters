@@ -128,12 +128,32 @@
                 </div>
            </div>
             <% if (session) { %>
-           <form method="POST" action="/beers/<%= beer._id %>/description" class="mt-1" name="beerDescription" hidden>
-             <label for="beer-description">Description</label>
-             <textarea class="u-full-width" placeholder="There ones was a beer..." id="beer-description" name="description"><%= beer.description %></textarea>
-             <input class="button-primary" type="submit" value="Submit">
-             <input type="button" value="Cancel" id="cancel-description-btn">
-           </form>  
+              <div class="modal modal" id="edit-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-container" id="edit-modal-body">
+                  <div class="modal-header">
+                    <button class="btn btn-clear u-pull-right" id="close-edit-modal-btn"></button>
+                  </div>
+                      <div class="modal-body">
+                        <div class="content">
+                          <form method="POST" action="/beers/<%= beer._id %>/description" class="mt-1" name="beerDescription">
+                            <label for="style">Style</label>
+                            <select class="u-full-width" id="style" name="style" required>
+                              <% if (style) { %>
+                              <option value="<%= style._id %>" selected><%= style.name %></option>                              
+                              <% } else { %> 
+                              <option value="" disabled selected>Select style</option>
+                              <% } %>
+                            </select>
+                            <label for="beer-description">Description</label>
+                            <textarea class="u-full-width" placeholder="There ones was a beer..." id="beer-description" name="description"><%= beer.description %></textarea>
+                            <input class="button-primary" type="submit" value="Submit">
+                            <input type="button" value="Cancel" id="cancel-description-btn">
+                          </form>
+                        </div>
+                      </div>
+                </div>
+              </div>  
            <% } %>  
      </div>
      <div class="one-third column">

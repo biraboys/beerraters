@@ -3,7 +3,7 @@
 <div class="container register-form">
   <div class="six columns">
     <h4>Add beer</h4>
-    <form method="post" name="addBeer">
+    <form method="post" name="addBeer" action="/beers/add">
       <label for="name">Name*</label>
       <input class="u-full-width" type="text" name="name" id="name" required>
       <label for="style">Style*</label>
@@ -19,7 +19,7 @@
       <label for="category">Category</label>
       <select class="u-full-width" id="category" name="category" disabled>
       </select>
-      <input class="u-full-width" type="text" placeholder="New category" name="otherCategory" id="other-category" hidden required>
+      <input class="u-full-width" type="text" placeholder="New category" name="otherCategory" id="other-category" hidden>
       <label for="country">Country*</label>
       <select class="u-full-width" id="country" name="country" required>
         <option value="" disabled selected>Select country</option>
@@ -30,7 +30,7 @@
       <label for="brewery">Brewery</label>
       <select class="u-full-width" id="brewery" name="brewery" disabled>
       </select>
-      <input class="u-full-width" type="text" placeholder="New brewery" name="otherBrewery" id="other-brewery" hidden required>
+      <input class="u-full-width" type="text" placeholder="New brewery" name="otherBrewery" id="other-brewery" hidden>
       <label for="image">Image</label>
       <input class="u-full-width" type="text" name="image" id="image">
       <label for="description">Description</label>

@@ -13,35 +13,46 @@ module.exports = {
     res.status(200).json(beers)
   },
   addBeer: async (req, res, next) => {
-    const [countries, categories, styles, breweries] = await Promise.all([
-      Country.find({}),
-      Category.find({}),
-      Style.find({}),
-      Brewery.find({})
-    ])
-
-    sortByName(countries)
-    sortByName(categories)
-    sortByName(styles)
-    sortByName(breweries)
-
     if (!req.session.user) {
       res.redirect('/login')
     } else {
-      res.render('addbeer', {session: req.session.user, countries: countries, categories: categories, styles: styles, breweries: breweries})
+      const [countries, styles] = await Promise.all([
+        Country.find({}),
+        Style.find({})
+      ])
+
+      sortByName(countries)
+      sortByName(styles)
+
+      res.render('addbeer', {session: req.session.user, countries: countries, styles: styles})
     }
   },
   newBeer: async (req, res, next) => {
-    const [name, category, style, brewery, country, image, description] =
-      [
-        req.body.name, req.body.category, req.body.style, req.body.brewery, req.body.country, req.body.image, req.body.description
-      ]
-
-    const [categoryId, styleId, breweryId, countryId] = await Promise.all([
-      Category.findOne({name: category}, '_id'),
+    const [name, style, country, image, description] = [req.body.name, req.body.style, req.body.country, req.body.image, req.body.description]
+    const [styleId, countryId] = await Promise.all([
       Style.findOne({name: style}, '_id'),
-      Brewery.findOne({name: brewery}, '_id'),
       Country.findOne({name: country}, '_id')
+    ])
+    let [category, brewery] = [req.body.category, req.body.brewery]
+    if (category === 'Other') {
+      category = req.body.otherCategory
+      const newCategory = new Category({
+        name: category,
+        style_id: styleId
+      })
+      await newCategory.save()
+    }
+    if (brewery === 'Other') {
+      brewery = req.body.otherBrewery
+      const newBrewery = new Brewery({
+        name: brewery,
+        country_id: countryId
+      })
+      await newBrewery.save()
+    }
+    const [categoryId, breweryId] = await Promise.all([
+      Category.findOne({name: category}, '_id'),
+      Brewery.findOne({name: brewery}, '_id')
     ])
 
     const newBeer = new Beer({
@@ -54,7 +65,7 @@ module.exports = {
       description: description
     })
     const beer = await newBeer.save()
-    res.status(201).json(beer)
+    res.status(201).redirect(`/beers/${beer._id}`)
   },
   getBeerCategory: async (req, res, next) => {
     const { beerId } = req.params
@@ -142,7 +153,9 @@ module.exports = {
     }
     if (beer.category_id) {
       category = await Category.findOne({_id: beer.category_id}, 'name style_id')
-      style = await Style.findOne({_id: category.style_id}, 'name')
+    }
+    if (beer.style_id) {
+      style = await Style.findOne({_id: beer.style_id}, 'name')
     }
     res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
   },
@@ -205,7 +218,9 @@ module.exports = {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId)
     const description = req.body.description
+    const styleId = req.body.style
     beer.description = description
+    beer.style_id = styleId
     await beer.save()
     res.redirect(`/beers/${beerId}`)
   },

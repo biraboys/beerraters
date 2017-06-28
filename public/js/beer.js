@@ -8,6 +8,8 @@ const ratingModal = document.getElementById('rating-modal')
 const beerDescriptionForm = document.forms.beerDescription
 const cancelButton = document.getElementById('cancel-description-btn')
 const closeModal = document.getElementById('close-modal-btn')
+const closeEditModal = document.getElementById('close-edit-modal-btn')
+const editModal = document.getElementById('edit-modal')
 const ratingModalBody = document.getElementById('rating-modal-body')
 const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
 
@@ -77,11 +79,16 @@ consumeLink.onclick = () => {
 }
 
 editLink.onclick = () => {
-  beerDescriptionForm.removeAttribute('hidden')
+  editModal.classList.add('active')
+  getBeerStyles()
+}
+
+closeEditModal.onclick = () => {
+  editModal.classList.remove('active')
 }
 
 cancelButton.onclick = () => {
-  beerDescriptionForm.setAttribute('hidden', '')
+  editModal.classList.remove('active')
 }
 
 ratingLink.onclick = () => {
@@ -195,6 +202,22 @@ async function avgRatingSymbols () {
           break
       }
     }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function getBeerStyles () {
+  const currentStyle = document.getElementById('current-style') || ''
+  try {
+    const response = await fetch('/styles')
+    const styles = await response.json()
+    styles.forEach(style => {
+      beerDescriptionForm.style.innerHTML += `
+       <option value="${style._id}">${style.name}</option>
+      `
+    })
+    console.log(styles)
   } catch (err) {
     console.log(err)
   }
