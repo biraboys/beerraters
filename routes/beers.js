@@ -11,25 +11,17 @@ router.route('/add')
 
 router.route('/:beerId')
   .get(BeersController.renderBeer)
-  .patch(BeersController.updateBeer)
+  .post(BeersController.updateBeer)
 
 router.route('/:beerId/consume')
-  .get(BeersController.checkIfConsumed)
   .post(BeersController.consumeBeer)
-
-router.route('/:beerId/category')
-  .get(BeersController.getBeerCategory)
-  .post(BeersController.newBeerCategory)
-
-router.route('/:beerId/brewery')
-  .get(BeersController.getBeerBrewery)
-
-router.route('/:beerId/description')
-  .post(BeersController.addBeerDescription)
 
 router.route('/:beerId/rating')
   .get(BeersController.getAverageRating)
   .post(BeersController.addBeerRating)
+
+router.route('/:beerId/contributions')
+  .get(BeersController.getContributions)
 
 router.route('/fetch/:beerId')
   .get(BeersController.getBeer)

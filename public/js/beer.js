@@ -1,7 +1,9 @@
+// Variables
 const beerIdElement = location.href
 const beerId = beerIdElement.split('/')[4]
 const consumeLink = document.getElementById('consume-link')
 const consumeIcon = document.getElementById('consume-icon')
+const ratingIcon = document.getElementById('rating-icon')
 const editLink = document.getElementById('edit-link')
 const ratingLink = document.getElementById('rating-link')
 const ratingModal = document.getElementById('rating-modal')
@@ -12,6 +14,49 @@ const closeEditModal = document.getElementById('close-edit-modal-btn')
 const editModal = document.getElementById('edit-modal')
 const ratingModalBody = document.getElementById('rating-modal-body')
 const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
+
+// Click bindings
+consumeLink.onclick = () => {
+  checkIconColor('consume')
+}
+
+editLink.onclick = () => {
+  editModal.classList.add('active')
+  getBeerStyles()
+}
+
+closeEditModal.onclick = () => {
+  editModal.classList.remove('active')
+}
+
+cancelButton.onclick = () => {
+  editModal.classList.remove('active')
+}
+
+closeModal.onclick = () => {
+  ratingModal.classList.remove('active')
+}
+
+ratingLink.onclick = () => {
+  checkIconColor('rating')
+}
+
+function checkIconColor (icon) {
+  switch (icon) {
+    case 'consume':
+      if (consumeIcon.getAttribute('fill') === '#E8EDFA') {
+        postConsume()
+      }
+      break
+    case 'rating':
+      if (ratingIcon.getAttribute('fill') === '#E8EDFA') {
+        ratingModal.classList.add('active')
+      }
+      break
+  }
+}
+
+// DOM functions
 
 ratingSymbols.forEach((symbol, index) => {
   symbol.addEventListener('mouseover', () => {
@@ -39,6 +84,7 @@ function changeSymbolColor (symbol, position) {
   }
 }
 
+// DB functions
 async function postRating (index) {
   const rating = index + 1
   try {
@@ -52,51 +98,18 @@ async function postRating (index) {
       }),
       credentials: 'same-origin'
     })
-    const text = await response.text()
-    if (text === 'Already Rated') {
-      ratingModalBody.innerHTML = `
-      <div class="toast toast-error">
-        Error! You have already rated this beer.
-      </div>
-      `
-    } else {
-      ratingModalBody.innerHTML = `
+    ratingModalBody.innerHTML = `
       <div class="toast toast-success">
         Success! You rated this beer ${rating}.
       </div>
       `
-    }
     setTimeout(() => {
       ratingModal.classList.remove('active')
-    }, 1000)
+      location.reload(true)
+    }, 2000)
   } catch (err) {
     console.log(err)
   }
-}
-
-consumeLink.onclick = () => {
-  postConsume()
-}
-
-editLink.onclick = () => {
-  editModal.classList.add('active')
-  getBeerStyles()
-}
-
-closeEditModal.onclick = () => {
-  editModal.classList.remove('active')
-}
-
-cancelButton.onclick = () => {
-  editModal.classList.remove('active')
-}
-
-ratingLink.onclick = () => {
-  ratingModal.classList.add('active')
-}
-
-closeModal.onclick = () => {
-  ratingModal.classList.remove('active')
 }
 
 async function postConsume () {
@@ -109,24 +122,42 @@ async function postConsume () {
     if (status === 500) {
       window.location.href = '/login'
     } else {
-      const text = await response.text()
-      console.log(text)
+      const beerName = document.getElementById('beer-name').innerHTML
+      ratingModal.classList.add('active')
+      ratingModalBody.innerHTML = `
+      <div class="toast toast-success">
+        Hope your ${beerName} tasted good! .
+      </div>
+      `
+      setTimeout(() => {
+        ratingModal.classList.remove('active')
+        location.reload(true)
+      }, 2000)
     }
   } catch (err) {
     console.log(err)
   }
 }
 
-async function checkIfConsume () {
+async function checkContributions () {
   try {
-    const response = await fetch(`/beers/${beerId}/consume`, {
+    const response = await fetch(`/beers/${beerId}/contributions`, {
       method: 'get',
       credentials: 'same-origin'
     })
-    const text = await response.text()
-    if (text === 'Consumed') {
-      consumeIcon.src = '/icons/consumes.svg'
+    const json = await response.json()
+    const userId = json.user
+    const contributions = json.beer
+    const ratingUsers = contributions.ratings.map(rating => {
+      return rating.user
+    })
+    if (contributions.consumes.indexOf(userId) !== -1) {
+      consumeIcon.setAttribute('fill', '#000000')
       consumeLink.setAttribute('data-tooltip', 'Consumed, nice!')
+    }
+    if (ratingUsers.indexOf(userId) !== -1) {
+      ratingIcon.setAttribute('fill', '#000000')
+      ratingLink.setAttribute('data-tooltip', 'Already rated')
     }
   } catch (err) {
     console.log(err)
@@ -217,11 +248,47 @@ async function getBeerStyles () {
        <option value="${style._id}">${style.name}</option>
       `
     })
-    console.log(styles)
+    beerDescriptionForm.style.onchange = function () {
+      showMatchingCategories(this.value)
+    }
   } catch (err) {
     console.log(err)
   }
 }
 
-checkIfConsume()
+async function showMatchingCategories (style) {
+  try {
+    const response = await fetch(`/styles/${style}/categories`)
+    const categories = await response.json()
+    if (categories.length > 0) {
+      const categoryInput = beerDescriptionForm.category
+      const otherCategoryInput = beerDescriptionForm.otherCategory
+      categoryInput.removeAttribute('disabled')
+      categoryInput.innerHTML = ''
+      categories.forEach(category => {
+        categoryInput.innerHTML +=
+          `
+          <option value="${category.name}">${category.name}</option>
+          `
+      })
+      categoryInput.innerHTML += `
+        <option value="Other">Other</option>
+        `
+      beerDescriptionForm.category.onchange = function () {
+        if (this.value === 'Other') {
+          otherCategoryInput.removeAttribute('hidden')
+          otherCategoryInput.setAttribute('required', true)
+        } else {
+          otherCategoryInput.setAttribute('hidden', true)
+          otherCategoryInput.removeAttribute('required')
+        }
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// Init calls
+checkContributions()
 avgRatingSymbols()

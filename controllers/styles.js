@@ -14,9 +14,9 @@ module.exports = {
     res.status(200).render('style', { style: style, session: req.session.user })
   },
   getCategories: async (req, res, next) => {
-    const {styleName} = req.params
-    const styleId = await Style.findOne({name: styleName}, '_id')
+    const {styleId} = req.params
     const categories = await Category.find({style_id: styleId}, 'name')
+    sortByName(categories)
     res.json(categories)
   }
 }

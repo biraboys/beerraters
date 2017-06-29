@@ -4,7 +4,6 @@ const Brewery = require('../models/brewery')
 const Country = require('../models/country')
 const Style = require('../models/style')
 const User = require('../models/user')
-const Session = require('../models/session')
 const {sortByName} = require('../helpers/helpers')
 
 module.exports = {
@@ -17,8 +16,8 @@ module.exports = {
       res.redirect('/login')
     } else {
       const [countries, styles] = await Promise.all([
-        Country.find({}),
-        Style.find({})
+        Country.find({}, 'name'),
+        Style.find({}, 'name')
       ])
 
       sortByName(countries)
@@ -67,12 +66,6 @@ module.exports = {
     const beer = await newBeer.save()
     res.status(201).redirect(`/beers/${beer._id}`)
   },
-  getBeerCategory: async (req, res, next) => {
-    const { beerId } = req.params
-    const beerCategory = await Beer.findById(beerId).populate('category')
-    // res.status(200).render('categories', beerCategories)
-    res.status(200).json(beerCategory)
-  },
   getBeer: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId)
@@ -92,46 +85,40 @@ module.exports = {
     }
     res.json({ beer: beer, brewery: brewery, country: country, style: style, category: category, rating: rating })
   },
-  getBeerBrewery: async (req, res, next) => {
-    const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    const beerBrewery = await Brewery.find({ _id: beer.brewery_id })
-    const beerCountry = beerBrewery[0].country
-    const ct = countries.filter(country => {
-      if (country.name.toLowerCase() === beerCountry.toLowerCase()) {
-        return country
-      }
-    })
-    const country = ct[0]
-    res.status(200).render('brewery', { brewery: beerBrewery[0], country: country, session: req.session.user })
-  },
-  //   getUserReviews: async (req, res, next) => {
-  //     const { userId } = req.params
-  //     const userReviews = await User.findById(userId).populate('reviews')
-  //     res.status(200).render('reviews', userReviews)
-  //   },
-  newBeerCategory: async (req, res, next) => {
-    const { beerId } = req.params
-    // Create a new category
-    const newCategory = new Category(req.body)
-    // Get beer
-    const beer = await Beer.findById(beerId)
-    // Bind category and beer
-    newCategory.beer = beer
-    // Save category
-    await newCategory.save()
-    // Add category to beer
-    beer.category.push(newCategory)
-    // Save cateogry
-    await beer.save()
-
-    res.status(201).json(newCategory)
+  getUserReviews: async (req, res, next) => {
+    const { userId } = req.params
+    const userReviews = await User.findById(userId).populate('reviews')
+    res.status(200).render('reviews', userReviews)
   },
   updateBeer: async (req, res, next) => {
     const { beerId } = req.params
-    const updatedBeer = req.body
-    const result = await Beer.findByIdAndUpdate(beerId, updatedBeer)
-    res.status(200).json({ success: true })
+    const [description, styleId] = [req.body.description, req.body.style]
+    let category = req.body.category
+
+    if (category === 'Other') {
+      category = req.body.otherCategory
+      const newCategory = new Category({
+        name: category,
+        style_id: styleId
+      })
+      await newCategory.save()
+    }
+
+    const categoryId = await Category.findOne({name: category}, '_id')
+    await Beer.findByIdAndUpdate(beerId, { $set: { style_id: styleId, category_id: categoryId, description: description } })
+    // if (brewery === 'Other') {
+    //   brewery = req.body.otherBrewery
+    //   const newBrewery = new Brewery({
+    //     name: brewery,
+    //     country_id: countryId
+    //   })
+    //   await newBrewery.save()
+    // }
+    // const [categoryId, breweryId] = await Promise.all([
+    //   Category.findOne({name: category}, '_id'),
+    //   Brewery.findOne({name: brewery}, '_id')
+    // ])
+    res.status(200).redirect(`/beers/${beerId}`)
   },
   findBeer: async (req, res, next) => {
     const beerName = req.query.q
@@ -191,39 +178,6 @@ module.exports = {
       }
     }
   },
-  checkIfConsumed: async (req, res, next) => {
-    const sessionId = req.sessionID
-    const sessions = await Session.find({})
-    const match = sessions.filter(mongo => {
-      if (mongo._id === sessionId) {
-        return mongo
-      }
-    })
-
-    const userId = JSON.parse(match[0].session).user._id
-
-    const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    const beerConsumes = beer.consumes
-
-    const exists = beerConsumes.indexOf(userId)
-
-    if (exists === -1) {
-      res.send('Not consumed')
-    } else {
-      res.send('Consumed')
-    }
-  },
-  addBeerDescription: async (req, res, next) => {
-    const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    const description = req.body.description
-    const styleId = req.body.style
-    beer.description = description
-    beer.style_id = styleId
-    await beer.save()
-    res.redirect(`/beers/${beerId}`)
-  },
   addBeerRating: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId)
@@ -256,5 +210,11 @@ module.exports = {
     } else {
       res.json(0)
     }
+  },
+  getContributions: async (req, res, next) => {
+    const { beerId } = req.params
+    const userId = req.session.user._id
+    const beer = await Beer.findById(beerId, 'consumes ratings reviews')
+    res.status(200).json({beer: beer, user: userId})
   }
 }
