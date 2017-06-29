@@ -158,9 +158,35 @@
                               <% } %>
                             </select>
                             <label for="category">Category</label>
+                            <% if (category) { %>
+                            <select class="u-full-width" id="category" name="category">
+                            <option value="<%= category._id %>" selected><%= category.name %></option>
+                            <% } else { %>
                             <select class="u-full-width" id="category" name="category" disabled>
+                            <% } %>
                             </select>
                             <input class="u-full-width" type="text" placeholder="New category" name="otherCategory" id="other-category" hidden>
+                            <label for="country">Country</label>
+                            <select class="u-full-width" id="country" name="country" required>
+                              <% if (country) { %>
+                              <option value="<%= country._id %>" selected><%= country.name %></option>                              
+                              <% } else { %> 
+                              <option value="" disabled selected>Selected country</option>
+                              <% } %>
+                            </select>
+                            <label for="brewery">Brewery</label>
+                            <% if (brewery) { %>
+                            <select class="u-full-width" id="brewery" name="brewery">
+                            <option value="<%= brewery._id %>" selected><%= brewery.name %></option>
+                            <% } else { %> 
+                            <select class="u-full-width" id="brewery" name="brewery" disabled>
+                            <% } %>                                                          
+                            </select>
+                            <input class="u-full-width" type="text" placeholder="New brewery" name="otherBrewery" id="other-brewery" hidden>
+                            <label for="state">State</label>                            
+                            <select class="u-full-width" id="state" name="state" hidden>
+                            </select>
+                            <input class="u-full-width" type="text" placeholder="New state" name="otherState" id="other-state" hidden>                            
                             <label for="beer-description">Description</label>
                             <textarea class="u-full-width" placeholder="There ones was a beer..." id="beer-description" name="description"><%= beer.description %></textarea>
                             <input class="button-primary" type="submit" value="Submit">

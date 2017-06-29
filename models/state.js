@@ -7,19 +7,7 @@ const stateSchema = new Schema({
   {
     type: Schema.Types.ObjectId,
     ref: 'country'
-  },
-  breweries: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'brewery'
-    }
-  ],
-  beers: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'beer'
-    }
-  ]
+  }
 })
 
 const State = mongoose.model('state', stateSchema)

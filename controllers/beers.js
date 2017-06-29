@@ -2,6 +2,7 @@ const Beer = require('../models/beer')
 const Category = require('../models/category')
 const Brewery = require('../models/brewery')
 const Country = require('../models/country')
+const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
 const {sortByName} = require('../helpers/helpers')
@@ -92,8 +93,8 @@ module.exports = {
   },
   updateBeer: async (req, res, next) => {
     const { beerId } = req.params
-    const [description, styleId] = [req.body.description, req.body.style]
-    let category = req.body.category
+    const [description, styleId, countryId] = [req.body.description, req.body.style, req.body.country]
+    let [category, brewery, state] = [req.body.category, req.body.brewery, req.body.state]
 
     if (category === 'Other') {
       category = req.body.otherCategory
@@ -103,21 +104,28 @@ module.exports = {
       })
       await newCategory.save()
     }
+    if (brewery === 'Other') {
+      brewery = req.body.otherBrewery
+      const newBrewery = new Brewery({
+        name: brewery,
+        country_id: countryId
+      })
+      await newBrewery.save()
+    }
+
+    if (state === 'Other') {
+      state = req.body.otherState
+      const newState = new State({
+        name: state,
+        country_id: countryId
+      })
+      await newState.save()
+    }
 
     const categoryId = await Category.findOne({name: category}, '_id')
-    await Beer.findByIdAndUpdate(beerId, { $set: { style_id: styleId, category_id: categoryId, description: description } })
-    // if (brewery === 'Other') {
-    //   brewery = req.body.otherBrewery
-    //   const newBrewery = new Brewery({
-    //     name: brewery,
-    //     country_id: countryId
-    //   })
-    //   await newBrewery.save()
-    // }
-    // const [categoryId, breweryId] = await Promise.all([
-    //   Category.findOne({name: category}, '_id'),
-    //   Brewery.findOne({name: brewery}, '_id')
-    // ])
+    const breweryId = await Brewery.findOne({name: brewery}, '_id')         
+    await Beer.findByIdAndUpdate(beerId, { $set: { style_id: styleId, category_id: categoryId, description: description, country_id: countryId, brewery_id: breweryId } })
+
     res.status(200).redirect(`/beers/${beerId}`)
   },
   findBeer: async (req, res, next) => {
@@ -136,7 +144,7 @@ module.exports = {
       brewery = await Brewery.findOne({_id: beer.brewery_id}, 'name')
     }
     if (beer.country_id) {
-      country = await Country.findOne({_id: beer.country_id}, 'code flag')
+      country = await Country.findOne({_id: beer.country_id}, 'name code flag')
     }
     if (beer.category_id) {
       category = await Category.findOne({_id: beer.category_id}, 'name style_id')

@@ -23,6 +23,7 @@ consumeLink.onclick = () => {
 editLink.onclick = () => {
   editModal.classList.add('active')
   getBeerStyles()
+  getBeerCountries()
 }
 
 closeEditModal.onclick = () => {
@@ -41,6 +42,7 @@ ratingLink.onclick = () => {
   checkIconColor('rating')
 }
 
+// DOM functions
 function checkIconColor (icon) {
   switch (icon) {
     case 'consume':
@@ -55,8 +57,6 @@ function checkIconColor (icon) {
       break
   }
 }
-
-// DOM functions
 
 ratingSymbols.forEach((symbol, index) => {
   symbol.addEventListener('mouseover', () => {
@@ -82,6 +82,13 @@ function changeSymbolColor (symbol, position) {
       }
     })
   }
+}
+
+// Helper functions
+function sortByName (array) {
+  return array.sort((a, b) => {
+    return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
+  })
 }
 
 // DB functions
@@ -283,6 +290,102 @@ async function showMatchingCategories (style) {
           otherCategoryInput.removeAttribute('required')
         }
       }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+async function getBeerCountries () {
+  const currentCountry = document.getElementById('current-country') || ''
+  try {
+    const response = await fetch('/countries')
+    const countries = await response.json()
+    sortByName(countries)
+    countries.forEach(country => {
+      beerDescriptionForm.country.innerHTML += `
+       <option value="${country._id}">${country.name}</option>
+      `
+    })
+    beerDescriptionForm.country.onchange = function () {
+      showMatchingBreweries(this.value)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function showMatchingBreweries (country) {
+  const breweriesInput = beerDescriptionForm.brewery
+  const otherBreweryInput = beerDescriptionForm.otherBrewery
+  breweriesInput.removeAttribute('disabled')
+  breweriesInput.innerHTML = ''
+  otherBreweryInput.setAttribute('hidden', true)
+  try {
+    const response = await fetch(`/countries/${country}/breweries`)
+    const breweries = await response.json()
+    if (breweries.length > 0) {
+      sortByName(breweries)
+      breweries.forEach(brewery => {
+        breweriesInput.innerHTML +=
+          `
+          <option value="${brewery._id}">${brewery.name}</option>
+          `
+      })
+      breweriesInput.innerHTML += `
+        <option value="Other">Other</option>
+        `
+      beerDescriptionForm.brewery.onchange = function () {
+        if (this.value === 'Other') {
+          otherBreweryInput.removeAttribute('hidden')
+          getCountryStates(country)
+        } else {
+          otherBreweryInput.setAttribute('hidden', true)
+        }
+      }
+    } else {
+      breweriesInput.innerHTML = `
+        <option value="Other">Other</option>
+        `
+      otherBreweryInput.removeAttribute('hidden')
+      getCountryStates(country)
+    }
+  } catch (err) {
+
+  }
+}
+
+async function getCountryStates (country) {
+  const statesInput = beerDescriptionForm.state
+  const otherStateInput = beerDescriptionForm.otherState
+  statesInput.removeAttribute('hidden')
+  statesInput.innerHTML = ''
+  otherStateInput.setAttribute('hidden', true)
+  try {
+    const response = await fetch(`/countries/${country}/states`)
+    const states = await response.json()
+    if (states.length > 0) {
+      sortByName(states)
+      states.forEach(state => {
+        statesInput.innerHTML +=
+          `
+          <option value="${state._id}">${state.name}</option>
+          `
+      })
+      statesInput.innerHTML += `
+        <option value="Other">Other</option>
+        `
+      beerDescriptionForm.brewery.onchange = function () {
+        if (this.value === 'Other') {
+          otherStateInput.removeAttribute('hidden')
+        } else {
+          otherStateInput.setAttribute('hidden', true)
+        }
+      }
+    } else {
+      statesInput.innerHTML = `
+        <option value="Other">Other</option>
+        `
+      otherStateInput.removeAttribute('hidden')
     }
   } catch (err) {
     console.log(err)
