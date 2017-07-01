@@ -111,19 +111,22 @@ module.exports = {
         country_id: countryId
       })
       await newBrewery.save()
-    }
-
-    if (state === 'Other') {
-      state = req.body.otherState
-      const newState = new State({
-        name: state,
-        country_id: countryId
-      })
-      await newState.save()
+      const breweryId = await Brewery.findOne({name: brewery}, '_id')
+      await Country.findByIdAndUpdate(countryId, { $push: {breweries: breweryId} })
+      if (state === 'Other') {
+        state = req.body.otherState
+        const newState = new State({
+          name: state,
+          country_id: countryId
+        })
+        await newState.save()
+        const stateId = await State.findOne({name: state}, '_id')
+        await Brewery.findByIdAndUpdate(breweryId, { $set: {state_id: stateId} })
+      }
     }
 
     const categoryId = await Category.findOne({name: category}, '_id')
-    const breweryId = await Brewery.findOne({name: brewery}, '_id')         
+    const breweryId = await Brewery.findOne({name: brewery}, '_id')
     await Beer.findByIdAndUpdate(beerId, { $set: { style_id: styleId, category_id: categoryId, description: description, country_id: countryId, brewery_id: breweryId } })
 
     res.status(200).redirect(`/beers/${beerId}`)

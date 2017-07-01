@@ -7,6 +7,11 @@ const Beer = require('../models/beer')
 router.get('/', function (req, res, next) {
   res.render('index', { session: req.session.user })
 })
+
+router.get('/image', async function (req, res, next) {
+
+  res.end()
+})
 // router.get('/change', async function (req, res, next) {
 //   const beers = await Beer.find({})
 //   beers.forEach(async (beer, index) => {

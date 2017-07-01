@@ -1,6 +1,6 @@
 const User = require('../models/user')
 const Review = require('../models/review')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
 
 const controller = module.exports = {

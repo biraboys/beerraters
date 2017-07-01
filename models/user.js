@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const titlize = require('mongoose-title-case')
 const validate = require('mongoose-validator')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 const nameValidator = [
   validate({

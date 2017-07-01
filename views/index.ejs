@@ -90,5 +90,18 @@
 
 <%- include footer.ejs %>
 
+<script>
+function myFunction() {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+        x.className += " responsive";
+    } else {
+        x.className = "topnav";
+    }
+}
+</script>
+
+<script src="/js/logout.js"></script>
+
 </body>
 </html>

@@ -1,6 +1,5 @@
 <%- include header.ejs %>
 
-<div class="section hero">
  <div class="container">
    <div class="row">
          <% if (beer === undefined) { %>
@@ -160,7 +159,7 @@
                             <label for="category">Category</label>
                             <% if (category) { %>
                             <select class="u-full-width" id="category" name="category">
-                            <option value="<%= category._id %>" selected><%= category.name %></option>
+                            <option value="<%= category.name %>" selected><%= category.name %></option>
                             <% } else { %>
                             <select class="u-full-width" id="category" name="category" disabled>
                             <% } %>
@@ -177,7 +176,7 @@
                             <label for="brewery">Brewery</label>
                             <% if (brewery) { %>
                             <select class="u-full-width" id="brewery" name="brewery">
-                            <option value="<%= brewery._id %>" selected><%= brewery.name %></option>
+                            <option value="<%= brewery.name %>" selected><%= brewery.name %></option>
                             <% } else { %> 
                             <select class="u-full-width" id="brewery" name="brewery" disabled>
                             <% } %>                                                          
@@ -231,7 +230,6 @@
       <% } %>  
    </div>
  </div>
-</div>
 
 <%- include footer.ejs %>
 

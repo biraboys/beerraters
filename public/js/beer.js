@@ -328,7 +328,7 @@ async function showMatchingBreweries (country) {
       breweries.forEach(brewery => {
         breweriesInput.innerHTML +=
           `
-          <option value="${brewery._id}">${brewery.name}</option>
+          <option value="${brewery.name}">${brewery.name}</option>
           `
       })
       breweriesInput.innerHTML += `
@@ -368,7 +368,7 @@ async function getCountryStates (country) {
       states.forEach(state => {
         statesInput.innerHTML +=
           `
-          <option value="${state._id}">${state.name}</option>
+          <option value="${state.name}">${state.name}</option>
           `
       })
       statesInput.innerHTML += `
