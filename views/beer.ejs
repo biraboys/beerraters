@@ -75,12 +75,18 @@
                         <path d="M0 0h24v24H0z" fill="none"/>
                       </svg>
                     </a>
+                    <a class="tooltip tooltip-bottom" id="image-link" data-tooltip="Add image">
+                      <svg fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                      </svg>
+                    </a>  
                     <a class="tooltip tooltip-bottom" id="edit-link" data-tooltip="Edit">
                       <svg id="edit-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                         <path d="M0 0h24v24H0z" fill="none"/>
                       </svg>
-                    </a>  
+                    </a>
                   </div>
                   <% } %>
                   <div class="card-title" id="beer-name"><%= beer.name %></div>
@@ -151,7 +157,7 @@
                             <label for="style">Style</label>
                             <select class="u-full-width" id="style" name="style" required>
                               <% if (style) { %>
-                              <option value="<%= style._id %>" selected><%= style.name %></option>                              
+                              <option value="<%= style._id %>" selected disabled><%= style.name %></option>                              
                               <% } else { %> 
                               <option value="" disabled selected>Select style</option>
                               <% } %>
@@ -159,7 +165,7 @@
                             <label for="category">Category</label>
                             <% if (category) { %>
                             <select class="u-full-width" id="category" name="category">
-                            <option value="<%= category.name %>" selected><%= category.name %></option>
+                            <option value="<%= category.name %>" selected disabled><%= category.name %></option>
                             <% } else { %>
                             <select class="u-full-width" id="category" name="category" disabled>
                             <% } %>
@@ -168,24 +174,27 @@
                             <label for="country">Country</label>
                             <select class="u-full-width" id="country" name="country" required>
                               <% if (country) { %>
-                              <option value="<%= country._id %>" selected><%= country.name %></option>                              
+                              <option value="<%= country._id %>" selected disabled><%= country.name %></option>                              
                               <% } else { %> 
                               <option value="" disabled selected>Selected country</option>
                               <% } %>
                             </select>
                             <label for="brewery">Brewery</label>
+                            <div id="loader"></div>
                             <% if (brewery) { %>
                             <select class="u-full-width" id="brewery" name="brewery">
-                            <option value="<%= brewery.name %>" selected><%= brewery.name %></option>
+                            <option value="<%= brewery.name %>" selected disabled><%= brewery.name %></option>
                             <% } else { %> 
                             <select class="u-full-width" id="brewery" name="brewery" disabled>
                             <% } %>                                                          
                             </select>
                             <input class="u-full-width" type="text" placeholder="New brewery" name="otherBrewery" id="other-brewery" hidden>
-                            <label for="state">State</label>                            
-                            <select class="u-full-width" id="state" name="state" hidden>
-                            </select>
-                            <input class="u-full-width" type="text" placeholder="New state" name="otherState" id="other-state" hidden>                            
+                            <div id="state-group" hidden>
+                              <label for="state">State</label>                            
+                              <select class="u-full-width" id="state" name="state">
+                              </select>
+                              <input class="u-full-width" type="text" placeholder="New state" name="otherState" id="other-state" hidden>
+                            </div>                            
                             <label for="beer-description">Description</label>
                             <textarea class="u-full-width" placeholder="There ones was a beer..." id="beer-description" name="description"><%= beer.description %></textarea>
                             <input class="button-primary" type="submit" value="Submit">
@@ -231,6 +240,10 @@
    </div>
  </div>
 </section>
+<form action="/beers/<%= beer._id %>/addImage" method="post" enctype="multipart/form-data">
+  Select a file: <input type="file" name="img">
+  <input type="submit" name="submit" value="submit">
+</form>
 <%- include footer.ejs %>
 
 <script src="/js/beer.js"></script>

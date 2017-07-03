@@ -5,7 +5,7 @@ const Country = require('../models/country')
 const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
-const {sortByName} = require('../helpers/helpers')
+const Jimp = require('jimp')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -227,5 +227,16 @@ module.exports = {
     const userId = req.session.user._id
     const beer = await Beer.findById(beerId, 'consumes ratings reviews')
     res.status(200).json({beer: beer, user: userId})
+  },
+  addBeerImage: async (req, res, next) => {
+    Jimp.read(`public/uploads/beers/${req.files[0].filename}`).then(function (lenna) {
+      lenna.resize(Jimp.AUTO, 250)
+         .quality(60)
+         .write(`public/uploads/beers/${req.files[0].filename}.png`)
+      console.log('It worked')
+    }).catch(function (err) {
+      console.error(err)
+    })
+    res.json(req.files)
   }
 }

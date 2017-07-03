@@ -14,6 +14,7 @@ const closeEditModal = document.getElementById('close-edit-modal-btn')
 const editModal = document.getElementById('edit-modal')
 const ratingModalBody = document.getElementById('rating-modal-body')
 const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
+const stateGroup = document.getElementById('state-group')
 
 // Click bindings
 consumeLink.onclick = () => {
@@ -246,10 +247,10 @@ async function avgRatingSymbols () {
 }
 
 async function getBeerStyles () {
-  const currentStyle = document.getElementById('current-style') || ''
   try {
     const response = await fetch('/styles')
     const styles = await response.json()
+    sortByName(styles)
     styles.forEach(style => {
       beerDescriptionForm.style.innerHTML += `
        <option value="${style._id}">${style.name}</option>
@@ -270,6 +271,7 @@ async function showMatchingCategories (style) {
     if (categories.length > 0) {
       const categoryInput = beerDescriptionForm.category
       const otherCategoryInput = beerDescriptionForm.otherCategory
+      sortByName(categories)
       categoryInput.removeAttribute('disabled')
       categoryInput.innerHTML = ''
       categories.forEach(category => {
@@ -296,7 +298,6 @@ async function showMatchingCategories (style) {
   }
 }
 async function getBeerCountries () {
-  const currentCountry = document.getElementById('current-country') || ''
   try {
     const response = await fetch('/countries')
     const countries = await response.json()
@@ -320,10 +321,13 @@ async function showMatchingBreweries (country) {
   breweriesInput.removeAttribute('disabled')
   breweriesInput.innerHTML = ''
   otherBreweryInput.setAttribute('hidden', true)
+  stateGroup.setAttribute('hidden', true)
   try {
     const response = await fetch(`/countries/${country}/breweries`)
     const breweries = await response.json()
     if (breweries.length > 0) {
+      const loader = document.getElementById('loader')
+      loader.classList.add('loading')
       sortByName(breweries)
       breweries.forEach(brewery => {
         breweriesInput.innerHTML +=
@@ -339,9 +343,11 @@ async function showMatchingBreweries (country) {
           otherBreweryInput.removeAttribute('hidden')
           getCountryStates(country)
         } else {
+          stateGroup.setAttribute('hidden', true)
           otherBreweryInput.setAttribute('hidden', true)
         }
       }
+      loader.classList.remove('loading')
     } else {
       breweriesInput.innerHTML = `
         <option value="Other">Other</option>
@@ -357,7 +363,7 @@ async function showMatchingBreweries (country) {
 async function getCountryStates (country) {
   const statesInput = beerDescriptionForm.state
   const otherStateInput = beerDescriptionForm.otherState
-  statesInput.removeAttribute('hidden')
+  stateGroup.removeAttribute('hidden')
   statesInput.innerHTML = ''
   otherStateInput.setAttribute('hidden', true)
   try {
@@ -395,3 +401,11 @@ async function getCountryStates (country) {
 // Init calls
 checkContributions()
 avgRatingSymbols()
+
+// async function postImage () {
+//   fetch(`/beers/${beerId}/addImage`, {
+//     method: 'post',
+//     credentials: 'same-origin',
+//     body: new FormData(document.forms.addImage)
+//   })
+// }
