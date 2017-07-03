@@ -1,3 +1,5 @@
+/* Elements */
+
 html, body {
   height: 100%;
 }
@@ -11,9 +13,6 @@ nav {
   box-shadow: 0 6px 18px 0 rgba(232,237,250,.5);
 }
 
-.content {
-  flex: 1 0 auto;
-}
 
 a {
   cursor: pointer
@@ -48,6 +47,13 @@ a {
   display: flex;
 }
 
+.content {
+  flex: 1 0 auto;
+}
+
+.main-section {
+  margin: 5rem 0;
+}
 
 .flex-center {
   justify-content: center;
@@ -238,6 +244,10 @@ a {
 
 .ml-0 {
   margin-left: 0;
+}
+
+.mt--15 {
+  margin-top: -1.5rem;
 }
 
 

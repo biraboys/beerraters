@@ -99,7 +99,7 @@ const controller = module.exports = {
       if (bcrypt.compareSync(password, user.password)) {
         const userSession = { _id: user._id }
         req.session.user = userSession
-        res.redirect('/')
+        res.redirect(req.session.previousPage)
       } else {
         res.status(400).render('login', { success: false, message: 'Password does not match.', username: username, session: req.session.user })
       }
