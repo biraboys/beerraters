@@ -220,8 +220,8 @@ const controller = module.exports = {
         const stmpTransport = nodemailer.createTransport({
           service: 'Gmail',
           auth: {
-            user: 'beerraters0@gmail.com',
-            pass: 'beerraters2017'
+            user: process.env.GMAIL_U,
+            pass: process.env.GMAIL_PASS
           }
         })
         const mailOptions = {
