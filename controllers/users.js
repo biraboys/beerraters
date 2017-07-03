@@ -1,6 +1,5 @@
 const User = require('../models/user')
 const Review = require('../models/review')
-const bcrypt = require('bcrypt')
 const multer = require('multer')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
@@ -14,6 +13,8 @@ const storage = multer.diskStorage({
   }
 })
 const upload = multer({ storage: storage }).single('profileImage')
+const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose')
 
 const controller = module.exports = {
   index: async (req, res, next) => {

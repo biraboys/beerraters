@@ -2,9 +2,9 @@ const Beer = require('../models/beer')
 const Category = require('../models/category')
 const Brewery = require('../models/brewery')
 const Country = require('../models/country')
+const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
-const Session = require('../models/session')
 const {sortByName} = require('../helpers/helpers')
 
 module.exports = {
@@ -13,35 +13,46 @@ module.exports = {
     res.status(200).json(beers)
   },
   addBeer: async (req, res, next) => {
-    const [countries, categories, styles, breweries] = await Promise.all([
-      Country.find({}),
-      Category.find({}),
-      Style.find({}),
-      Brewery.find({})
-    ])
-
-    sortByName(countries)
-    sortByName(categories)
-    sortByName(styles)
-    sortByName(breweries)
-
     if (!req.session.user) {
       res.redirect('/login')
     } else {
-      res.render('addbeer', {session: req.session.user, countries: countries, categories: categories, styles: styles, breweries: breweries})
+      const [countries, styles] = await Promise.all([
+        Country.find({}, 'name'),
+        Style.find({}, 'name')
+      ])
+
+      sortByName(countries)
+      sortByName(styles)
+
+      res.render('addbeer', {session: req.session.user, countries: countries, styles: styles})
     }
   },
   newBeer: async (req, res, next) => {
-    const [name, category, style, brewery, country, image, description] =
-      [
-        req.body.name, req.body.category, req.body.style, req.body.brewery, req.body.country, req.body.image, req.body.description
-      ]
-
-    const [categoryId, styleId, breweryId, countryId] = await Promise.all([
-      Category.findOne({name: category}, '_id'),
+    const [name, style, country, image, description] = [req.body.name, req.body.style, req.body.country, req.body.image, req.body.description]
+    const [styleId, countryId] = await Promise.all([
       Style.findOne({name: style}, '_id'),
-      Brewery.findOne({name: brewery}, '_id'),
       Country.findOne({name: country}, '_id')
+    ])
+    let [category, brewery] = [req.body.category, req.body.brewery]
+    if (category === 'Other') {
+      category = req.body.otherCategory
+      const newCategory = new Category({
+        name: category,
+        style_id: styleId
+      })
+      await newCategory.save()
+    }
+    if (brewery === 'Other') {
+      brewery = req.body.otherBrewery
+      const newBrewery = new Brewery({
+        name: brewery,
+        country_id: countryId
+      })
+      await newBrewery.save()
+    }
+    const [categoryId, breweryId] = await Promise.all([
+      Category.findOne({name: category}, '_id'),
+      Brewery.findOne({name: brewery}, '_id')
     ])
 
     const newBeer = new Beer({
@@ -54,13 +65,7 @@ module.exports = {
       description: description
     })
     const beer = await newBeer.save()
-    res.status(201).json(beer)
-  },
-  getBeerCategory: async (req, res, next) => {
-    const { beerId } = req.params
-    const beerCategory = await Beer.findById(beerId).populate('category')
-    // res.status(200).render('categories', beerCategories)
-    res.status(200).json(beerCategory)
+    res.status(201).redirect(`/beers/${beer._id}`)
   },
   getBeer: async (req, res, next) => {
     const { beerId } = req.params
@@ -81,46 +86,50 @@ module.exports = {
     }
     res.json({ beer: beer, brewery: brewery, country: country, style: style, category: category, rating: rating })
   },
-  getBeerBrewery: async (req, res, next) => {
-    const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    const beerBrewery = await Brewery.find({ _id: beer.brewery_id })
-    const beerCountry = beerBrewery[0].country
-    const ct = countries.filter(country => {
-      if (country.name.toLowerCase() === beerCountry.toLowerCase()) {
-        return country
-      }
-    })
-    const country = ct[0]
-    res.status(200).render('brewery', { brewery: beerBrewery[0], country: country, session: req.session.user })
-  },
-  //   getUserReviews: async (req, res, next) => {
-  //     const { userId } = req.params
-  //     const userReviews = await User.findById(userId).populate('reviews')
-  //     res.status(200).render('reviews', userReviews)
-  //   },
-  newBeerCategory: async (req, res, next) => {
-    const { beerId } = req.params
-    // Create a new category
-    const newCategory = new Category(req.body)
-    // Get beer
-    const beer = await Beer.findById(beerId)
-    // Bind category and beer
-    newCategory.beer = beer
-    // Save category
-    await newCategory.save()
-    // Add category to beer
-    beer.category.push(newCategory)
-    // Save cateogry
-    await beer.save()
-
-    res.status(201).json(newCategory)
+  getUserReviews: async (req, res, next) => {
+    const { userId } = req.params
+    const userReviews = await User.findById(userId).populate('reviews')
+    res.status(200).render('reviews', userReviews)
   },
   updateBeer: async (req, res, next) => {
     const { beerId } = req.params
-    const updatedBeer = req.body
-    const result = await Beer.findByIdAndUpdate(beerId, updatedBeer)
-    res.status(200).json({ success: true })
+    const [description, styleId, countryId] = [req.body.description, req.body.style, req.body.country]
+    let [category, brewery, state] = [req.body.category, req.body.brewery, req.body.state]
+
+    if (category === 'Other') {
+      category = req.body.otherCategory
+      const newCategory = new Category({
+        name: category,
+        style_id: styleId
+      })
+      await newCategory.save()
+    }
+    if (brewery === 'Other') {
+      brewery = req.body.otherBrewery
+      const newBrewery = new Brewery({
+        name: brewery,
+        country_id: countryId
+      })
+      await newBrewery.save()
+      const breweryId = await Brewery.findOne({name: brewery}, '_id')
+      await Country.findByIdAndUpdate(countryId, { $push: {breweries: breweryId} })
+      if (state === 'Other') {
+        state = req.body.otherState
+        const newState = new State({
+          name: state,
+          country_id: countryId
+        })
+        await newState.save()
+        const stateId = await State.findOne({name: state}, '_id')
+        await Brewery.findByIdAndUpdate(breweryId, { $set: {state_id: stateId} })
+      }
+    }
+
+    const categoryId = await Category.findOne({name: category}, '_id')
+    const breweryId = await Brewery.findOne({name: brewery}, '_id')
+    await Beer.findByIdAndUpdate(beerId, { $set: { style_id: styleId, category_id: categoryId, description: description, country_id: countryId, brewery_id: breweryId } })
+
+    res.status(200).redirect(`/beers/${beerId}`)
   },
   findBeer: async (req, res, next) => {
     const beerName = req.query.q
@@ -138,11 +147,13 @@ module.exports = {
       brewery = await Brewery.findOne({_id: beer.brewery_id}, 'name')
     }
     if (beer.country_id) {
-      country = await Country.findOne({_id: beer.country_id}, 'code flag')
+      country = await Country.findOne({_id: beer.country_id}, 'name code flag')
     }
     if (beer.category_id) {
       category = await Category.findOne({_id: beer.category_id}, 'name style_id')
-      style = await Style.findOne({_id: category.style_id}, 'name')
+    }
+    if (beer.style_id) {
+      style = await Style.findOne({_id: beer.style_id}, 'name')
     }
     res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
   },
@@ -178,37 +189,6 @@ module.exports = {
       }
     }
   },
-  checkIfConsumed: async (req, res, next) => {
-    const sessionId = req.sessionID
-    const sessions = await Session.find({})
-    const match = sessions.filter(mongo => {
-      if (mongo._id === sessionId) {
-        return mongo
-      }
-    })
-
-    const userId = JSON.parse(match[0].session).user._id
-
-    const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    const beerConsumes = beer.consumes
-
-    const exists = beerConsumes.indexOf(userId)
-
-    if (exists === -1) {
-      res.send('Not consumed')
-    } else {
-      res.send('Consumed')
-    }
-  },
-  addBeerDescription: async (req, res, next) => {
-    const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    const description = req.body.description
-    beer.description = description
-    await beer.save()
-    res.redirect(`/beers/${beerId}`)
-  },
   addBeerRating: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId)
@@ -241,5 +221,11 @@ module.exports = {
     } else {
       res.json(0)
     }
+  },
+  getContributions: async (req, res, next) => {
+    const { beerId } = req.params
+    const userId = req.session.user._id
+    const beer = await Beer.findById(beerId, 'consumes ratings reviews')
+    res.status(200).json({beer: beer, user: userId})
   }
 }

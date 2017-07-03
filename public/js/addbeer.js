@@ -30,8 +30,10 @@ async function showMatchingCategories (style) {
       addBeerForm.category.onchange = function () {
         if (this.value === 'Other') {
           otherCategoryInput.removeAttribute('hidden')
+          otherCategoryInput.setAttribute('required', true)
         } else {
           otherCategoryInput.setAttribute('hidden', true)
+          otherCategoryInput.removeAttribute('required')
         }
       }
     }
@@ -62,8 +64,10 @@ async function showMatchingBreweries (country) {
       addBeerForm.brewery.onchange = function () {
         if (this.value === 'Other') {
           otherBreweryInput.removeAttribute('hidden')
+          otherBreweryInput.setAttribute('required', true)
         } else {
           otherBreweryInput.setAttribute('hidden', true)
+          otherBreweryInput.removeAttribute('required')
         }
       }
     }

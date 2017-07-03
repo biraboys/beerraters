@@ -7,14 +7,23 @@ const Beer = require('../models/beer')
 router.get('/', function (req, res, next) {
   res.render('index', { session: req.session.user })
 })
-router.get('/change', async function (req, res, next) {
-  const beers = await Beer.find({})
-  beers.forEach(async beer => {
-    beer.consumes = []
-    await beer.save()
-  })
-  res.json(beers)
+
+router.get('/image', async function (req, res, next) {
+
+  res.end()
 })
+// router.get('/change', async function (req, res, next) {
+//   const beers = await Beer.find({})
+//   beers.forEach(async (beer, index) => {
+//     if (index > 5000 && index < 6000) {
+//     if (beer.category_id) {
+//       const category = await Category.findById(beer.category_id)
+//       await Beer.findByIdAndUpdate(beer._id, { $set: { style_id: category.style_id}})
+//     }
+//     }
+//   })
+//   res.end()
+// })
 
 // router.get('/categories', async function (req, res, next) {
 //   const categories = await Category.find({})

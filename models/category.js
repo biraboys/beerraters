@@ -6,7 +6,8 @@ const categorySchema = new Schema({
   style_id:
   {
     type: Schema.Types.ObjectId,
-    ref: 'style'
+    ref: 'style',
+    required: true
   }
 })
 

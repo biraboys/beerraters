@@ -1,15 +1,62 @@
+// Variables
 const beerIdElement = location.href
 const beerId = beerIdElement.split('/')[4]
 const consumeLink = document.getElementById('consume-link')
 const consumeIcon = document.getElementById('consume-icon')
+const ratingIcon = document.getElementById('rating-icon')
 const editLink = document.getElementById('edit-link')
 const ratingLink = document.getElementById('rating-link')
 const ratingModal = document.getElementById('rating-modal')
 const beerDescriptionForm = document.forms.beerDescription
 const cancelButton = document.getElementById('cancel-description-btn')
 const closeModal = document.getElementById('close-modal-btn')
+const closeEditModal = document.getElementById('close-edit-modal-btn')
+const editModal = document.getElementById('edit-modal')
 const ratingModalBody = document.getElementById('rating-modal-body')
 const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
+
+// Click bindings
+consumeLink.onclick = () => {
+  checkIconColor('consume')
+}
+
+editLink.onclick = () => {
+  editModal.classList.add('active')
+  getBeerStyles()
+  getBeerCountries()
+}
+
+closeEditModal.onclick = () => {
+  editModal.classList.remove('active')
+}
+
+cancelButton.onclick = () => {
+  editModal.classList.remove('active')
+}
+
+closeModal.onclick = () => {
+  ratingModal.classList.remove('active')
+}
+
+ratingLink.onclick = () => {
+  checkIconColor('rating')
+}
+
+// DOM functions
+function checkIconColor (icon) {
+  switch (icon) {
+    case 'consume':
+      if (consumeIcon.getAttribute('fill') === '#E8EDFA') {
+        postConsume()
+      }
+      break
+    case 'rating':
+      if (ratingIcon.getAttribute('fill') === '#E8EDFA') {
+        ratingModal.classList.add('active')
+      }
+      break
+  }
+}
 
 ratingSymbols.forEach((symbol, index) => {
   symbol.addEventListener('mouseover', () => {
@@ -37,6 +84,14 @@ function changeSymbolColor (symbol, position) {
   }
 }
 
+// Helper functions
+function sortByName (array) {
+  return array.sort((a, b) => {
+    return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
+  })
+}
+
+// DB functions
 async function postRating (index) {
   const rating = index + 1
   try {
@@ -50,46 +105,18 @@ async function postRating (index) {
       }),
       credentials: 'same-origin'
     })
-    const text = await response.text()
-    if (text === 'Already Rated') {
-      ratingModalBody.innerHTML = `
-      <div class="toast toast-error">
-        Error! You have already rated this beer.
-      </div>
-      `
-    } else {
-      ratingModalBody.innerHTML = `
+    ratingModalBody.innerHTML = `
       <div class="toast toast-success">
         Success! You rated this beer ${rating}.
       </div>
       `
-    }
     setTimeout(() => {
       ratingModal.classList.remove('active')
-    }, 1000)
+      location.reload(true)
+    }, 2000)
   } catch (err) {
     console.log(err)
   }
-}
-
-consumeLink.onclick = () => {
-  postConsume()
-}
-
-editLink.onclick = () => {
-  beerDescriptionForm.removeAttribute('hidden')
-}
-
-cancelButton.onclick = () => {
-  beerDescriptionForm.setAttribute('hidden', '')
-}
-
-ratingLink.onclick = () => {
-  ratingModal.classList.add('active')
-}
-
-closeModal.onclick = () => {
-  ratingModal.classList.remove('active')
 }
 
 async function postConsume () {
@@ -102,24 +129,42 @@ async function postConsume () {
     if (status === 500) {
       window.location.href = '/login'
     } else {
-      const text = await response.text()
-      console.log(text)
+      const beerName = document.getElementById('beer-name').innerHTML
+      ratingModal.classList.add('active')
+      ratingModalBody.innerHTML = `
+      <div class="toast toast-success">
+        Hope your ${beerName} tasted good! .
+      </div>
+      `
+      setTimeout(() => {
+        ratingModal.classList.remove('active')
+        location.reload(true)
+      }, 2000)
     }
   } catch (err) {
     console.log(err)
   }
 }
 
-async function checkIfConsume () {
+async function checkContributions () {
   try {
-    const response = await fetch(`/beers/${beerId}/consume`, {
+    const response = await fetch(`/beers/${beerId}/contributions`, {
       method: 'get',
       credentials: 'same-origin'
     })
-    const text = await response.text()
-    if (text === 'Consumed') {
-      consumeIcon.src = '/icons/consumes.svg'
+    const json = await response.json()
+    const userId = json.user
+    const contributions = json.beer
+    const ratingUsers = contributions.ratings.map(rating => {
+      return rating.user
+    })
+    if (contributions.consumes.indexOf(userId) !== -1) {
+      consumeIcon.setAttribute('fill', '#000000')
       consumeLink.setAttribute('data-tooltip', 'Consumed, nice!')
+    }
+    if (ratingUsers.indexOf(userId) !== -1) {
+      ratingIcon.setAttribute('fill', '#000000')
+      ratingLink.setAttribute('data-tooltip', 'Already rated')
     }
   } catch (err) {
     console.log(err)
@@ -200,5 +245,153 @@ async function avgRatingSymbols () {
   }
 }
 
-checkIfConsume()
+async function getBeerStyles () {
+  const currentStyle = document.getElementById('current-style') || ''
+  try {
+    const response = await fetch('/styles')
+    const styles = await response.json()
+    styles.forEach(style => {
+      beerDescriptionForm.style.innerHTML += `
+       <option value="${style._id}">${style.name}</option>
+      `
+    })
+    beerDescriptionForm.style.onchange = function () {
+      showMatchingCategories(this.value)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function showMatchingCategories (style) {
+  try {
+    const response = await fetch(`/styles/${style}/categories`)
+    const categories = await response.json()
+    if (categories.length > 0) {
+      const categoryInput = beerDescriptionForm.category
+      const otherCategoryInput = beerDescriptionForm.otherCategory
+      categoryInput.removeAttribute('disabled')
+      categoryInput.innerHTML = ''
+      categories.forEach(category => {
+        categoryInput.innerHTML +=
+          `
+          <option value="${category.name}">${category.name}</option>
+          `
+      })
+      categoryInput.innerHTML += `
+        <option value="Other">Other</option>
+        `
+      beerDescriptionForm.category.onchange = function () {
+        if (this.value === 'Other') {
+          otherCategoryInput.removeAttribute('hidden')
+          otherCategoryInput.setAttribute('required', true)
+        } else {
+          otherCategoryInput.setAttribute('hidden', true)
+          otherCategoryInput.removeAttribute('required')
+        }
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+async function getBeerCountries () {
+  const currentCountry = document.getElementById('current-country') || ''
+  try {
+    const response = await fetch('/countries')
+    const countries = await response.json()
+    sortByName(countries)
+    countries.forEach(country => {
+      beerDescriptionForm.country.innerHTML += `
+       <option value="${country._id}">${country.name}</option>
+      `
+    })
+    beerDescriptionForm.country.onchange = function () {
+      showMatchingBreweries(this.value)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function showMatchingBreweries (country) {
+  const breweriesInput = beerDescriptionForm.brewery
+  const otherBreweryInput = beerDescriptionForm.otherBrewery
+  breweriesInput.removeAttribute('disabled')
+  breweriesInput.innerHTML = ''
+  otherBreweryInput.setAttribute('hidden', true)
+  try {
+    const response = await fetch(`/countries/${country}/breweries`)
+    const breweries = await response.json()
+    if (breweries.length > 0) {
+      sortByName(breweries)
+      breweries.forEach(brewery => {
+        breweriesInput.innerHTML +=
+          `
+          <option value="${brewery.name}">${brewery.name}</option>
+          `
+      })
+      breweriesInput.innerHTML += `
+        <option value="Other">Other</option>
+        `
+      beerDescriptionForm.brewery.onchange = function () {
+        if (this.value === 'Other') {
+          otherBreweryInput.removeAttribute('hidden')
+          getCountryStates(country)
+        } else {
+          otherBreweryInput.setAttribute('hidden', true)
+        }
+      }
+    } else {
+      breweriesInput.innerHTML = `
+        <option value="Other">Other</option>
+        `
+      otherBreweryInput.removeAttribute('hidden')
+      getCountryStates(country)
+    }
+  } catch (err) {
+
+  }
+}
+
+async function getCountryStates (country) {
+  const statesInput = beerDescriptionForm.state
+  const otherStateInput = beerDescriptionForm.otherState
+  statesInput.removeAttribute('hidden')
+  statesInput.innerHTML = ''
+  otherStateInput.setAttribute('hidden', true)
+  try {
+    const response = await fetch(`/countries/${country}/states`)
+    const states = await response.json()
+    if (states.length > 0) {
+      sortByName(states)
+      states.forEach(state => {
+        statesInput.innerHTML +=
+          `
+          <option value="${state.name}">${state.name}</option>
+          `
+      })
+      statesInput.innerHTML += `
+        <option value="Other">Other</option>
+        `
+      beerDescriptionForm.brewery.onchange = function () {
+        if (this.value === 'Other') {
+          otherStateInput.removeAttribute('hidden')
+        } else {
+          otherStateInput.setAttribute('hidden', true)
+        }
+      }
+    } else {
+      statesInput.innerHTML = `
+        <option value="Other">Other</option>
+        `
+      otherStateInput.removeAttribute('hidden')
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// Init calls
+checkContributions()
 avgRatingSymbols()

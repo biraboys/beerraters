@@ -1,6 +1,5 @@
 <%- include header.ejs %>
 
-<div class="section hero">
  <div class="container">
    <div class="row">
          <% if (beer === undefined) { %>
@@ -59,20 +58,32 @@
                   <% if (session) { %>
                   <div class="u-pull-right mt-1">
                      <a class="tooltip tooltip-bottom" id="consume-link" data-tooltip="Drank it?">
-                      <img src="/icons/consumes-grey.svg" id="consume-icon" alt="Consume" /> 
+                      <svg id="consume-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                      </svg>
                     </a> 
                     <a class="tooltip tooltip-bottom" data-tooltip="Review">
-                      <img src="/icons/reviews-grey.svg" alt="Review" />
+                      <svg id="review-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0zm15.35 6.41l-1.77-1.77c-.2-.2-.51-.2-.71 0L6 11.53V14h2.47l6.88-6.88c.2-.19.2-.51 0-.71z" fill="none"/>
+                        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 14v-2.47l6.88-6.88c.2-.2.51-.2.71 0l1.77 1.77c.2.2.2.51 0 .71L8.47 14H6zm12 0h-7.5l2-2H18v2z"/>
+                      </svg>
                     </a>
                     <a class="tooltip tooltip-bottom" id="rating-link" data-tooltip="Rate">
-                      <img src="/icons/ratings-grey.svg" alt="Rating" />
+                      <svg id="rating-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
                     </a>
                     <a class="tooltip tooltip-bottom" id="edit-link" data-tooltip="Edit">
-                      <img src="/icons/edit-grey.svg" alt="Edit" />
+                      <svg id="edit-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
                     </a>  
                   </div>
                   <% } %>
-                  <div class="card-title"><%= beer.name %></div>
+                  <div class="card-title" id="beer-name"><%= beer.name %></div>
                   <div class="card-title" id="rating-container">
                   <% if (!beer.avg_rating) { %>
                     <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -128,12 +139,62 @@
                 </div>
            </div>
             <% if (session) { %>
-           <form method="POST" action="/beers/<%= beer._id %>/description" class="mt-1" name="beerDescription" hidden>
-             <label for="beer-description">Description</label>
-             <textarea class="u-full-width" placeholder="There ones was a beer..." id="beer-description" name="description"><%= beer.description %></textarea>
-             <input class="button-primary" type="submit" value="Submit">
-             <input type="button" value="Cancel" id="cancel-description-btn">
-           </form>  
+              <div class="modal modal" id="edit-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-container" id="edit-modal-body">
+                  <div class="modal-header">
+                    <button class="btn btn-clear u-pull-right" id="close-edit-modal-btn"></button>
+                  </div>
+                      <div class="modal-body">
+                        <div class="content">
+                          <form method="POST" action="/beers/<%= beer._id %>" class="mt-1" name="beerDescription">
+                            <label for="style">Style</label>
+                            <select class="u-full-width" id="style" name="style" required>
+                              <% if (style) { %>
+                              <option value="<%= style._id %>" selected><%= style.name %></option>                              
+                              <% } else { %> 
+                              <option value="" disabled selected>Select style</option>
+                              <% } %>
+                            </select>
+                            <label for="category">Category</label>
+                            <% if (category) { %>
+                            <select class="u-full-width" id="category" name="category">
+                            <option value="<%= category.name %>" selected><%= category.name %></option>
+                            <% } else { %>
+                            <select class="u-full-width" id="category" name="category" disabled>
+                            <% } %>
+                            </select>
+                            <input class="u-full-width" type="text" placeholder="New category" name="otherCategory" id="other-category" hidden>
+                            <label for="country">Country</label>
+                            <select class="u-full-width" id="country" name="country" required>
+                              <% if (country) { %>
+                              <option value="<%= country._id %>" selected><%= country.name %></option>                              
+                              <% } else { %> 
+                              <option value="" disabled selected>Selected country</option>
+                              <% } %>
+                            </select>
+                            <label for="brewery">Brewery</label>
+                            <% if (brewery) { %>
+                            <select class="u-full-width" id="brewery" name="brewery">
+                            <option value="<%= brewery.name %>" selected><%= brewery.name %></option>
+                            <% } else { %> 
+                            <select class="u-full-width" id="brewery" name="brewery" disabled>
+                            <% } %>                                                          
+                            </select>
+                            <input class="u-full-width" type="text" placeholder="New brewery" name="otherBrewery" id="other-brewery" hidden>
+                            <label for="state">State</label>                            
+                            <select class="u-full-width" id="state" name="state" hidden>
+                            </select>
+                            <input class="u-full-width" type="text" placeholder="New state" name="otherState" id="other-state" hidden>                            
+                            <label for="beer-description">Description</label>
+                            <textarea class="u-full-width" placeholder="There ones was a beer..." id="beer-description" name="description"><%= beer.description %></textarea>
+                            <input class="button-primary" type="submit" value="Submit">
+                            <input type="button" value="Cancel" id="cancel-description-btn">
+                          </form>
+                        </div>
+                      </div>
+                </div>
+              </div>  
            <% } %>  
      </div>
      <div class="one-third column">
@@ -169,7 +230,6 @@
       <% } %>  
    </div>
  </div>
-</div>
 
 <%- include footer.ejs %>
 
