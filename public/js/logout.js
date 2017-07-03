@@ -17,7 +17,7 @@ async function logoutSession () {
     window.location.href = '/'
     const text = await response.json()
     console.log(text.msg)
-  } else if (response.status === 5000) {
+  } else if (response.status === 500) {
     const text = await response.json()
     console.log(text.err)
   }

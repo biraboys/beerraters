@@ -1,0 +1,22 @@
+<%- include header.ejs %>
+
+<div class="container login-form">
+  <div class="row">
+    <div class="six columns">
+      <h4>Reset Password</h4>
+      <label for="password">New password:</label>
+      <input class="u-full-width" type="password" name="password" id="password" required autofocus>
+      <label for="confirmpass">Confirm password:</label>
+      <input class="u-full-width" type="password" name="confirmpass" id="confirmpass" required autofocus>
+      <input class="button-primary" type="submit" value="Update password" id="submitpass">
+      <p id="message"></p>
+    </div>
+  </div>
+</div>
+
+<%- include footer.ejs %>
+
+<script src="/js/reset.js"></script>
+
+</body>
+</html>

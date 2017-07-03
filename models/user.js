@@ -65,8 +65,11 @@ const userSchema = new Schema({
   consumes: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
   following: [],
   followers: [],
-  description: { type: String },
-  profileImg: { type: String }
+  description: { type: String, default: '' },
+  profileImg: { type: String, default: '' },
+  resetPasswordToken: { type: String, default: '' },
+  resetPasswordExpires: { type: Date, default: null },
+  isAdmin: { type: Boolean, default: false }
 })
 
 userSchema.static('findByName', function (userArr, userName) {
