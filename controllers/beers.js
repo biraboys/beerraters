@@ -157,9 +157,6 @@ module.exports = {
     res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
   },
   consumeBeer: async (req, res, next) => {
-    if (!req.session) {
-      res.redirect('/login')
-    } else {
       // const sessionId = req.sessionID
       // const sessions = await Session.find({})
       // const match = sessions.filter(mongo => {
@@ -169,45 +166,41 @@ module.exports = {
       // })
 
       // const userId = JSON.parse(match[0].session).user._id
-      const userId = req.session.user._id
-      const user = await User.findById(userId)
+    const userId = req.session.user._id
 
-      const { beerId } = req.params
-      const beer = await Beer.findById(beerId)
-      const beerConsumes = beer.consumes
+    const { beerId } = req.params
+    const beer = await Beer.findOne({_id: beerId}, 'consumes')
 
-      const exists = beerConsumes.indexOf(userId)
-
-      if (exists === -1) {
-        beer.consumes.push(user)
-        await beer.save()
-        await User.findOneAndUpdate({ _id: userId }, { $push: { consumes: beerId } })
-        res.redirect('/')
-      } else {
-        res.send('Already consumed, you thirsty bastard!')
-      }
+    if (beer.consumes.indexOf(userId) === -1) {
+      await Beer.findOneAndUpdate({ _id: beerId }, { $push: { consumes: userId } })
+      await User.findOneAndUpdate({ _id: userId }, { $push: { consumes: beerId } })
+      res.redirect(`/beers/${beerId}`)
+    } else {
+      res.send('Already consumed, you thirsty bastard!')
     }
   },
   addBeerRating: async (req, res, next) => {
     const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
     const rating = req.body.rating
     const userId = req.session.user._id
-    const user = await User.findById(userId)
-    const ratings = user.ratings
-    const exists = ratings.indexOf(beerId)
 
-    if (exists === -1) {
-      beer.ratings.push({rating: rating, user: user})
+    const beer = await Beer.findOne({_id: beerId}, 'ratings')
+
+    const userRatings = beer.ratings.map(rating => {
+      return rating.user
+    })
+
+    if (userRatings.indexOf(userId) === -1) {
+      await Beer.findByIdAndUpdate(beerId, { $push: { ratings: {rating: rating, user: userId} } })
+      await User.findByIdAndUpdate(userId, { $push: { ratings: beerId } })
       let avgRating = 0
       for (const obj of beer.ratings) {
+        console.log(obj.rating)
         avgRating += obj.rating
       }
-      avgRating = (avgRating / beer.ratings.length).toFixed(1)
-      beer.avg_rating = avgRating
-      await beer.save()
-      await User.findOneAndUpdate({ _id: userId }, { $push: { ratings: beerId } })
-      res.send(`Not Rated`)
+      avgRating = (avgRating / beer.ratings.length)
+      await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
+      res.redirect(`/beers/${beerId}`)
     } else {
       res.send('Already Rated')
     }
@@ -224,7 +217,7 @@ module.exports = {
   getContributions: async (req, res, next) => {
     const { beerId } = req.params
     const userId = req.session.user._id
-    const beer = await Beer.findById(beerId, 'consumes ratings reviews')
+    const beer = await Beer.findOne({_id: beerId}, 'consumes ratings images')
     res.status(200).json({beer: beer, user: userId})
   },
   addBeerImage: async (req, res, next) => {

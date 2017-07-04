@@ -2,7 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const brewerySchema = new Schema({
-  name: String,
+  name:
+  {
+    type: String,
+    required: true
+  },
   state_id:
   {
     type: Schema.Types.ObjectId,
@@ -11,7 +15,8 @@ const brewerySchema = new Schema({
   country_id:
   {
     type: Schema.Types.ObjectId,
-    ref: 'country'
+    ref: 'country',
+    required: true
   }
 })
 

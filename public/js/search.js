@@ -113,7 +113,12 @@ async function getBeerInfo (beer) {
 }
 
 function generateBeerCard (beerObj) {
-  let categoryName, styleName, styleLink, breweryName, breweryLink, countryFlag, countryCode, countryLink, rating
+  let categoryName, styleName, styleLink, breweryName, breweryLink, countryFlag, countryCode, countryLink, rating, beerImage
+  if (beerObj.beer.images.length !== 0) {
+    beerImage = `/uploads/beers/${beerObj.beer._id}/${beerObj.beer.images[0].name}`
+  } else {
+    beerImage = `/images/beer_placeholder.svg`
+  }
   if (beerObj.category) {
     categoryName = beerObj.category.name
     styleName = beerObj.style.name
@@ -231,7 +236,7 @@ function generateBeerCard (beerObj) {
         <div class="row">
           <div class="one-third column">
             <div class="card-image">
-              <img class="u-max-full-width" src="/images/search-beer.jpg">
+              <img class="u-max-full-width" src="${beerImage}">
             </div>
           </div>
           <div class="two-thirds column">

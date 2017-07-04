@@ -2,12 +2,36 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const countrySchema = new Schema({
-  name: String,
-  code: String,
-  flag: String,
-  lat: String,
-  long: String,
-  zoom: String,
+  name:
+  {
+    type: String,
+    required: true
+  },
+  code:
+  {
+    type: String,
+    required: true
+  },
+  flag:
+  {
+    type: String,
+    required: true
+  },
+  lat:
+  {
+    type: String,
+    required: true
+  },
+  long:
+  {
+    type: String,
+    required: true
+  },
+  zoom:
+  {
+    type: String,
+    required: true
+  },
   breweries: [
     {
       type: Schema.Types.ObjectId,

@@ -5,6 +5,7 @@ const consumeLink = document.getElementById('consume-link')
 const imageLink = document.getElementById('image-link')
 const consumeIcon = document.getElementById('consume-icon')
 const ratingIcon = document.getElementById('rating-icon')
+const imageIcon = document.getElementById('image-icon')
 const editLink = document.getElementById('edit-link')
 const ratingLink = document.getElementById('rating-link')
 const ratingModal = document.getElementById('rating-modal')
@@ -26,7 +27,7 @@ consumeLink.onclick = () => {
 }
 
 imageLink.onclick = () => {
-  imageModal.classList.add('active')
+  checkIconColor('image')
 }
 
 editLink.onclick = () => {
@@ -72,6 +73,10 @@ function checkIconColor (icon) {
         ratingModal.classList.add('active')
       }
       break
+    case 'image':
+      if (imageIcon.getAttribute('fill') === '#E8EDFA') {
+        imageModal.classList.add('active')
+      }
   }
 }
 
@@ -175,9 +180,16 @@ async function checkContributions () {
     const ratingUsers = contributions.ratings.map(rating => {
       return rating.user
     })
+    const userImages = contributions.images.map(image => {
+      return image.user_id
+    })
     if (contributions.consumes.indexOf(userId) !== -1) {
       consumeIcon.setAttribute('fill', '#000000')
       consumeLink.setAttribute('data-tooltip', 'Consumed, nice!')
+    }
+    if (userImages.indexOf(userId) !== -1) {
+      imageIcon.setAttribute('fill', '#000000')
+      imageLink.setAttribute('data-tooltip', 'Posted photo')
     }
     if (ratingUsers.indexOf(userId) !== -1) {
       ratingIcon.setAttribute('fill', '#000000')

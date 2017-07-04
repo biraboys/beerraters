@@ -226,7 +226,9 @@
                     <div class="row">
                   <% user.images.forEach(function(image) { %>
                   <div class="three columns">
-                    <img src="/uploads/beers/<%= image.beer_id %>/<%= image.name %>" class="u-max-full-width">
+                    <a href="/beers/<%= image.beer_id %>">
+                      <img src="/uploads/beers/<%= image.beer_id %>/<%= image.name %>" class="u-max-full-width">
+                    </a>
                   </div>
                   <% }); %>
                 </div>
