@@ -6,6 +6,8 @@ const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
 const Jimp = require('jimp')
+const sizeOf = require('image-size')
+const fs = require('fs')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -229,14 +231,21 @@ module.exports = {
     res.status(200).json({beer: beer, user: userId})
   },
   addBeerImage: async (req, res, next) => {
-    Jimp.read(`public/uploads/beers/${req.files[0].filename}`).then(function (lenna) {
-      lenna.resize(Jimp.AUTO, 250)
-         .quality(60)
-         .write(`public/uploads/beers/${req.files[0].filename}.png`)
-      console.log('It worked')
-    }).catch(function (err) {
-      console.error(err)
-    })
+    const {beerId} = req.params
+    const path = `public/uploads/beers`
+    const name = `${req.files[0].filename}`
+    const dimensions = sizeOf(`${path}/${name}`)
+    const image = await Jimp.read(`${path}/${name}`)
+    if (dimensions.width > dimensions.height) {
+      image.resize(Jimp.AUTO, 250)
+    } else {
+      image.resize(250, Jimp.AUTO)
+    }
+    image.quality(60)
+    image.write(`${path}/${beerId}/${name}.png`)
+    await Beer.findByIdAndUpdate(beerId, { $push: { images: { img_name: name, user: req.session.user } } })
+    const filePath = `${path}/${name}`
+    fs.unlinkSync(filePath)
     res.json(req.files)
   }
 }

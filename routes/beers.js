@@ -1,7 +1,9 @@
 const router = require('express-promise-router')()
 const BeersController = require('../controllers/beers')
 const multer = require('multer')
-const upload = multer({ dest: 'public/uploads/beers' })
+const upload = multer({ dest: `public/uploads/beers/` })
+const Beer = require('../models/beer')
+
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
 //     cb(null, '/public/uploads/beers')
@@ -38,5 +40,11 @@ router.route('/:beerId/addImage')
 
 router.route('/fetch/:beerId')
   .get(BeersController.getBeer)
+
+router.get('/:beerId/images', async function (req, res, next) {
+  const {beerId} = req.params
+  const beer = await Beer.findById(beerId)
+  res.json(beer.images)
+})
 
 module.exports = router

@@ -45,6 +45,12 @@ const beerSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'user'
     }
+  ],
+  images: [
+    {
+      img_name: String,
+      user: { type: Schema.Types.ObjectId, ref: 'user' }
+    }
   ]
 })
 

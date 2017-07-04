@@ -41,17 +41,13 @@
             <div class="card">
               <div class="card-image">
                 <div class="row">
-                  <div class="six image-column">
-                    <img class="u-max-full-width" src="/images/beer-1.png">
-                  </div>
+                  <% if (beer.images) { %>
+                  <% beer.images.forEach(function(image) { %>
                   <div class="three image-column">
-                    <img class="u-max-full-width" src="/images/beer-2.jpg">
-                    <img class="u-max-full-width" src="/images/beer-3.jpg">
+                    <img class="u-max-full-width" src="/uploads/beers/<%= image.img_name %>">
                   </div>
-                    <div class="three image-column">
-                    <img class="u-max-full-width" src="/images/beer-4.jpg">
-                    <img class="u-max-full-width" src="/images/beer-5.jpg">
-                  </div>
+                  <% }); %>
+                  <% } %>
                 </div>
               </div>
                 <div class="card-header">

@@ -398,14 +398,21 @@ async function getCountryStates (country) {
   }
 }
 
+// async function getImages () {
+//   try {
+//     const response = await fetch(`/beers/${beerId}/images`, {
+//       credentials: 'same-origin'
+//     })
+//     const json = await response.json()
+//     const img = document.createElement('img')
+//     const path = json[0].img_name
+//     img.src = `/images/uploads/beers/${path}`
+//     console.log(img)
+//   } catch (err) {
+
+//   }
+// }
 // Init calls
 checkContributions()
 avgRatingSymbols()
-
-// async function postImage () {
-//   fetch(`/beers/${beerId}/addImage`, {
-//     method: 'post',
-//     credentials: 'same-origin',
-//     body: new FormData(document.forms.addImage)
-//   })
-// }
+// getImages()
