@@ -9,6 +9,8 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
+require('dotenv').config()
+
 const app = express()
 
 // Middleware
@@ -42,6 +44,8 @@ const register = require('./routes/register')
 const facts = require('./routes/facts')
 const logout = require('./routes/logout')
 const styles = require('./routes/styles')
+const forgot = require('./routes/forgot')
+const reset = require('./routes/reset')
 
 app.use('/', index)
 app.use('/users', users)
@@ -54,6 +58,8 @@ app.use('/countries', countries)
 app.use('/facts', facts)
 app.use('/logout', logout)
 app.use('/styles', styles)
+app.use('/forgot', forgot)
+app.use('/reset', reset)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))

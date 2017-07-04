@@ -3,9 +3,16 @@
 <div class="container register-form">
   <div class="six columns">
     <h4>Edit profile</h4>
-    <form method="post" enctype="multipart/form-data">
-			<label for="username">Set profile image:</label>
-      <input class="u-full-width" type="file" name="profileImage">
+    <!-- enctype="multipart/form-data"-->
+    <form method="post">
+			<!--<label for="username">Set profile image:</label>-->
+      <!--<input class="u-full-width" type="file" name="profileImage">-->
+      <label for="currentpass">Current password:</label>
+      <input type="password" name="currentpass">
+      <label for="newpass">New password</label>
+      <input type="password" name="newpass">
+      <label for="confirmpass">Confirm new password:</label>
+      <input type="password" name="confirmpass">
 			<label for="description">Write something about yourself:</label>
       <textarea class="u-full-width" name="description"></textarea>
       <input class="button-primary" type="submit" value="Save">

@@ -5,3 +5,5 @@ mongodb-login.js
 .DS_Store
 npm-debug.log
 uploads
+.env
+

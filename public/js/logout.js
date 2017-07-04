@@ -14,10 +14,10 @@ async function logoutSession () {
   })
 
   if (response.status === 200) {
-    window.location.href = '/'
     const text = await response.json()
     console.log(text.msg)
-  } else if (response.status === 5000) {
+    window.location.href = '/'
+  } else if (response.status === 500) {
     const text = await response.json()
     console.log(text.err)
   }

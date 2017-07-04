@@ -1,0 +1,20 @@
+<%- include header.ejs %>
+
+<div class="container login-form">
+  <div class="row">
+    <div class="six columns">
+      <h4>Forgot password</h4>
+      <label for="email">Enter your email:</label>
+      <input class="u-full-width" type="email" name="email" id="email" required autofocus>
+      <input class="button-primary" type="submit" value="Reset password" id="forgot">
+      <p id="message"></p>
+    </div>
+  </div>
+</div>
+
+<%- include footer.ejs %>
+
+<script src="/js/forgot.js"></script>
+
+</body>
+</html>
