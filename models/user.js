@@ -65,6 +65,12 @@ const userSchema = new Schema({
   consumes: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
   following: [],
   followers: [],
+  images: [
+    {
+      name: String,
+      beer_id: { type: Schema.Types.ObjectId, ref: 'beer' }
+    }
+  ],
   description: { type: String },
   profileImg: { type: String }
 })

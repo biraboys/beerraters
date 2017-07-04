@@ -2,6 +2,7 @@
 const beerIdElement = location.href
 const beerId = beerIdElement.split('/')[4]
 const consumeLink = document.getElementById('consume-link')
+const imageLink = document.getElementById('image-link')
 const consumeIcon = document.getElementById('consume-icon')
 const ratingIcon = document.getElementById('rating-icon')
 const editLink = document.getElementById('edit-link')
@@ -11,14 +12,21 @@ const beerDescriptionForm = document.forms.beerDescription
 const cancelButton = document.getElementById('cancel-description-btn')
 const closeModal = document.getElementById('close-modal-btn')
 const closeEditModal = document.getElementById('close-edit-modal-btn')
+const closeImageModal = document.getElementById('close-image-modal-btn')
 const editModal = document.getElementById('edit-modal')
+const imageModal = document.getElementById('image-modal')
 const ratingModalBody = document.getElementById('rating-modal-body')
 const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
 const stateGroup = document.getElementById('state-group')
+const submitImgBtn = document.getElementById('submit-img-btn')
 
 // Click bindings
 consumeLink.onclick = () => {
   checkIconColor('consume')
+}
+
+imageLink.onclick = () => {
+  imageModal.classList.add('active')
 }
 
 editLink.onclick = () => {
@@ -29,6 +37,14 @@ editLink.onclick = () => {
 
 closeEditModal.onclick = () => {
   editModal.classList.remove('active')
+}
+
+submitImgBtn.onclick = () => {
+  imageModal.classList.remove('active')
+}
+
+closeImageModal.onclick = () => {
+  imageModal.classList.remove('active')
 }
 
 cancelButton.onclick = () => {

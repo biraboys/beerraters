@@ -44,7 +44,7 @@
                   <% if (beer.images) { %>
                   <% beer.images.forEach(function(image) { %>
                   <div class="three image-column">
-                    <img class="u-max-full-width" src="/uploads/beers/<%= image.img_name %>">
+                    <img class="u-max-full-width" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
                   </div>
                   <% }); %>
                   <% } %>
@@ -141,7 +141,7 @@
                 </div>
            </div>
             <% if (session) { %>
-              <div class="modal modal" id="edit-modal">
+              <div class="modal" id="edit-modal">
                 <div class="modal-overlay"></div>
                 <div class="modal-container" id="edit-modal-body">
                   <div class="modal-header">
@@ -199,6 +199,22 @@
                         </div>
                       </div>
                 </div>
+              </div>
+              <div class="modal" id="image-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-container" id="image-modal-body">
+                  <div class="modal-header">
+                    <button class="btn btn-clear u-pull-right" id="close-image-modal-btn"></button>
+                  </div>
+                      <div class="modal-body">
+                        <div class="content">
+                          <form action="/beers/<%= beer._id %>/addImage" method="post" enctype="multipart/form-data">
+                            Select a file: <input type="file" name="img">
+                            <input id="submit-img-btn" type="submit" name="submit" value="submit">
+                          </form>
+                        </div>
+                      </div>
+                </div>
               </div>  
            <% } %>  
      </div>
@@ -236,10 +252,6 @@
    </div>
  </div>
 </section>
-<form action="/beers/<%= beer._id %>/addImage" method="post" enctype="multipart/form-data">
-  Select a file: <input type="file" name="img">
-  <input type="submit" name="submit" value="submit">
-</form>
 <%- include footer.ejs %>
 
 <script src="/js/beer.js"></script>

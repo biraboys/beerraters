@@ -1,5 +1,5 @@
 <%- include header.ejs %>
-
+<section class="main-section">
  <div class="container">
    <div class="row flex-column flex-center">
          <% if (user === undefined) { %>
@@ -216,67 +216,23 @@
               </div>
                   </div>
                 </div>
+                 <% if (user.images) { %>
                 <div class="accordion-item">
                   <input type="radio" id="accordion-3" name="accordion-radio" hidden="">
                   <label class="accordion-header hand" for="accordion-3">
                     Gallery
                   </label>
-                  <div class="accordion-body h-40">
-           <div class="carousel">
-                <input type="radio" id="slide-1" name="carousel-radio" hidden="" class="carousel-locator" checked="">
-                <input type="radio" id="slide-2" name="carousel-radio" hidden="" class="carousel-locator">
-                <input type="radio" id="slide-3" name="carousel-radio" hidden="" class="carousel-locator">
-                <input type="radio" id="slide-4" name="carousel-radio" hidden="" class="carousel-locator">
-                <div class="carousel-container">
-                  <figure class="carousel-item">
-                    <label class="item-prev btn btn-action btn-lg" for="slide-4">
-                      <i class="icon icon-arrow-left"></i>
-                    </label>
-                    <label class="item-next btn btn-action btn-lg" for="slide-2">
-                      <i class="icon icon-arrow-right"></i>
-                    </label>
-                    <img src="/images/beer-1.png" class="img-full rounded" alt="macOS Yosemite Wallpaper">
-                  </figure>
-
-                  <figure class="carousel-item">
-                    <label class="item-prev btn btn-action btn-lg" for="slide-1">
-                      <i class="icon icon-arrow-left"></i>
-                    </label>
-                    <label class="item-next btn btn-action btn-lg" for="slide-3">
-                      <i class="icon icon-arrow-right"></i>
-                    </label>
-                    <img src="/images/beer-2.jpg" class="img-full rounded" alt="macOS Yosemite Wallpaper">
-                  </figure>
-
-                  <figure class="carousel-item">
-                    <label class="item-prev btn btn-action btn-lg" for="slide-2">
-                      <i class="icon icon-arrow-left"></i>
-                    </label>
-                    <label class="item-next btn btn-action btn-lg" for="slide-4">
-                      <i class="icon icon-arrow-right"></i>
-                    </label>
-                    <img src="/images/beer-3.jpg" class="img-full rounded" alt="macOS Yosemite Wallpaper">
-                  </figure>
-                  
-                  <figure class="carousel-item">
-                    <label class="item-prev btn btn-action btn-lg" for="slide-3">
-                      <i class="icon icon-arrow-left"></i>
-                    </label>
-                    <label class="item-next btn btn-action btn-lg" for="slide-1">
-                      <i class="icon icon-arrow-right"></i>
-                    </label>
-                    <img src="/images/beer-4.jpg" class="img-full rounded" alt="macOS Yosemite Wallpaper">
-                  </figure>
-                </div>
-                <div class="carousel-nav">
-                  <label class="nav-item text-hide hand" for="slide-1">1</label>
-                  <label class="nav-item text-hide hand" for="slide-2">2</label>
-                  <label class="nav-item text-hide hand" for="slide-3">3</label>
-                  <label class="nav-item text-hide hand" for="slide-4">4</label>
+                  <div class="accordion-body">
+                    <div class="row">
+                  <% user.images.forEach(function(image) { %>
+                  <div class="three columns">
+                    <img src="/uploads/beers/<%= image.beer_id %>/<%= image.name %>" class="u-max-full-width">
+                  </div>
+                  <% }); %>
                 </div>
               </div>
-                  </div>
                 </div>
+                <% } %>
               </div>
           </div>
  </div>
@@ -285,6 +241,7 @@
       <% } %>  
    </div>
  </div>
+ </section> 
 
 <%- include footer.ejs %>
 <script src="/js/user.js"></script>
