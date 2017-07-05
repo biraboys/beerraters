@@ -181,25 +181,25 @@ module.exports = {
   },
   addBeerRating: async (req, res, next) => {
     const { beerId } = req.params
-    const rating = req.body.rating
     const userId = req.session.user._id
+    const user = await User.findOne({_id: userId}, 'ratings')
 
-    const beer = await Beer.findOne({_id: beerId}, 'ratings')
+    if (user.ratings.indexOf(beerId) === -1) {
+      const rating = req.body.rating
 
-    const userRatings = beer.ratings.map(rating => {
-      return rating.user
-    })
-
-    if (userRatings.indexOf(userId) === -1) {
       await Beer.findByIdAndUpdate(beerId, { $push: { ratings: {rating: rating, user: userId} } })
       await User.findByIdAndUpdate(userId, { $push: { ratings: beerId } })
-      let avgRating = 0
-      for (const obj of beer.ratings) {
-        console.log(obj.rating)
-        avgRating += obj.rating
-      }
-      avgRating = (avgRating / beer.ratings.length)
+
+      const beer = await Beer.findOne({_id: beerId}, 'ratings')
+
+      const beerRatings = beer.ratings.map(obj => {
+        return obj.rating
+      })
+      const ratingSum = beerRatings.reduce((a, b) => a + b, 0)
+      const avgRating = ratingSum / beerRatings.length
+
       await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
+
       res.redirect(`/beers/${beerId}`)
     } else {
       res.send('Already Rated')
