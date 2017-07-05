@@ -7,6 +7,9 @@ router.route('/')
 router.route('/:countryId')
   .get(CountriesController.getCountry)
 
+router.route('/:countryId/json')
+  .get(CountriesController.getCountryJson)
+
 router.route('/:countryId/breweries')
   .get(CountriesController.getBreweries)
 

@@ -66,47 +66,17 @@
    <div class="row">
             <div class="card">
               <div class="accordion">
+                <% if (user.reviews.length > 0) { %>
                 <div class="accordion-item">
                   <input type="radio" id="accordion-1" name="accordion-radio" hidden="" checked="">
                   <label class="accordion-header hand" for="accordion-1">
                     Reviews
                   </label>
-                  <div class="accordion-body">
-                 <div class="tile">
-                <div class="tile-icon">
-                  <figure class="avatar avatar-lg">
-                    <img src="/images/beer-1.png">
-                  </figure>
-                </div>
-                <div class="tile-content">
-                  <p class="tile-title">Heineken</p>
-                  <p class="tile-subtitle">Earth's Mightiest Heroes joined forces to take on threats that were too big for any one hero to tackle...</p>
+                  <div class="accordion-body" id="reviews-container">
                 </div>
               </div>
-                    <div class="tile">
-                <div class="tile-icon">
-                  <figure class="avatar avatar-lg">
-                    <img src="/images/beer-2.jpg">
-                  </figure>
-                </div>
-                <div class="tile-content">
-                  <p class="tile-title">Pilsner Urquell</p>
-                  <p class="tile-subtitle">Earth's Mightiest Heroes joined forces to take on threats that were too big for any one hero to tackle...</p>
-                </div>
-              </div>
-                    <div class="tile">
-                <div class="tile-icon">
-                  <figure class="avatar avatar-lg">
-                    <img src="/images/beer-3.jpg">
-                  </figure>
-                </div>
-                <div class="tile-content">
-                  <p class="tile-title">Omnipollo</p>
-                  <p class="tile-subtitle">Earth's Mightiest Heroes joined forces to take on threats that were too big for any one hero to tackle...</p>
-                </div>
-              </div>
-                  </div>
-                </div>
+              <% } %>
+                            
                 <div class="accordion-item">
                   <input type="radio" id="accordion-2" name="accordion-radio" hidden="">
                   <label class="accordion-header hand" for="accordion-2">

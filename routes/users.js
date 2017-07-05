@@ -8,6 +8,9 @@ router.route('/')
 router.route('/:userId')
   .get(UsersController.getUser)
 
+router.route('/:userId/json')
+  .get(UsersController.getUserJson)
+
 router.route('/:userId/follow')
   .post(UsersController.followUser)
 

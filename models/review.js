@@ -2,8 +2,18 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const reviewSchema = new Schema({
-  title: {
+  user_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true
+  },
+  place: {
     type: String,
+    required: true
+  },
+  country_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'country',
     required: true
   },
   body: {
@@ -15,13 +25,10 @@ const reviewSchema = new Schema({
     default: Date.now
   },
   edited: Date,
-  beer: {
+  beer_id: {
     type: Schema.Types.ObjectId,
-    ref: 'beer'
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'user'
+    ref: 'beer',
+    required: true
   }
 })
 

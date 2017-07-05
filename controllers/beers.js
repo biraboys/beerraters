@@ -2,6 +2,7 @@ const Beer = require('../models/beer')
 const Category = require('../models/category')
 const Brewery = require('../models/brewery')
 const Country = require('../models/country')
+const Review = require('../models/review')
 const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
@@ -85,10 +86,10 @@ module.exports = {
     }
     res.json({ beer: beer, brewery: brewery, country: country, style: style, category: category, rating: rating })
   },
-  getUserReviews: async (req, res, next) => {
-    const { userId } = req.params
-    const userReviews = await User.findById(userId).populate('reviews')
-    res.status(200).render('reviews', userReviews)
+  getReviews: async (req, res, next) => {
+    const { beerId } = req.params
+    const beerReviews = await Beer.findOne({ _id: beerId }, 'reviews')
+    res.status(200).json(beerReviews)
   },
   updateBeer: async (req, res, next) => {
     const { beerId } = req.params
@@ -157,15 +158,6 @@ module.exports = {
     res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
   },
   consumeBeer: async (req, res, next) => {
-      // const sessionId = req.sessionID
-      // const sessions = await Session.find({})
-      // const match = sessions.filter(mongo => {
-      //   if (mongo._id === sessionId) {
-      //     return mongo
-      //   }
-      // })
-
-      // const userId = JSON.parse(match[0].session).user._id
     const userId = req.session.user._id
 
     const { beerId } = req.params
@@ -197,6 +189,7 @@ module.exports = {
       })
       const ratingSum = beerRatings.reduce((a, b) => a + b, 0)
       const avgRating = ratingSum / beerRatings.length
+      avgRating.toFixed(1)
 
       await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
 
@@ -217,7 +210,7 @@ module.exports = {
   getContributions: async (req, res, next) => {
     const { beerId } = req.params
     const userId = req.session.user._id
-    const beer = await Beer.findOne({_id: beerId}, 'consumes ratings images')
+    const beer = await Beer.findOne({_id: beerId}, 'consumes ratings images reviews')
     res.status(200).json({beer: beer, user: userId})
   },
   addBeerImage: async (req, res, next) => {
@@ -238,5 +231,27 @@ module.exports = {
     const filePath = `${path}/${name}`
     fs.unlinkSync(filePath)
     res.redirect(`/beers/${beerId}`)
+  },
+  addBeerReview: async (req, res, next) => {
+    const userId = req.session.user._id
+    const { beerId } = req.params
+    const beer = await Beer.findOne({_id: beerId}, 'reviews')
+
+    if (beer.reviews.indexOf(userId) === -1) {
+      const newReview = new Review({
+        user_id: userId,
+        place: req.body.place,
+        country_id: req.body.location,
+        body: req.body.review,
+        beer_id: beerId
+      })
+      await newReview.save()
+      const review = await Review.findOne({beer_id: beerId, user_id: userId}, '_id')
+      await Beer.findOneAndUpdate({ _id: beerId }, { $push: { reviews: { review_id: review._id, user_id: userId } } })
+      await User.findOneAndUpdate({ _id: userId }, { $push: { reviews: review._id } })
+      res.redirect(`/beers/${beerId}`)
+    } else {
+      res.send('Already reviwed')
+    }
   }
 }

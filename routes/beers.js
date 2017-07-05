@@ -28,6 +28,10 @@ router.route('/:beerId')
 router.route('/:beerId/consume')
   .post(BeersController.consumeBeer)
 
+router.route('/:beerId/review')
+  .get(BeersController.getReviews)
+  .post(BeersController.addBeerReview)
+
 router.route('/:beerId/rating')
   .get(BeersController.getAverageRating)
   .post(BeersController.addBeerRating)

@@ -6,12 +6,17 @@ const imageLink = document.getElementById('image-link')
 const consumeIcon = document.getElementById('consume-icon')
 const ratingIcon = document.getElementById('rating-icon')
 const imageIcon = document.getElementById('image-icon')
+const reviewIcon = document.getElementById('review-icon')
 const editLink = document.getElementById('edit-link')
 const ratingLink = document.getElementById('rating-link')
+const reviewLink = document.getElementById('review-link')
 const ratingModal = document.getElementById('rating-modal')
+const reviewModal = document.getElementById('review-modal')
 const beerDescriptionForm = document.forms.beerDescription
+const reviewForm = document.forms.reviewForm
 const cancelButton = document.getElementById('cancel-description-btn')
 const closeModal = document.getElementById('close-modal-btn')
+const closeReviewModal = document.getElementById('close-review-modal-btn')
 const closeEditModal = document.getElementById('close-edit-modal-btn')
 const closeImageModal = document.getElementById('close-image-modal-btn')
 const editModal = document.getElementById('edit-modal')
@@ -30,6 +35,10 @@ imageLink.onclick = () => {
   checkIconColor('image')
 }
 
+reviewLink.onclick = () => {
+  checkIconColor('review')
+}
+
 editLink.onclick = () => {
   editModal.classList.add('active')
   getBeerStyles()
@@ -38,6 +47,10 @@ editLink.onclick = () => {
 
 closeEditModal.onclick = () => {
   editModal.classList.remove('active')
+}
+
+closeReviewModal.onclick = () => {
+  reviewModal.classList.remove('active')
 }
 
 submitImgBtn.onclick = () => {
@@ -77,6 +90,13 @@ function checkIconColor (icon) {
       if (imageIcon.getAttribute('fill') === '#E8EDFA') {
         imageModal.classList.add('active')
       }
+      break
+    case 'review':
+      if (reviewIcon.getAttribute('fill') === '#E8EDFA') {
+        reviewModal.classList.add('active')
+        getCountries()
+      }
+      break
   }
 }
 
@@ -183,9 +203,16 @@ async function checkContributions () {
     const userImages = contributions.images.map(image => {
       return image.user_id
     })
+    const userReviews = contributions.reviews.map(review => {
+      return review.user_id
+    })
     if (contributions.consumes.indexOf(userId) !== -1) {
       consumeIcon.setAttribute('fill', '#000000')
       consumeLink.setAttribute('data-tooltip', 'Consumed, nice!')
+    }
+    if (userReviews.indexOf(userId) !== -1) {
+      reviewIcon.setAttribute('fill', '#000000')
+      reviewLink.setAttribute('data-tooltip', 'Reviewed')
     }
     if (userImages.indexOf(userId) !== -1) {
       imageIcon.setAttribute('fill', '#000000')
@@ -426,6 +453,65 @@ async function getCountryStates (country) {
   }
 }
 
+async function getCountries () {
+  try {
+    const response = await fetch('/countries')
+    const countries = await response.json()
+    sortByName(countries)
+    countries.forEach(country => {
+      reviewForm.location.innerHTML += `
+       <option value="${country._id}">${country.name}</option>
+      `
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function checkReviews () {
+  const reviewsContainer = document.getElementById('reviews-container')
+  try {
+    const response = await fetch(`/beers/${beerId}/review`, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    const reviewsObj = await response.json()
+    console.log(reviewsObj)
+    if (reviewsObj.reviews.length > 0) {
+      reviewsObj.reviews.forEach(async obj => {
+        const [userResponse, reviewResponse] = await Promise.all([
+          fetch(`/users/${obj.user_id}/json`),
+          fetch(`/reviews/${obj.review_id}`)
+        ])
+        const [user, review] = await Promise.all([
+          userResponse.json(),
+          reviewResponse.json()
+        ])
+        const countryResponse = await fetch(`/countries/${review.country_id}/json`)
+        const country = await countryResponse.json()
+        reviewsContainer.innerHTML += `
+            <div class="card mt-1">
+               <div class="tile">
+                <div class="tile-icon">
+                  <figure class="avatar avatar-lg">
+                    <img src="/images/user-placeholder.png">
+                  </figure>
+                </div>
+                <div class="tile-content mt-1">
+                  <p class="tile-title"><a href="/users/${user._id}"><strong>${user.displayName}</strong></a></p>
+                  <p class="tile-subtitle"> ${review.place} in <a class="card-link" href="/countries/${country._id}">${country.name}</a></p>
+                  <p>${review.body}</p>
+                </div>
+              </div>
+            </div>
+        `
+      })
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // async function getImages () {
 //   try {
 //     const response = await fetch(`/beers/${beerId}/images`, {
@@ -443,4 +529,5 @@ async function getCountryStates (country) {
 // Init calls
 checkContributions()
 avgRatingSymbols()
+checkReviews()
 // getImages()

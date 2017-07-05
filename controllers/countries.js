@@ -7,6 +7,11 @@ module.exports = {
     const countries = await Country.find({}, 'name')
     res.status(201).json(countries)
   },
+  getCountryJson: async (req, res, next) => {
+    const { countryId } = req.params
+    const country = await Country.findOne({_id: countryId}, 'name')
+    res.status(200).json(country)
+  },
   getCountry: async (req, res, next) => {
     const { countryId } = req.params
     const country = await Country.findById(countryId)

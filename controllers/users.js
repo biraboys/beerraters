@@ -22,6 +22,11 @@ const controller = module.exports = {
     res.status(200).json(users)
     // res.status(200).render('users', {users})
   },
+  getUserJson: async (req, res, next) => {
+    const { userId } = req.params
+    const user = await User.findOne({_id: userId}, 'profileImg displayName')
+    res.status(200).json(user)
+  },
   newUser: async (req, res, next) => {
     const [username, name, email, password] = [req.body.username, req.body.name, req.body.email, req.body.password]
     const newUser = new User({
@@ -75,7 +80,8 @@ const controller = module.exports = {
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
-    const userReviews = await User.findById(userId).populate('reviews')
+    const userReviews = await User.findOne({_id: userId}, 'reviews').populate('reviews')
+
     // res.status(200).render('reviews', userReviews)
     res.status(200).json(userReviews)
   },

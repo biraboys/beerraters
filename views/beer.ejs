@@ -63,7 +63,7 @@
                         <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
                       </svg>
                     </a> 
-                    <a class="tooltip tooltip-bottom" data-tooltip="Review">
+                    <a class="tooltip tooltip-bottom" id="review-link" data-tooltip="Review">
                       <svg id="review-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 0h24v24H0zm15.35 6.41l-1.77-1.77c-.2-.2-.51-.2-.71 0L6 11.53V14h2.47l6.88-6.88c.2-.19.2-.51 0-.71z" fill="none"/>
                         <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 14v-2.47l6.88-6.88c.2-.2.51-.2.71 0l1.77 1.77c.2.2.2.51 0 .71L8.47 14H6zm12 0h-7.5l2-2H18v2z"/>
@@ -219,7 +219,30 @@
                         </div>
                       </div>
                 </div>
-              </div>  
+              </div>
+               <div class="modal" id="review-modal">
+                <div class="modal-overlay"></div>
+                <div class="modal-container" id="review-modal-body">
+                  <div class="modal-header">
+                    <button class="btn btn-clear u-pull-right" id="close-review-modal-btn"></button>
+                  </div>
+                      <div class="modal-body">
+                        <div class="content">
+                          <form action="/beers/<%= beer._id %>/review" method="post" name="reviewForm">
+                            <label for="place">Where did you drink this beer?</label>
+                            <input class="u-full-width" type="text" placeholder="On a balcony, at a beach, in a restaurant..." name="place" id="place" required>
+                            <label for="location">Location</label>
+                            <select class="u-full-width" id="location" name="location" required>
+                              <option value="" disabled selected>Selected country</option>
+                            </select>
+                            <label for="review">Review</label>
+                            <textarea class="u-full-width" placeholder="Fire away!" id="review" name="review"></textarea>
+                            <input type="submit" name="submit" value="submit">
+                          </form>
+                        </div>
+                      </div>
+                </div>
+              </div>    
            <% } %>  
      </div>
      <div class="one-third column">
@@ -252,9 +275,13 @@
        </div>
      </div>   
    </div>
-      <% } %>  
-   </div>
- </div>
+      <% } %>
+      <% if (beer.reviews) { %>  
+<div class="row mt-10" id="reviews-container">
+</div>
+<% } %>  
+
+ </div> <!-- main container -->
 </section>
 <%- include footer.ejs %>
 
