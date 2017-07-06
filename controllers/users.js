@@ -75,7 +75,6 @@ const controller = module.exports = {
       res.status(200).render('user', { followers: amount, follower: follow, user, session: req.session.user, id: profileId })
     } else {
       const amount = user.followers.length
-      console.log(amount)
       res.status(200).render('user', { followers: amount, follower: false, user, session: req.session.user, id: profileId })
     }
   },

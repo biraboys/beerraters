@@ -65,4 +65,40 @@ async function getUserReviews () {
   }
 }
 
+async function getUserRanking () {
+  const rankingField = document.getElementById('ranking-field')
+  try {
+    const response = await fetch('/users')
+    const users = await response.json()
+    users.forEach(user => {
+      user.contributions = user.reviews.length + user.ratings.length + user.consumes.length + user.images.length
+    })
+    users.sort((a, b) => {
+      return a.contributions > b.contributions ? -1 : a.contributions <  b.contributions ? 1 : 0
+    })
+    const newUserArr = users.map(user => {
+      return user._id
+    })
+    const ranking = (newUserArr.indexOf(userId) + 1)
+    rankingField.innerHTML = ranking
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 getUserReviews()
+getUserRanking()
+
+//     const users = await User.find({}, 'country_id reviews ratings images consumes ')
+//     users.filter(userObj => {
+//       if (userObj.country_id === user.country_id) {
+//         return userObj
+//       }
+//     })
+//     users.sort((a, b) => {
+//       return ((a.reviews.length + a.ratings.length + a.consumes.length + a.images.length) < (b.reviews.length + b.ratings.length + b.consumes.length + b.images.length)) ? -1 : ((a.reviews.length + a.ratings.length + a.consumes.length + a.images.length) > (b.reviews.length + b.ratings.length + b.consumes.length + b.images.length)) ? 1 : 0
+//     })
+//     const position = users.findIndex(userObj => {
+//       return userObj._id === user._id
+//     })
+//     console.log(position)
