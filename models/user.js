@@ -58,7 +58,8 @@ const userSchema = new Schema({
   username: { type: String, required: true, lowercase: true, unique: true, validate: usernameValidator },
   name: { type: String, required: true, validate: nameValidator },
   email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
-  password: { type: String, required: true, validate: passwordValidator },
+  password: { type: String, required: true, validate: passwordValidator, select: false },
+  country_id: { type: Schema.Types.ObjectId, ref: 'country', required: true },
   registered: { type: Date, default: Date.now },
   reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
   ratings: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
@@ -79,8 +80,9 @@ const userSchema = new Schema({
 })
 
 userSchema.static('findByName', function (userArr, userName) {
+  userName.toLowerCase()
   userArr = userArr.filter(user => {
-    if (user.username.includes(userName) || user.name.includes(userName)) return user
+    if (user.username.toLowerCase().includes(userName) || user.name.toLowerCase().includes(userName)) return user
   })
   return userArr
 })

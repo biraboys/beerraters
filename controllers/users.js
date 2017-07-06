@@ -28,14 +28,15 @@ const controller = module.exports = {
     res.status(200).json(user)
   },
   newUser: async (req, res, next) => {
-    const [username, name, email, password] = [req.body.username, req.body.name, req.body.email, req.body.password]
+    const [username, name, email, password, country] = [req.body.username, req.body.name, req.body.email, req.body.password, req.body.country]
     const newUser = new User({
       username: username,
       name: name,
       email: email,
       password: password,
       following: [],
-      followers: []
+      followers: [],
+      country_id: country
     })
     await newUser.save(err => {
       if (err) {
@@ -104,9 +105,9 @@ const controller = module.exports = {
   },
   findUser: async (req, res, next) => {
     const userName = req.query.q
-    const allusers = await User.find({})
+    const allusers = await User.find({}).populate('country_id')
     const users = await User.findByName(allusers, userName)
-    res.status(200).render('users', { users: users, userName: userName, session: req.session.user })
+    res.status(200).json(users)
   },
   loginUser: async (req, res, next) => {
     const [username, password] = [req.body.username, req.body.password]

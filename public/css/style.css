@@ -28,6 +28,11 @@ a {
   width: 100%;
 }
 
+.u-max-half-width {
+  max-width: 50%;
+  box-sizing: border-box;
+}
+
 .add-rating-symbol {
   cursor: pointer
 }
@@ -242,6 +247,10 @@ a {
 
 .ml-0 {
   margin-left: 0;
+}
+
+.mt-2-5 {
+  margin-top: 2.5rem;
 }
 
 .mt--15 {

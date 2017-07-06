@@ -12,6 +12,9 @@
       <input class="u-full-width" type="text" name="email" id="email" value="<%= errorMessage.email %>" required >
       <label for="password">Password:</label>
       <input class="u-full-width" type="password" name="password" id="password" required title="Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35.">
+      <select class="u-full-width" id="country" name="country" required>
+        <option value="" disabled selected>Select country</option>
+      </select>
       <input class="button-primary" type="submit" value="Register" id="register-btn">
       <% if (!errorMessage.success) { %>
         <p class="error-register-new-user"><%= errorMessage.message %></p>
@@ -22,5 +25,6 @@
 
 <%- include footer.ejs %>
 
+<script src="/js/register.js"></script>
 </body>
 </html>

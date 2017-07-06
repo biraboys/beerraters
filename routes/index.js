@@ -1,20 +1,17 @@
 const router = require('express-promise-router')()
-const fetch = require('node-fetch')
-const Category = require('../models/category')
-const Country = require('../models/country')
-const Style = require('../models/style')
-const Brewery = require('../models/brewery')
-const Beer = require('../models/beer')
-const State = require('../models/state')
+// const fetch = require('node-fetch')
+// const Category = require('../models/category')
+// const Country = require('../models/country')
+// const Style = require('../models/style')
+// const Brewery = require('../models/brewery')
+// const Beer = require('../models/beer')
+// const State = require('../models/state')
+// const User = require('../models/user')
 
 router.get('/', function (req, res, next) {
   res.render('index', { session: req.session.user })
 })
 
-router.get('/breweries', async function (req, res, next) {
-  const breweries = await State.find({})
-  res.json(breweries)
-})
 // router.get('/change', async function (req, res, next) {
 //   const beers = await Beer.find({})
 //   beers.forEach(async (beer, index) => {
