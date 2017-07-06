@@ -14,7 +14,16 @@ router.route('/users')
 router.route('/breweries')
   .get(BreweriesController.findBrewery)
 
-router.route('/beers')
-  .get(BeersController.findBeer)
+router.route('/beers/name')
+  .get(BeersController.findBeerByName)
+
+router.route('/beers/style')
+  .get(BeersController.findBeerByStyle)
+
+router.route('/beers/brewery')
+  .get(BeersController.findBeerByBrewery)
+
+router.route('/beers/country')
+  .get(BeersController.findBeerByCountry)
 
 module.exports = router

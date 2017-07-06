@@ -11,10 +11,18 @@
 				  <div id="error-container"></div>
 				<label for="word">Find</label>
 				<div class="row">
-					<a class="button button-primary search-btn" id="beer-search-btn">Beer</a>
-					<a class="button search-btn" id="brewery-search-btn">Brewery</a>
-					<a class="button search-btn" id="user-search-btn">User</a>
+					<div class="one-half column">
+					  <a class="button button-primary search-btn" id="beer-search-btn">Beer</a>
+					  <a class="button search-btn" id="user-search-btn">User</a>
+					</div>
+					<div class="one-half column">
+					</div>					
 				</div>
+				<label for="options">Filter by</label>
+				<input class="filter-option" type="radio" name="name" value="name" checked>Name
+				<input class="filter-option" type="radio" name="style" value="style">Style
+				<input class="filter-option" type="radio" name="brewery" value="brewery">Brewery
+				<input class="filter-option" type="radio" name="country" value="country">Country			
 			</form>
 			  <div id="loading-container"></div>
 			  <div id="results-container"></div>

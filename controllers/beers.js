@@ -131,13 +131,29 @@ module.exports = {
 
     res.status(200).redirect(`/beers/${beerId}`)
   },
-  findBeer: async (req, res, next) => {
+  findBeerByName: async (req, res, next) => {
     const beerName = req.query.q
     const allBeers = await Beer.find({})
     const beers = await Beer.findByName(allBeers, beerName)
     res.status(200).json(beers)
-    // res.status(200).render('beers', { beers: beers, beerName: beerName, session: req.session.user })
-    // res.status(200).json(filtered)
+  },
+  findBeerByStyle: async (req, res, next) => {
+    const beerName = req.query.q
+    const allBeers = await Beer.find({}).populate('style_id')
+    const beers = await Beer.findByStyle(allBeers, beerName)
+    res.status(200).json(beers)
+  },
+  findBeerByBrewery: async (req, res, next) => {
+    const beerName = req.query.q
+    const allBeers = await Beer.find({}).populate('brewery_id')
+    const beers = await Beer.findByBrewery(allBeers, beerName)
+    res.status(200).json(beers)
+  },
+  findBeerByCountry: async (req, res, next) => {
+    const beerName = req.query.q
+    const allBeers = await Beer.find({}).populate('country_id')
+    const beers = await Beer.findByCountry(allBeers, beerName)
+    res.status(200).json(beers)
   },
   renderBeer: async (req, res, next) => {
     const { beerId } = req.params

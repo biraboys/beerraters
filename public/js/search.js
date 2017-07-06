@@ -1,13 +1,13 @@
 // Globals
 const searchForm = document.forms.searchForm
 const beerSearch = document.getElementById('beer-search-btn')
-const brewerySearch = document.getElementById('brewery-search-btn')
 const userSearch = document.getElementById('user-search-btn')
 const searchButtonArr = Array.from(document.getElementsByClassName('search-btn'))
 const beerContainer = document.getElementById('beer-container')
 const resultsContainer = document.getElementById('results-container')
 const loadingContainer = document.getElementById('loading-container')
 const pageNavigation = document.getElementById('page-navigation')
+const filterOptions = Array.from(document.getElementsByClassName('filter-option'))
 
 // Storage check
 if (sessionStorage.getItem('beerCards') !== null) {
@@ -30,18 +30,29 @@ function activeButtons (current) {
   })
 }
 
+function setChecked (active) {
+  active.checked = true
+  filterOptions.forEach(option => {
+    if (option !== active) {
+      option.checked = false
+    }
+  })
+}
+
 beerSearch.addEventListener('click', function () {
   searchForm.action = '/search/beers'
   activeButtons(this)
 })
 
-brewerySearch.addEventListener('click', function () {
-  searchForm.action = '/search/breweries'
-  activeButtons(this)
-})
 userSearch.addEventListener('click', function () {
   searchForm.action = '/search/users'
   activeButtons(this)
+})
+
+filterOptions.forEach(option => {
+  option.addEventListener('click', function () {
+    setChecked(this)
+  })
 })
 
 searchForm.q.addEventListener('keyup', function () {
@@ -57,16 +68,23 @@ searchForm.addEventListener('submit', function (e) {
   const beerName = searchForm.q.value
   e.preventDefault()
   if (beerName.length >= 3) {
-    getInputValues(beerName)
+    let filter
+    filterOptions.forEach(option => {
+      if (option.checked === true) {
+        filter = option.value
+      }
+    })
+    getInputValues(beerName, filter)
   }
 })
 
 // DB calls
-async function getInputValues (beerName) {
+async function getInputValues (beerName, filter) {
   loadingContainer.classList.add('loading')
   try {
-    const response = await fetch(`/search/beers/?q=${beerName}`)
+    const response = await fetch(`/search/beers/${filter}/?q=${beerName}`)
     const beers = await response.json()
+    console.log(beers)
     if (beers.length < 1) {
       clearContent(beerContainer)
       displayErrorMessage(beerName)
