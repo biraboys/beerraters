@@ -42,7 +42,6 @@ function setChecked (active) {
 
 beerSearch.addEventListener('click', function () {
   filterOptionsContainer.style.display = 'block'
-  searchForm.action = '/search/beers'
   searchForm.q.select()
   searchForm.q.focus()
   activeButtons(this)
@@ -50,7 +49,6 @@ beerSearch.addEventListener('click', function () {
 
 userSearch.addEventListener('click', function () {
   filterOptionsContainer.style.display = 'none'
-  searchForm.action = '/search/users'
   searchForm.q.select()
   searchForm.q.focus()
   activeButtons(this)
@@ -74,10 +72,18 @@ searchForm.q.addEventListener('keyup', function () {
 })
 
 searchForm.addEventListener('submit', function (e) {
-  const beerName = searchForm.q.value
   e.preventDefault()
+  searchButtonArr.forEach(button => {
+    if (button.classList.contains('button-primary')) {
+      checkSubmitValue(button.name)
+    }
+  })
+})
+
+function checkSubmitValue (searchItem) {
+  const beerName = searchForm.q.value
   if (beerName.length >= 3) {
-    if (searchForm.action === '/search/beers') {
+    if (searchItem === 'beer') {
       let filter
       filterOptions.forEach(option => {
         if (option.checked === true) {
@@ -89,7 +95,7 @@ searchForm.addEventListener('submit', function (e) {
       searchUser(beerName)
     }
   }
-})
+}
 
 // DB calls
 async function getInputValues (beerName, filter) {

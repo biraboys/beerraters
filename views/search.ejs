@@ -3,7 +3,7 @@
 	<div class="container">
 		<div class="row flex-center flex-column">
 	   <div class="two-thirds column">
-			<form action="/search/beers" method="GET" role="search" name="searchForm">
+			<form role="search" name="searchForm">
 				<div class="row">
 					<label for="word">What are you after?</label>
 					<input required class="u-full-width" type="text" placeholder="Search..." name="q" pattern=".{2,}" title="Search must contain at least 3 characters">
@@ -12,8 +12,8 @@
 				<label for="word">Find</label>
 				<div class="row">
 					<div class="one-half column">
-					  <a class="button button-primary search-btn" id="beer-search-btn">Beer</a>
-					  <a class="button search-btn" id="user-search-btn">User</a>
+					  <a class="button button-primary search-btn" name="beer" id="beer-search-btn">Beer</a>
+					  <a class="button search-btn" name="user" id="user-search-btn">User</a>
 					</div>
 					<div class="one-half column">
 					</div>					
