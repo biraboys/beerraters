@@ -74,7 +74,7 @@ async function getUserRanking () {
       user.contributions = user.reviews.length + user.ratings.length + user.consumes.length + user.images.length
     })
     users.sort((a, b) => {
-      return a.contributions > b.contributions ? -1 : a.contributions <  b.contributions ? 1 : 0
+      return a.contributions > b.contributions ? -1 : a.contributions < b.contributions ? 1 : 0
     })
     const newUserArr = users.map(user => {
       return user._id

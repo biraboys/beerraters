@@ -1,17 +1,57 @@
 <%- include header.ejs %>
 <section class="main-section">
  <div class="container">
-   <div class="row">
+   <div class="row ta-center">
          <% if (country === undefined) { %>
           <div class="one-half column">
             <h1 class="hero-heading">Sorry could not found country</h1>
           </div>
             <% } else { %>
-          <div class="one-half column">
              <h1 class="hero-heading"><%= country.name %> <img class="u-max-full-width" src="/images/flags/<%= country.flag %>"></h1>
-             <h1 class="hero-heading"><%= country.code %></h1>
-             <p>Breweries: <%=breweries %></p>
-             <p>Beers: <%=beers %></p>
+             <div class="row flex-center ta-center">
+               <div class="three columns">
+                  <div class="card">
+                    <div class="card-body">
+                      <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+                        <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/>
+                        </svg>
+                        <figcaption>Beers</figcaption>
+                        <figcaption><%= beers %></figcaption>
+                      </figure>
+                    </div>
+                  </div>
+               </div>
+              <div class="three columns">
+                <div class="card">
+                  <div class="card-body">
+                    <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+                      <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+                      </svg>
+                      <figcaption>Breweries</figcaption>
+                      <figcaption><%= breweries %></figcaption>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+              <div class="three columns">
+                <div class="card">
+                  <div class="card-body">
+                    <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+                      <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
+                      <figcaption>Users</figcaption>
+                      <figcaption><%= users %></figcaption>
+                    </figure>
+                  </div>
+                </div>
+               </div>
+             </div>
           </div>
       <% } %>  
    </div>

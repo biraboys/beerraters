@@ -1,6 +1,7 @@
 const Country = require('../models/country')
 const Brewery = require('../models/brewery')
 const State = require('../models/state')
+const User = require('../models/user')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -17,7 +18,8 @@ module.exports = {
     const country = await Country.findById(countryId)
     const breweriesAmount = country.breweries.length
     const beersAmount = country.beers.length
-    res.status(200).render('country', { country: country, breweries: breweriesAmount, beers: beersAmount, session: req.session.user })
+    const users = await User.find({country_id: countryId})
+    res.status(200).render('country', { country: country, breweries: breweriesAmount, beers: beersAmount, users: users.length, session: req.session.user })
   },
   getBreweries: async (req, res, next) => {
     const {countryId} = req.params
