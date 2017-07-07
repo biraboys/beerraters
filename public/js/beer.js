@@ -487,6 +487,12 @@ async function checkReviews () {
           userResponse.json(),
           reviewResponse.json()
         ])
+        let profileImg
+        if (user.profileImg.length > 0) { 
+          profileImg = `/uploads/users/${user._id}/${user.profileImg}`
+        } else {
+          profileImg = '/images/user-placeholder.png'
+        }
         const countryResponse = await fetch(`/countries/${review.country_id}/json`)
         const country = await countryResponse.json()
         reviewsContainer.innerHTML += `
@@ -494,7 +500,7 @@ async function checkReviews () {
                <div class="tile">
                 <div class="tile-icon">
                   <figure class="avatar avatar-lg">
-                    <img src="/images/user-placeholder.png">
+                    <img src="${profileImg}">
                   </figure>
                 </div>
                 <div class="tile-content mt-1">

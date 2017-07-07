@@ -1,20 +1,12 @@
 const User = require('../models/user')
 const Review = require('../models/review')
-const multer = require('multer')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const async = require('async')
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '/public/uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + '.jpg')
-  }
-})
-const upload = multer({ storage: storage }).single('profileImage')
 const bcrypt = require('bcryptjs')
-const mongoose = require('mongoose')
+const Jimp = require('jimp')
+const sizeOf = require('image-size')
+const fs = require('fs')
 
 const controller = module.exports = {
   index: async (req, res, next) => {
@@ -24,7 +16,7 @@ const controller = module.exports = {
   },
   getUserJson: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findOne({_id: userId}, 'profileImg displayName')
+    const user = await User.findOne({_id: userId}, 'profileImg displayName name description')
     res.status(200).json(user)
   },
   newUser: async (req, res, next) => {
@@ -36,7 +28,8 @@ const controller = module.exports = {
       password: password,
       following: [],
       followers: [],
-      country_id: country
+      country_id: country,
+      displaName: name || username
     })
     await newUser.save(err => {
       if (err) {
@@ -110,7 +103,7 @@ const controller = module.exports = {
   },
   loginUser: async (req, res, next) => {
     const [username, password] = [req.body.username, req.body.password]
-    const user = await User.findOne({ username: username.toLowerCase() })
+    const user = await User.findOne({ username: username.toLowerCase() }, 'password')
     if (user) {
       if (bcrypt.compareSync(password, user.password)) {
         const userSession = { _id: user._id }
@@ -124,12 +117,31 @@ const controller = module.exports = {
     }
   },
   editProfile: async (req, res, next) => {
-    const [description, currentpass, password, confirmpass] = [req.body.description, req.body.currentpass, req.body.newpass, req.body.confirmpass]
-    if (description) {
-      await User.update({_id: req.session.user._id}, { description: description })
+    const user = await User.findOne({ _id: req.session.user._id }, 'profileImg')
+    const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
+
+    const currentpass = req.body.currentpass
+    const password = req.body.newpass
+    const confirmpass = req.body.confirmpass
+    let link = user.profileImg
+
+    if (req.files.length > 0) {
+      const profileImg = `${req.files[0].filename}`
+      const path = `public/uploads/users`
+      const image = await Jimp.read(`${path}/${profileImg}`)
+      image.resize(128, 128)
+      image.quality(60)
+      image.write(`${path}/${req.session.user._id}/${profileImg}.png`)
+      const filePath = `${path}/${profileImg}`
+      fs.unlinkSync(filePath)
+      if (user.profileImg.length > 0) {
+        fs.unlinkSync(`${path}/${req.session.user._id}/${user.profileImg}`)
+      }
+      link = `${profileImg}.png`
     }
+
     if (currentpass && password && confirmpass) {
-      const user = await User.findById(req.session.user._id)
+      const user = await User.findOne({ _id: req.session.user._id }, 'password')
       if (bcrypt.compareSync(currentpass, user.password)) {
         if (password === confirmpass) {
           user.password = password
@@ -146,21 +158,23 @@ const controller = module.exports = {
       }
     }
 
-    // if (req.file) {
-    //   upload(req, res, err => {
-    //     if (err) {
-    //       console.log(err)
-    //     }
-    //     res.status(200)
-    //   })
-    //   await user.update({ profileImg: req.file.filename })
-    // }
+    await User.findOneAndUpdate({ _id: req.session.user._id }, {
+      $set: {
+        name: name,
+        displayName: displayName,
+        description: description,
+        profileImg: link
+      }
+    })
+
   },
   followUser: async (req, res, next) => {
     if (req.session.user) {
       const { userId } = req.params
-      const user = await User.findById(userId)
-      const session = await User.findById(req.session.user._id)
+      const [user, session] = await Promise.all([
+        User.findById(userId),
+        User.findById(req.session.user._id)
+      ])
       const following = session.following
       if (following.indexOf(user._id) > -1) {
         // User is already following this user
@@ -263,7 +277,7 @@ const controller = module.exports = {
   resetPassword: async(req, res, next) => {
     async.waterfall([
       done => {
-        User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
+        User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, 'password', (err, user) => {
           if (!user) {
             res.json({ message: 'Password reset token is invalid or has expired.' })
           }

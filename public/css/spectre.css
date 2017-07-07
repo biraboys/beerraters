@@ -529,3 +529,8 @@
 .toast a.active {
   opacity: .75;
 }
+
+/* Images */
+.card .card-image:last-child .circle {
+  border-radius: 50%;
+}

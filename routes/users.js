@@ -1,5 +1,7 @@
 const router = require('express-promise-router')()
 const UsersController = require('../controllers/users')
+const multer = require('multer')
+const upload = multer({ dest: `public/uploads/users/` })
 
 router.route('/')
   .get(UsersController.index)
@@ -19,7 +21,7 @@ router.route('/:userId/reviews')
   .post(UsersController.newUserReview)
 
 router.route('/:userId/edit')
-  .post(UsersController.editProfile)
+  .post(upload.any(), UsersController.editProfile)
 
 router.get('/:userId/edit', function (req, res) {
   if (req.session.user._id === req.params.userId) {

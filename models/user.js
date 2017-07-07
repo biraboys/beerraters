@@ -12,7 +12,7 @@ const nameValidator = [
   }),
   validate({
     validator: 'isLength',
-    arguments: [3, 20],
+    arguments: [2, 20],
     message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
   })
 ]
@@ -56,7 +56,7 @@ const passwordValidator = [
 
 const userSchema = new Schema({
   username: { type: String, required: true, lowercase: true, unique: true, validate: usernameValidator },
-  name: { type: String, required: true, validate: nameValidator },
+  name: { type: String, validate: nameValidator },
   email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
   password: { type: String, required: true, validate: passwordValidator, select: false },
   country_id: { type: Schema.Types.ObjectId, ref: 'country', required: true },
@@ -76,7 +76,8 @@ const userSchema = new Schema({
   profileImg: { type: String, default: '' },
   resetPasswordToken: { type: String, default: '' },
   resetPasswordExpires: { type: Date, default: null },
-  isAdmin: { type: Boolean, default: false }
+  displayName: { type: String },
+  role: { type: String, default: 'User' }
 })
 
 userSchema.static('findByName', function (userArr, userName) {

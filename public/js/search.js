@@ -340,13 +340,19 @@ function generateBeerCard (beerObj) {
 }
 
 function generateUserCard (user) {
+  let profileImg
+  if (user.profileImg.length > 0) {
+    profileImg = `/uploads/users/${user._id}/${user.profileImg}`
+  } else {
+    profileImg = '/images/user-placeholder.png'
+  }
   const userCard = `
     <div class="row" style="padding: 0.5rem;">
       <div class="card">
         <div class="row">
           <div class="one-third column">
             <div class="card-image flex-center mt-2-5">
-              <img class="u-max-half-width" src="/images/user-placeholder.png">
+              <img class="u-max-half-width circle" src="${profileImg}">
             </div>
           </div>
           <div class="two-thirds column">
