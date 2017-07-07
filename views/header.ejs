@@ -34,9 +34,13 @@
   <nav>
     <ul class="main-nav">
       <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Top List</a></li>      
+      <li class="nav-item"><a class="nav-link" href="/toplist">Top List</a></li>      
       <li class="nav-item"><a class="nav-link" href="/facts">Beer Facts</a></li>                 
+      <li class="nav-item">
+        <form name="searchForm">
+          <input required class="u-full-width mt-1" type="text" placeholder="Search..." name="q" pattern=".{2,}" title="Search must contain at least 3 characters">
+        </form>
+      </li>
       <div class="u-pull-right">
         <% if (!session) { %>
           <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>

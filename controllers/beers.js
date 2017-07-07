@@ -15,6 +15,11 @@ module.exports = {
     const beers = await Beer.find({})
     res.status(200).json(beers)
   },
+  getTopRatedBeers: async (req, res, next) => {
+    const beers = await Beer.find({}).populate('style_id country_id', 'name code flag')
+    const rated = await Beer.findTopRated(beers)
+    res.status(200).json(rated)
+  },
   addBeer: async (req, res, next) => {
     if (!req.session.user) {
       res.redirect('/login')

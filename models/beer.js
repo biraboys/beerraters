@@ -92,6 +92,15 @@ beerSchema.static('findByCountry', function (beerArr, beerName) {
   return beerArr
 })
 
+beerSchema.static('findTopRated', function (beers) {
+  beers = beers.filter(beer => {
+    if (beer.avg_rating) {
+      return beer
+    }
+  })
+  return beers
+})
+
 const Beer = mongoose.model('beer', beerSchema)
 
 module.exports = Beer

@@ -47,6 +47,7 @@ const styles = require('./routes/styles')
 const forgot = require('./routes/forgot')
 const reset = require('./routes/reset')
 const reviews = require('./routes/reviews')
+const toplist = require('./routes/toplist')
 
 app.use('/', index)
 app.use('/users', users)
@@ -62,6 +63,7 @@ app.use('/styles', styles)
 app.use('/forgot', forgot)
 app.use('/reset', reset)
 app.use('/reviews', reviews)
+app.use('/toplist', toplist)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))
