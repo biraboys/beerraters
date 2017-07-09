@@ -168,9 +168,12 @@ async function searchUser (userName) {
       clearContent(beerContainer)
       clearContent(pageNavigation)
       users.forEach(async (user, index) => {
-        if (index <= 50) {
-          const userCard = generateUserCard(user)
-          await displayBeer(userCard)
+        if (user.active) {
+          console.log(user.active)
+          if (index <= 50) {
+            const userCard = generateUserCard(user)
+            await displayBeer(userCard)
+          }
         }
       })
       if (users.length > 50) {
@@ -346,39 +349,41 @@ function generateUserCard (user) {
   } else {
     profileImg = '/images/user-placeholder.png'
   }
-  const userCard = `
-    <div class="row" style="padding: 0.5rem;">
-      <div class="card">
-        <div class="row">
-          <div class="one-third column">
-            <div class="card-image flex-center mt-2-5">
-              <img class="u-max-half-width circle" src="${profileImg}">
+  if (user.active) {
+    const userCard = `
+      <div class="row" style="padding: 0.5rem;">
+        <div class="card">
+          <div class="row">
+            <div class="one-third column">
+              <div class="card-image flex-center mt-2-5">
+                <img class="u-max-half-width circle" src="${profileImg}">
+              </div>
             </div>
-          </div>
-          <div class="two-thirds column">
-            <div class="card-header">
-              <div class="card-title">
-                <a class="card-link" href="/users/${user._id}">@${user.username}</a>
-                <img src="/images/flags/${user.country_id.flag}">
-              </div> 
-              <div class="card-title">                  
-                <a class="card-link" href="/users/${user._id}">${user.name}</a>
-              </div>
-              <div class="card-subtitle">
-                Followers: ${user.followers.length}
-                Following: ${user.following.length}
-              </div>
-              <div class="card-subtitle">
-                Consumes: ${user.consumes.length}
-                Ratings: ${user.ratings.length}
-                Reviews: ${user.reviews.length}
+            <div class="two-thirds column">
+              <div class="card-header">
+                <div class="card-title">
+                  <a class="card-link" href="/users/${user._id}">@${user.username}</a>
+                  <img src="/images/flags/${user.country_id.flag}">
+                </div> 
+                <div class="card-title">                  
+                  <a class="card-link" href="/users/${user._id}">${user.name}</a>
+                </div>
+                <div class="card-subtitle">
+                  Followers: ${user.followers.length}
+                  Following: ${user.following.length}
+                </div>
+                <div class="card-subtitle">
+                  Consumes: ${user.consumes.length}
+                  Ratings: ${user.ratings.length}
+                  Reviews: ${user.reviews.length}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      `
-  return userCard
+        `
+    return userCard
+  }
 }
 
 function displayBeer (beerCard) {

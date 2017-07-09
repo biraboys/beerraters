@@ -534,3 +534,8 @@
 .card .card-image:last-child .circle {
   border-radius: 50%;
 }
+
+.avatar.avatar-xl {
+  height: 10rem;
+  width: 10rem;
+}

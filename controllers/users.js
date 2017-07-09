@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer')
 const async = require('async')
 const bcrypt = require('bcryptjs')
 const Jimp = require('jimp')
-const sizeOf = require('image-size')
 const fs = require('fs')
 
 const controller = module.exports = {
@@ -21,6 +20,10 @@ const controller = module.exports = {
   },
   newUser: async (req, res, next) => {
     const [username, name, email, password, country] = [req.body.username, req.body.name, req.body.email, req.body.password, req.body.country]
+    const buff = crypto.randomBytes(20)
+    const token = buff.toString('hex')
+    const tokenExpires = Date.now() + 3600000
+
     const newUser = new User({
       username: username,
       name: name,
@@ -29,8 +32,11 @@ const controller = module.exports = {
       following: [],
       followers: [],
       country_id: country,
-      displaName: name || username
+      displaName: username,
+      registrationToken: token,
+      registrationTokenExpires: tokenExpires
     })
+
     await newUser.save(err => {
       if (err) {
         const errorMessage = { success: false, username: username, name: name, email: email }
@@ -53,7 +59,31 @@ const controller = module.exports = {
         }
         res.status(400).render('register', { errorMessage, session: req.session.user })
       } else {
-        res.redirect(`/register/${username}`)
+        const stmpTransport = nodemailer.createTransport({
+          service: 'Gmail',
+          auth: {
+            user: process.env.GMAIL_U,
+            pass: process.env.GMAIL_PASS
+          }
+        })
+        const mailOptions = {
+          to: newUser.email,
+          from: 'noreply@beerraters.com',
+          subject: 'Please confirm account - Beerraters.com',
+          text:
+          `Hi ${newUser.username},\n
+          Thanks for registrating at Beerraters, we hope you will enjoy your stay!\n
+          Before you can start using our services you will need to confirm your account.\n
+          Please confirm your account by clicking the following link:\n http://${req.headers.host}/activation/${token}\n
+          You have until ${newUser.registrationTokenExpires.toLocaleString('en-US')} to activate your account.`
+        }
+        stmpTransport.sendMail(mailOptions, err => {
+          if (err) { console.log(err) }
+          console.log('mail sent')
+          // res.json({ success: true, message: `An email has been sent to ${newUser.email} with further instructions.` })
+        })
+        res.json({ message: `User created! An email has been sent to ${newUser.email}, follow the instructions to complete the registration.` })
+        // res.redirect(`/register/${username}`)
       }
     })
   },
@@ -103,14 +133,18 @@ const controller = module.exports = {
   },
   loginUser: async (req, res, next) => {
     const [username, password] = [req.body.username, req.body.password]
-    const user = await User.findOne({ username: username.toLowerCase() }, 'password')
+    const user = await User.findOne({ username: username.toLowerCase() }, 'password active')
     if (user) {
-      if (bcrypt.compareSync(password, user.password)) {
-        const userSession = { _id: user._id }
-        req.session.user = userSession
-        res.redirect(req.session.previousPage)
+      if (user.active) {
+        if (bcrypt.compareSync(password, user.password)) {
+          const userSession = { _id: user._id }
+          req.session.user = userSession
+          res.redirect(req.session.previousPage)
+        } else {
+          res.status(400).render('login', { success: false, message: 'Password does not match.', username: username, session: req.session.user })
+        }
       } else {
-        res.status(400).render('login', { success: false, message: 'Password does not match.', username: username, session: req.session.user })
+        res.json({ message: 'Please verify your account before logging in.' })
       }
     } else {
       res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}`, username: username, session: req.session.user })
@@ -166,7 +200,6 @@ const controller = module.exports = {
         profileImg: link
       }
     })
-
   },
   followUser: async (req, res, next) => {
     if (req.session.user) {
@@ -265,12 +298,27 @@ const controller = module.exports = {
       res.redirect('/forgot')
     })
   },
-  findToken: async(req, res) => {
+  getResetToken: async(req, res) => {
     await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
       if (!user) {
         res.json({ message: 'Password reset token invalid or has expired.' })
       } else {
         res.render('reset', { token: req.params.token, session: req.session.user })
+      }
+    })
+  },
+  getConfirmationToken: async(req, res) => {
+    await User.findOne({ registrationToken: req.params.token, registrationTokenExpires: { $gt: Date.now() } }, (err, user) => {
+      if (!user) {
+        User.findOneAndRemove({ registrationToken: req.params.token }, err => {
+          if (err) { console.log(err) }
+          res.json({ message: 'Activation link expired. Register again.' })
+        })
+      } else {
+        User.findOneAndUpdate({ _id: user._id }, { $set: { active: true, registrationToken: '', registrationTokenExpires: null } }, err => {
+          if (err) { console.log(err) }
+          res.json({ message: 'Successfully activated account!' })
+        })
       }
     })
   },

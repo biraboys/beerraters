@@ -1,6 +1,5 @@
 node_modules
 package-lock.json
-mongodb-login.js
 .vscode
 .DS_Store
 npm-debug.log

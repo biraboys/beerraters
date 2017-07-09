@@ -1,7 +1,6 @@
 // Requires for app
 const express = require('express')
 const path = require('path')
-const mongoUser = require('./mongodb-login.js')
 // const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
@@ -19,7 +18,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({
-  secret: `3'bn6p<B?J&&[!'S`,
+  secret: process.env.SESSION_SECRET,
   saveUninitialized: false,
   resave: false,
   cookie: { secure: !true },
@@ -47,6 +46,7 @@ const styles = require('./routes/styles')
 const forgot = require('./routes/forgot')
 const reset = require('./routes/reset')
 const reviews = require('./routes/reviews')
+const activation = require('./routes/activation')
 
 app.use('/', index)
 app.use('/users', users)
@@ -62,6 +62,7 @@ app.use('/styles', styles)
 app.use('/forgot', forgot)
 app.use('/reset', reset)
 app.use('/reviews', reviews)
+app.use('/activation', activation)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -93,11 +94,11 @@ app.use((err, req, res, next) => {
 // Databse handling
 const db = mongoose.connection
 
-const uri = 'mongodb://2.248.14.135:27017/beerarino?authSource=admin'
+const uri = process.env.MONGODB_HOST
 
 const options = {
-  user: mongoUser.name,
-  pass: mongoUser.pass
+  user: process.env.MONGODB_U,
+  pass: process.env.MONGODB_PASS
 }
 
 db.on('error', console.error.bind(console, 'connection error:'))

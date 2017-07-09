@@ -77,7 +77,10 @@ const userSchema = new Schema({
   resetPasswordToken: { type: String, default: '' },
   resetPasswordExpires: { type: Date, default: null },
   displayName: { type: String },
-  role: { type: String, default: 'User' }
+  role: { type: String, default: 'User' },
+  active: { type: Boolean, required: true, default: false },
+  registrationToken: { type: String, required: true },
+  registrationTokenExpires: { type: Date, default: null }
 })
 
 userSchema.static('findByName', function (userArr, userName) {

@@ -34,7 +34,7 @@
 								<img src="/images/flags/SE-32.png">
 							</div>
 							<div class="card-title">
-								<%= follower.name %>
+								<a href="/users/<%= follower._id %>"><%= follower.name %></a>
 							</div>
 							<div class="card-subtitle">
 								Member since <%= follower.registered.toDateString() %>

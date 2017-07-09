@@ -2,7 +2,7 @@
 <section class="main-section">
  <div class="container">
    <div class="row flex-column flex-center">
-         <% if (user === undefined) { %>
+         <% if (user === undefined || user.active === false) { %>
           <div class="one-half column">
             <h1 class="hero-heading">Sorry could not found user</h1>
           </div>

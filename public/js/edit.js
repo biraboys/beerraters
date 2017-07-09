@@ -16,7 +16,7 @@ async function test () {
 
     if (data) {
       name.value = data.name
-      displayname.value = data.displayName
+      displayname.value = data.displayName || ''
       description.value = data.description
     }
   } catch (err) {
