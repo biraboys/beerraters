@@ -2,7 +2,7 @@
 <section class="main-section">
  <div class="container">
    <div class="row flex-column flex-center">
-         <% if (user === undefined) { %>
+         <% if (user === undefined || user.active === false) { %>
           <div class="one-half column">
             <h1 class="hero-heading">Sorry could not found user</h1>
           </div>
@@ -11,8 +11,8 @@
             <div class="card">
               <div class="card-header flex-center flex-column">
                 <figure class="avatar avatar-xl">
-                  <% if (user.profileImg) { %>
-                    <img src="/public/uploads/<%= user.profileImg %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+                  <% if (user.profileImg.length > 0) { %>
+                    <img src="/uploads/users/<%= user._id %>/<%= user.profileImg %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
                   <% } else { %>
                     <img src="/images/user-placeholder.png" class="u-max-full-width img-thumbnail img-circle img-responsive" />
                   <% } %>

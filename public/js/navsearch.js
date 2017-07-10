@@ -1,6 +1,6 @@
-const searchForm = document.forms.searchForm
+const navSearchForm = document.forms.navSearchForm
 
-searchForm.addEventListener('submit', function (e) {
+navSearchForm.addEventListener('submit', function (e) {
   e.preventDefault()
   location.href = '/search'
 })

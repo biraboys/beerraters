@@ -24,7 +24,7 @@
 						<div class="card-header flex-center flex-column">
 							<figure class="avatar avatar-xl">
 								<% if (follower.profileImg) { %>
-									<img src="/public/uploads/<%= user.profileImg %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+									<img src="/uploads/users/<%= follower._id %>/<%= follower.profileImg %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
 								<% } else { %>
 									<img src="/images/user-placeholder.png" class="u-max-full-width img-thumbnail img-circle img-responsive" />
 								<% } %>
@@ -34,7 +34,7 @@
 								<img src="/images/flags/SE-32.png">
 							</div>
 							<div class="card-title">
-								<%= follower.name %>
+								<a href="/users/<%= follower._id %>"><%= follower.name %></a>
 							</div>
 							<div class="card-subtitle">
 								Member since <%= follower.registered.toDateString() %>
