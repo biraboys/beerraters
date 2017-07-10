@@ -22,7 +22,8 @@ const controller = module.exports = {
     const [username, name, email, password, country] = [req.body.username, req.body.name, req.body.email, req.body.password, req.body.country]
     const buff = crypto.randomBytes(20)
     const token = buff.toString('hex')
-    const tokenExpires = Date.now() + 3600000
+    // 1 Hour from now
+    const expires = Date.now() + 3600000
 
     const newUser = new User({
       username: username,
@@ -34,7 +35,7 @@ const controller = module.exports = {
       country_id: country,
       displaName: username,
       registrationToken: token,
-      registrationTokenExpires: tokenExpires
+      registrationTokenExpires: expires
     })
 
     await newUser.save(err => {
@@ -57,7 +58,7 @@ const controller = module.exports = {
         } else {
           errorMessage.message = err
         }
-        res.status(400).render('register', { errorMessage, session: req.session.user })
+        res.render('register', { errorMessage, session: req.session.user })
       } else {
         const stmpTransport = nodemailer.createTransport({
           service: 'Gmail',
@@ -69,21 +70,14 @@ const controller = module.exports = {
         const mailOptions = {
           to: newUser.email,
           from: 'noreply@beerraters.com',
-          subject: 'Please confirm account - Beerraters.com',
-          text:
-          `Hi ${newUser.username},\n
-          Thanks for registrating at Beerraters, we hope you will enjoy your stay!\n
-          Before you can start using our services you will need to confirm your account.\n
-          Please confirm your account by clicking the following link:\n http://${req.headers.host}/activation/${token}\n
-          You have until ${newUser.registrationTokenExpires.toLocaleString('en-US')} to activate your account.`
+          subject: 'Please confirm your account - Beerraters.com',
+          text: `Hi ${newUser.username},\n\n Thanks for your registration!\n Please confirm your account by clicking the following link:\n http://${req.headers.host}/activation/${token}\n\n If you havent done this before ${newUser.registrationTokenExpires.toLocaleString('en-US')}, the activation link will expire and you have to register a new account.`
         }
         stmpTransport.sendMail(mailOptions, err => {
           if (err) { console.log(err) }
           console.log('mail sent')
-          // res.json({ success: true, message: `An email has been sent to ${newUser.email} with further instructions.` })
+          res.json({ message: `User created! An email has been sent to ${newUser.email}, follow the instructions to complete the registration.` })
         })
-        res.json({ message: `User created! An email has been sent to ${newUser.email}, follow the instructions to complete the registration.` })
-        // res.redirect(`/register/${username}`)
       }
     })
   },
@@ -281,11 +275,7 @@ const controller = module.exports = {
           to: user.email,
           from: 'noreply@beerraters.com',
           subject: 'Password reset - Beerraters.com',
-          text:
-          `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n
-          Please click on the following link, or paste this into your browser to complete the process:\n
-          http://${req.headers.host}/reset/${token}\n
-          If you did not request this, please ignore this email and your password will remain unchanged.\n`
+          text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n Please click on the following link, or paste this into your browser to complete the process:\n http://${req.headers.host}/reset/${token}\n If you did not request this, please ignore this email and your password will remain unchanged.\n`
         }
         stmpTransport.sendMail(mailOptions, err => {
           console.log('mail sent')
@@ -310,12 +300,9 @@ const controller = module.exports = {
   getConfirmationToken: async(req, res) => {
     await User.findOne({ registrationToken: req.params.token, registrationTokenExpires: { $gt: Date.now() } }, (err, user) => {
       if (!user) {
-        User.findOneAndRemove({ registrationToken: req.params.token }, err => {
-          if (err) { console.log(err) }
-          res.json({ message: 'Activation link expired. Register again.' })
-        })
+        res.json({ message: 'Activation link expired. Register again.' })
       } else {
-        User.findOneAndUpdate({ _id: user._id }, { $set: { active: true, registrationToken: '', registrationTokenExpires: null } }, err => {
+        User.findOneAndUpdate({ _id: user._id }, { $set: { active: true }, $unset: { registrationToken: '', registrationTokenExpires: '' } }, err => {
           if (err) { console.log(err) }
           res.json({ message: 'Successfully activated account!' })
         })

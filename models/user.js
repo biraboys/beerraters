@@ -80,7 +80,7 @@ const userSchema = new Schema({
   role: { type: String, default: 'User' },
   active: { type: Boolean, required: true, default: false },
   registrationToken: { type: String, required: true },
-  registrationTokenExpires: { type: Date, default: null }
+  registrationTokenExpires: { type: Date, expires: '10s' }
 })
 
 userSchema.static('findByName', function (userArr, userName) {
