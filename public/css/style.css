@@ -21,6 +21,20 @@ a {
   text-decoration: none;
 }
 
+/* Backgrounds */
+/*
+.bgc-golden {
+  background-color: #D5BC26;
+}
+
+.bgc-grey {
+  background-color: rgba(205, 210, 220, 0.23)
+}
+
+.bgc-brownish {
+  background-color: #BF923B;
+}*/
+
 /* Images */
 
 .img-full {
@@ -258,6 +272,15 @@ a {
   margin-top: -1.5rem;
 }
 
+.mp-0 {
+  margin: 0;
+  padding: 0;
+}
+
+.pt-1 {
+  padding-top: 1rem;
+}
+
 
 /* Icons */
 
@@ -337,12 +360,16 @@ a {
   height: 40rem;
 }
 
+.h-10 {
+  height: 10rem;
+}
+
 .h-2 {
   height: 2rem;
 }
 
 .vh-100 {
-  height: 100vh
+  height: 100vh;
 }
 
 /* Cards */

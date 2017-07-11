@@ -59,7 +59,6 @@ const userSchema = new Schema({
   name: { type: String, validate: nameValidator },
   email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
   password: { type: String, required: true, validate: passwordValidator },
-  country_id: { type: Schema.Types.ObjectId, ref: 'country', required: true },
   registered: { type: Date, default: Date.now },
   reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
   ratings: [{ type: Schema.Types.ObjectId, ref: 'beer' }],

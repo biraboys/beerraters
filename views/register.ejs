@@ -1,27 +1,53 @@
 <%- include header.ejs %>
-
-<div class="container register-form">
-  <div class="six columns">
-    <h4>Register</h4>
-    <form method="post" name="register">
-      <label for="username">Username:</label>
-      <input class="u-full-width" type="text" name="username" id="username" value="<%= errorMessage.username %>" required title="Username must contain letters and numbers only.">
-      <label for="name">Full name:</label>
-      <input class="u-full-width" type="text" name="name" id="name" value="<%= errorMessage.name %>" required title="Name must be at least 3 characters, max 30, no special characters or numbers, must have space in between name.">
-      <label for="email">Email:</label>
-      <input class="u-full-width" type="text" name="email" id="email" value="<%= errorMessage.email %>" required >
-      <label for="password">Password:</label>
-      <input class="u-full-width" type="password" name="password" id="password" required title="Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35.">
-      <select class="u-full-width" id="country" name="country" required>
-        <option value="" disabled selected>Select country</option>
-      </select>
-      <input class="button-primary" type="submit" value="Register" id="register-btn">
-      <% if (!errorMessage.success) { %>
-        <p class="error-register-new-user"><%= errorMessage.message %></p>
-      <% } %>
-    </form>
+<section class="section">
+<div class="container">
+  <div class="row">
+    <div class="col s6">
+      <h4>Register</h4>
+      <p>Join the web's largest beer community today!</p>
+    </div>
+    <div class="col s6">
+      <form method="post" name="register">
+        <div class="input-field">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="username" type="text" class="validate" name="username" value="<%= errorMessage.username %>" required title="Username must contain letters and numbers only.">
+          <label for="username">Username</label>
+        </div>
+        <div class="input-field">
+          <i class="material-icons prefix">face</i>
+          <input id="name" type="text" class="validate" name="name" value="<%= errorMessage.name %>" required title="Name must be at least 3 characters, max 30, no special characters or numbers, must have space in between name.">
+          <label for="name">Full Name</label>
+        </div>
+        <div class="input-field">
+          <i class="material-icons prefix">email</i>
+          <input id="email" type="text" class="validate" name="email" value="<%= errorMessage.email %>" required>
+          <label for="email">Email</label>
+        </div>
+        <div class="input-field">
+          <i class="material-icons prefix">security</i>
+          <input id="password" type="password" name="password" title="Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35." required>
+          <label for="password">Password</label>
+        </div>
+        <button class="btn waves-effect waves-light" id="register-btn" type="submit" name="action">Register</button>
+        <!--<label for="username">Username:</label>
+        <input class="u-full-width" type="text" name="username" id="username" value="<%= errorMessage.username %>" required title="Username must contain letters and numbers only.">
+        <label for="name">Full name:</label>
+        <input class="u-full-width" type="text" name="name" id="name" value="<%= errorMessage.name %>" required title="Name must be at least 3 characters, max 30, no special characters or numbers, must have space in between name.">
+        <label for="email">Email:</label>
+        <input class="u-full-width" type="text" name="email" id="email" value="<%= errorMessage.email %>" required >
+        <label for="password">Password:</label>
+        <input class="u-full-width" type="password" name="password" id="password" required title="Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35.">
+        <select class="u-full-width" id="country" name="country" required>
+          <option value="" disabled selected>Select country</option>
+        </select>-->
+        <% if (!errorMessage.success) { %>
+          <p class="error-register-new-user"><%= errorMessage.message %></p>
+        <% } %>
+      </form>
+    </div>
   </div>
 </div>
+</section>
 
 <%- include footer.ejs %>
 

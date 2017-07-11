@@ -1,28 +1,24 @@
 <html lang="en">
 <head>
 
-<!-- Basic Page Needs
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<meta charset="utf-8">
-<title>Beerarino</title>
-<meta name="description" content="">
-<meta name="author" content="">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
 
-<!-- Mobile Specific Metas
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- FONT
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+<title>BeerRaters</title>
 
 <!-- CSS
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<link rel="stylesheet" href="/css/normalize.css">
-<link rel="stylesheet" href="/css/skeleton.css">
+<!--<link rel="stylesheet" href="/css/normalize.css">-->
+<!--<link rel="stylesheet" href="/css/skeleton.css">
 <link rel="stylesheet" href="/css/spectre.css">
-<link rel="stylesheet" href="/css/custom.css">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/custom.css">-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+<link href="css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+<!--<link rel="stylesheet" href="/css/style.css">-->
+
+      
 
 
 <!-- Favicon
@@ -31,26 +27,26 @@
 
 </head>
 <body>
-  <nav>
-    <ul class="main-nav">
-      <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="/toplist">Top List</a></li>      
-      <li class="nav-item"><a class="nav-link" href="/facts">Beer Facts</a></li>                 
-      <li class="nav-item">
-        <form name="navSearchForm">
-          <input required class="u-full-width mt-1" type="text" placeholder="Search..." name="q" pattern=".{2,}" title="Search must contain at least 3 characters">
-        </form>
-      </li>
-      <div class="u-pull-right">
-        <% if (!session) { %>
-          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="/register">Sign Up</a></li>
-        <% } else { %>
-          <li class="nav-item"><a class="nav-link" id="user-session-id" href="/users/<%= session._id %>">My profile</a></li>
-          <li class="nav-item"><a class="nav-link" href="" id="logout">Logout</a></li>
-        <% } %>
-      </div>
-    </ul>
-  </nav>
+    <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="/" class="brand-logo">
+        <img class="w-30" src="/images/logo_placeholder.png">
+      </a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="/register">Sign Up</a></li>
+        <li><a href="/login">Login</a></li>    
+      </ul>
 
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="/register">Sign Up</a></li>
+        <li><a href="/login">Login</a></li>  
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  
   <main class="content">
