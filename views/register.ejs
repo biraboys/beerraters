@@ -3,22 +3,22 @@
 <div class="container register-form">
   <div class="six columns">
     <h4>Register</h4>
-    <form method="post" name="register">
+    <form name="register">
       <label for="username">Username:</label>
-      <input class="u-full-width" type="text" name="username" id="username" value="<%= errorMessage.username %>" required title="Username must contain letters and numbers only.">
+      <input class="u-full-width" type="text" name="username" id="username" required title="Username must contain letters and numbers only.">
+      <span id="usernameMsg"></span>
       <label for="name">Full name:</label>
-      <input class="u-full-width" type="text" name="name" id="name" value="<%= errorMessage.name %>" required title="Name must be at least 3 characters, max 30, no special characters or numbers, must have space in between name.">
+      <input class="u-full-width" type="text" name="name" id="name" required title="Name must be at least 3 characters, max 30, no special characters or numbers, must have space in between name.">
       <label for="email">Email:</label>
-      <input class="u-full-width" type="text" name="email" id="email" value="<%= errorMessage.email %>" required >
+      <input class="u-full-width" type="text" name="email" id="email" required >
+      <span id="emailMsg"></span>
       <label for="password">Password:</label>
       <input class="u-full-width" type="password" name="password" id="password" required title="Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35.">
+      <span id="passwordMsg"></span>
       <select class="u-full-width" id="country" name="country" required>
         <option value="" disabled selected>Select country</option>
       </select>
       <input class="button-primary" type="submit" value="Register" id="register-btn">
-      <% if (!errorMessage.success) { %>
-        <p class="error-register-new-user"><%= errorMessage.message %></p>
-      <% } %>
     </form>
   </div>
 </div>

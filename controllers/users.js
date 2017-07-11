@@ -40,25 +40,7 @@ const controller = module.exports = {
 
     await newUser.save(err => {
       if (err) {
-        const errorMessage = { success: false, username: username, name: name, email: email }
-        if (err.errors != null) {
-          if (err.errors.name) {
-            errorMessage.message = err.errors.name.message
-          } else if (err.errors.email) {
-            errorMessage.message = err.errors.email.message
-          } else if (err.errors.username) {
-            errorMessage.message = err.errors.username.message
-          } else if (err.errors.password) {
-            errorMessage.message = err.errors.password.message
-          } else {
-            errorMessage.message = err
-          }
-        } else if (err.code === 11000) {
-          errorMessage.message = 'Username or e-mail already taken.'
-        } else {
-          errorMessage.message = err
-        }
-        res.render('register', { errorMessage, session: req.session.user })
+        res.json({ message: err.errors })
       } else {
         const stmpTransport = nodemailer.createTransport({
           service: 'Gmail',
@@ -300,7 +282,7 @@ const controller = module.exports = {
   getConfirmationToken: async(req, res) => {
     await User.findOne({ registrationToken: req.params.token, registrationTokenExpires: { $gt: Date.now() } }, (err, user) => {
       if (!user) {
-        res.json({ message: 'Activation link expired. Register again.' })
+        res.json({ message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.' })
       } else {
         User.findOneAndUpdate({ _id: user._id }, { $set: { active: true }, $unset: { registrationToken: '', registrationTokenExpires: '' } }, err => {
           if (err) { console.log(err) }
