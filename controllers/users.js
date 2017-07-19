@@ -40,7 +40,12 @@ const controller = module.exports = {
 
     await newUser.save(err => {
       if (err) {
-        res.json({ message: err.errors })
+        if (err.errors) {
+          console.log('error')
+          res.json({ message: err.errors })
+        } else if (err.code === 11000) {
+          res.json({ message: err.message })
+        }
       } else {
         const stmpTransport = nodemailer.createTransport({
           service: 'Gmail',
@@ -57,7 +62,6 @@ const controller = module.exports = {
         }
         stmpTransport.sendMail(mailOptions, err => {
           if (err) { console.log(err) }
-          console.log('mail sent')
           res.json({ message: `User created! An email has been sent to ${newUser.email}, follow the instructions to complete the registration.` })
         })
       }
