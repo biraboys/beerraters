@@ -75,7 +75,7 @@ registerBtn.addEventListener('click', async function (e) {
           emailMsg.innerHTML = 'Email already used.'
         }
       }
-      if (data.message[0] === 'U') {
+      if (data.message[0] === 'T') {
         registerForm.innerHTML = ''
         registrationHeading.innerHTML = data.message
       }
