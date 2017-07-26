@@ -5,25 +5,29 @@
 	   <div class="two-thirds column">
 			<form role="search" name="searchForm">
 				<div class="row">
-					<label for="word">What are you after?</label>
+					<h5>What are you after?</h5>
 					<input required class="u-full-width" type="text" placeholder="Search..." name="q" pattern=".{2,}" title="Search must contain at least 3 characters">
 				</div>
 				  <div id="error-container"></div>
-				<label for="word">Find</label>
 				<div class="row">
+					<h5>Find</h5>
 					<div class="one-half column">
-					  <a class="button button-primary search-btn" name="beer" id="beer-search-btn">Beer</a>
-					  <a class="button search-btn" name="user" id="user-search-btn">User</a>
+					  <a class="waves-effect waves-light btn button-primary search-btn" name="beer" id="beer-search-btn">Beer</a>
+					  <a class="waves-effect waves-light btn search-btn" name="user" id="user-search-btn">User</a>
 					</div>
 					<div class="one-half column">
 					</div>					
 				</div>
-				<div id="filter-options">
-					<label for="options">Filter by</label>
-					<input class="filter-option" type="radio" name="name" value="name" checked>Name
-					<input class="filter-option" type="radio" name="style" value="style">Style
-					<input class="filter-option" type="radio" name="brewery" value="brewery">Brewery
-					<input class="filter-option" type="radio" name="country" value="country">Country
+				<div class="input-field" id="filter-options">
+					<h5>Filter by</h5>
+					<input class="filter-option with-gap" type="radio" name="name" value="name" checked />
+					<label for="name">Name</label>
+					<input class="filter-option with-gap" type="radio" name="style" value="style">
+					<label for="style">Style</label>
+					<input class="filter-option with-gap" type="radio" name="brewery" value="brewery">
+					<label for="brewery">Brewery</label>
+					<input class="filter-option with-gap" type="radio" name="country" value="country">
+					<label for="country">Country</label>
 				</div>			
 			</form>
 			  <div id="loading-container"></div>
@@ -32,6 +36,7 @@
 			  <div id="page-navigation"></div>		
 		</div>
 
+	</div>
 	</div>
 </section>
 

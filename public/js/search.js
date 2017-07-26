@@ -59,6 +59,7 @@ filterOptions.forEach(option => {
     searchForm.q.select()
     searchForm.q.focus()
     setChecked(this)
+    console.log(this)
   })
 })
 
@@ -309,34 +310,31 @@ function generateBeerCard (beerObj) {
     `
   }
   const beerCard = `
-    <div class="row" style="padding: 0.5rem;">
-      <div class="card beer-card">
-        <div class="row">
-          <div class="one-third column">
+    <div class="row">
+      <div class="card horizontal">
             <div class="card-image">
-              <img class="u-max-full-width" src="${beerImage}">
+              <img class="h-200" src="${beerImage}">
             </div>
-          </div>
-          <div class="two-thirds column">
-            <div class="card-header">
+            <div class="card-stacked">
+            <div class="card-content">
               <div class="card-title">
                 <a class="card-link" href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a>
               </div> 
               <div class="card-title">                  
                 ${rating}
               </div>
-              <div class="card-subtitle">
-                  <a class="card-link">${categoryName}</a>
-                  <a class="card-link" href="${styleLink}">${styleName}</a>
+              <div>
+                  <span class="card-subtitle">${categoryName}</span>
+                  <a class="card-subtitle" href="${styleLink}">${styleName}</a>
               </div>
-              <div class="card-subtitle">
-                 <a class="card-link" href="${breweryLink}">${breweryName}</a>
-                 <a class="card-link" href="${countryLink}">${countryCode}</a>   
+              <div>
+                 <a class="card-subtitle" href="${breweryLink}">${breweryName}</a>
+                 <a class="card-subtitle" href="${countryLink}">${countryCode}</a>   
                   ${countryFlag}
               </div>
-            </div>
           </div>
         </div>
+      </div>
       </div>
       `
   return beerCard
@@ -540,9 +538,9 @@ async function newBeerCards (beersAmount, beers, startValue, endValue) {
 function generateButton (direction) {
   let button
   if (direction === 'back') {
-    button = `<a class="button" id="prev-btn">Previous</button>`
+    button = `<a class="waves-effect waves-light btn" id="prev-btn">Previous</button>`
   } else {
-    button = `<a class="button u-pull-right" id="next-btn">Next</button>`
+    button = `<a class="waves-effect waves-light btn right" id="next-btn">Next</button>`
   }
   return button
 }

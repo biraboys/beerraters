@@ -27,14 +27,29 @@
 
 </head>
 <body>
+  <div class="navbar-fixed">
     <nav class="light-blue lighten-1" role="navigation">
     <div class="nav-wrapper container">
+      <div class="row">
+        <div class="col s2">
       <a id="logo-container" href="/" class="brand-logo">
         <img class="w-30" src="/images/logo_placeholder.png">
+        
       </a>
+        </div>
+      <div class="col s5">
+        <form name="navSearchForm">
+        <div class="input-field">
+          <input style="height: 100%;" id="search" type="search" required>
+          <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+          <i class="material-icons">close</i>
+        </div>
+      </form>
+      </div>
+      <div class="col s5">
       <ul class="right hide-on-med-and-down">
         <li><a href="/">Home</a></li>
-        <li><a href="#">About</a></li>
+        <li><a href="/search">Search</a></li>
         <% if (!session) { %>
         <li><a href="/register">Sign Up</a></li>
         <li><a href="/login">Login</a></li>    
@@ -46,12 +61,14 @@
 
       <ul id="nav-mobile" class="side-nav">
         <li><a href="/">Home</a></li>
-        <li><a href="#">About</a></li>
+        <li><a href="/search">Search</a></li>
         <li><a href="/register">Sign Up</a></li>
         <li><a href="/login">Login</a></li>  
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
+      </div>
   </nav>
+  </div>
   
   <main class="content">
