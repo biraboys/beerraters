@@ -53,7 +53,7 @@ async function getUserReviews () {
             <p>
               ${review.place}
               <br>
-              ${review.body}
+              <span class="card-subtitle">${review.body}</span>
             </p>
             <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
        </li>

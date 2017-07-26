@@ -44,12 +44,6 @@ body {
   flex-direction: column;
 }
 
-.img-responsive {
-  display: block;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
 .ta-center {
   text-align: center;
 }
@@ -68,4 +62,12 @@ body {
 
 .pt-1 {
   padding-top: 1rem;
+}
+
+.row .col .img-column {
+  padding: 0;
+}
+
+.row .col .img-column .first-img{
+  padding-left: 0.75rem;
 }

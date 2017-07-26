@@ -163,7 +163,7 @@ module.exports = {
   renderBeer: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId).populate('country_id brewery_id style_id category_id')
-    res.status(200).render('beer', {beer})
+    res.status(200).render('beer', {beer: beer, session: req.session.user})
   },
   consumeBeer: async (req, res, next) => {
     const userId = req.session.user._id

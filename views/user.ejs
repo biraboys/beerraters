@@ -12,7 +12,7 @@
             <div class="card flex-center flex-column ta-center">
               <div class="pt-1">
                   <% if (user.profileImg.length > 0) { %>
-                    <img src="/uploads/users/<%= user._id %>/<%= user.profileImg %>" class="circle img-responsive" />
+                    <img src="/uploads/users/<%= user._id %>/<%= user.profileImg %>" class="circle responsive-img" />
                   <% } else { %>
                     <img src="/images/user-placeholder.png" />
                   <% } %>
