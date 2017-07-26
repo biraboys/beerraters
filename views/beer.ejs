@@ -3,11 +3,9 @@
  <div class="container">
    <div class="row">
          <% if (beer === undefined) { %>
-          <div class="one-half column">
-            <h1 class="hero-heading">Sorry could not found beer</h1>
-          </div>
+            <h1>Sorry could not found beer</h1>
             <% } else { %>
-            <div class="two-thirds column">
+            <div class="col s8">
               <div class="modal modal-sm" id="rating-modal">
                 <div class="modal-overlay"></div>
                 <div class="modal-container" id="rating-modal-body">
@@ -42,14 +40,20 @@
               <div class="card-image">
                 <div class="row">
                   <% if (beer.images.length !== 0) { %>
-                  <% beer.images.forEach(function(image) { %>
-                  <div class="three image-column">
-                    <img class="u-max-full-width" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
+                  <% beer.images.forEach(function(image, index) { %>
+                  <% if (index === 0) { %>
+                  <div class="col s3 img-column" style="padding-left: 0.75rem;">
+                    <img class="responsive-img materialboxed" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
                   </div>
+                  <% } else { %>
+                  <div class="col s3 img-column">
+                    <img class="responsive-img materialboxed" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
+                  </div>
+                  <% } %>
                   <% }); %>
                   <% } else {%>
-                  <div class="three image-column">
-                    <img class="u-max-full-width" src="/images/bottle.png">
+                  <div class="col s3 img-column">
+                    <img class="responsive-img" src="/images/bottle.png">
                   </div>
                   <% } %>
                 </div>
@@ -115,27 +119,27 @@
                     <span class="card-subtitle">N/A</span>
                   <% } %>
                   </div>
-                    <% if (style) { %>
+                    <% if (beer.style_id) { %>
                       <div class="card-subtitle">
-                        <a class="card-link" href="/styles/<%= style._id %>">
-                          <%= style.name %>
+                        <a class="card-link" href="/styles/<%= beer.style_id %>">
+                          <%= beer.style_id.name %>
                         </a>
                       </div>
                     <% } %>
-                      <% if (category) { %>
+                      <% if (beer.category_id) { %>
                       <div class="card-subtitle">
-                        <%= category.name %>
+                        <%= beer.category_id.name %>
                       </div>
                     <% } %>
                       <div class="card-subtitle">
-                    <% if (brewery) { %>
-                        <a class="card-link" href="/breweries/<%= brewery._id %>">
-                          <%= brewery.name %>
+                    <% if (beer.brewery_id) { %>
+                        <a class="card-link" href="/breweries/<%= beer.brewery_id %>">
+                          <%= beer.brewery_id.name %>
                         </a>
                     <% } %>
-                    <% if (country) { %>
-                        <a class="card-link" href="/countries/<%= country._id %>">
-                          <%= country.code %>
+                    <% if (beer.country_id) { %>
+                        <a class="card-link" href="/countries/<%= beer.country_id %>">
+                          <%= beer.country_id.code %>
                         </a>
                     <% } %>  
                       </div>
@@ -156,16 +160,16 @@
                           <form method="POST" action="/beers/<%= beer._id %>" class="mt-1" name="beerDescription">
                             <label for="style">Style</label>
                             <select class="u-full-width" id="style" name="style" required>
-                              <% if (style) { %>
-                              <option value="<%= style._id %>" selected><%= style.name %></option>                              
+                              <% if (beer.style_id) { %>
+                              <option value="<%= beer.style_id %>" selected><%= beer.style_id.name %></option>                              
                               <% } else { %> 
                               <option value="" disabled selected>Select style</option>
                               <% } %>
                             </select>
                             <label for="category">Category</label>
-                            <% if (category) { %>
+                            <% if (beer.category_id) { %>
                             <select class="u-full-width" id="category" name="category" required>
-                            <option value="<%= category.name %>" selected><%= category.name %></option>
+                            <option value="<%= beer.category_id.name %>" selected><%= beer.category_id.name %></option>
                             <% } else { %>
                             <select class="u-full-width" id="category" name="category" disabled>
                             <% } %>
@@ -173,17 +177,17 @@
                             <input class="u-full-width" type="text" placeholder="New category" name="otherCategory" id="other-category" hidden>
                             <label for="country">Country</label>
                             <select class="u-full-width" id="country" name="country" required>
-                              <% if (country) { %>
-                              <option value="<%= country._id %>" selected><%= country.name %></option>                              
+                              <% if (beer.country_id) { %>
+                              <option value="<%= beer.country_id %>" selected><%= beer.country_id.name %></option>                              
                               <% } else { %> 
                               <option value="" disabled selected>Selected country</option>
                               <% } %>
                             </select>
                             <label for="brewery">Brewery</label>
                             <div id="loader"></div>
-                            <% if (brewery) { %>
+                            <% if (beer.brewery_id) { %>
                             <select class="u-full-width" id="brewery" name="brewery" required>
-                            <option value="<%= brewery.name %>" selected><%= brewery.name %></option>
+                            <option value="<%= beer.brewery_id.name %>" selected><%= beer.brewery_id.name %></option>
                             <% } else { %> 
                             <select class="u-full-width" id="brewery" name="brewery" disabled>
                             <% } %>                                                          
@@ -245,7 +249,7 @@
               </div>    
            <% } %>  
      </div>
-     <div class="one-third column">
+     <div class="col s4">
        <div class="card">
          <div class="card-body">
            <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">

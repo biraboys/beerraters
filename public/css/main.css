@@ -1,0 +1,80 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+body {
+  background-color: #f1f2f1;
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+	font-size: inherit;
+}
+
+.w-30 {
+  width: 30%;
+}
+
+.w-15 {
+  width: 15%;
+}
+
+.section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+[class*="flex-"] {
+  display: flex;
+}
+
+
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.ta-center {
+  text-align: center;
+}
+
+.h-2 {
+  height: 2rem;
+}
+
+.main-section {
+  margin-top: 5rem;
+}
+
+.card-subtitle {
+  color: #bbc1cd;
+}
+
+.pt-1 {
+  padding-top: 1rem;
+}
+
+.row .col .img-column {
+  padding: 0;
+}
+
+.row .col .img-column .first-img{
+  padding-left: 0.75rem;
+}
+
+.select-dropdown .flag-img {
+  height: auto;
+  max-width: 100%;
+  margin-top: 0.9rem;
+
+}

@@ -19,7 +19,7 @@ const controller = module.exports = {
     res.status(200).json(user)
   },
   newUser: async (req, res, next) => {
-    const [username, name, email, password, country] = [req.body.username, req.body.name, req.body.email, req.body.password, req.body.country]
+    const [username, name, email, password] = [req.body.username, req.body.name, req.body.email, req.body.password]
     const buff = crypto.randomBytes(20)
     const token = buff.toString('hex')
     // 1 Hour from Date.now()
@@ -32,7 +32,6 @@ const controller = module.exports = {
       password: password,
       following: [],
       followers: [],
-      country_id: country,
       displaName: username,
       registrationToken: token,
       registrationTokenExpires: expires

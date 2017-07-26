@@ -1,26 +1,34 @@
 <%- include header.ejs %>
-
-<div class="container login-form">
+<section class="section">
+<div class="container">
   <div class="row">
-    <div class="six columns">
+    <div class="col s6">
       <h4>Login</h4>
-      <form method="post">
-        <label for="userName">Username:</label>
-        <input class="u-full-width" type="text" name="username" value="<%= username %>" required autofocus>
-        <label for="password">Password:</label>
-        <input class="u-full-width" type="password" name="password" required>
-        <input class="button-primary" type="submit" value="Login">
+      <p><a href="/forgot">Forgot password?</a></p>
+    </div>
+    <div class="col s6">
+      <form method="post" name="login">
+        <div class="input-field">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="username" type="text" name="username" placeholder="Username" value="<%= username %>" required autofocus>
+          <label for="username"></label>
+        </div>
+        <div class="input-field">
+          <i class="material-icons prefix">security</i>
+          <input id="password" type="password" name="password" placeholder="Password" required>
+          <label for="password"></label>
+        </div>
+        <button class="btn waves-effect waves-light" id="register-btn" type="submit" name="login">Login</button>
+      </form>
         <% if (success) { %>
           <p>User created successfully. Please log in.</p>
         <% } else { %>
           <p class="error-register-new-user"><%= message %></p>
         <% } %>
-      </form>
-      <p><a href="/forgot">Forgot password?</a></p>
-      <!--<p><a href="#">Forgot username?</a></p>-->
     </div>
-  </div>
+  </div> 
 </div>
+</section>
 
 <%- include footer.ejs %>
 

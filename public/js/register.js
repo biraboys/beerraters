@@ -10,30 +10,6 @@ const usernameMsg = document.getElementById('usernameMsg')
 const passwordMsg = document.getElementById('passwordMsg')
 const registrationHeading = document.getElementById('register-heading')
 
-async function getBeerCountries () {
-  try {
-    const response = await fetch('/countries')
-    const countries = await response.json()
-    sortByName(countries)
-    countries.forEach(country => {
-      registerForm.country.innerHTML += `
-       <option value="${country._id}">${country.name}</option>
-      `
-    })
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-// Helper functions
-function sortByName (array) {
-  return array.sort((a, b) => {
-    return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
-  })
-}
-
-getBeerCountries()
-
 // Post new user
 registerBtn.addEventListener('click', async function (e) {
   e.preventDefault()
@@ -83,4 +59,8 @@ registerBtn.addEventListener('click', async function (e) {
   } catch (err) {
     console.log(err)
   }
+})
+
+$(document).ready(function () {
+  $('select').material_select()
 })

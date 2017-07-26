@@ -20,7 +20,7 @@ async function followUser () {
     console.log(response.status)
     window.location.href = '/login'
   } else if (response.status === 200) {
-    if (follow.innerHTML === 'Follow') {
+    if (follow.innerHTML[0] === 'F') {
       const value = parseInt(followers.innerHTML) + 1
       followers.innerHTML = value
       follow.innerHTML = 'Unfollow'
@@ -47,17 +47,16 @@ async function getUserReviews () {
       const beerImageArr = await beerImageResponse.json()
       const beerImage = beerImageArr[0].name
       reviewsContainer.innerHTML += `
-                <div class="tile">
-                <div class="tile-icon">
-                  <figure class="avatar avatar-lg">
-                    <img src="/uploads/beers/${beerObj.beer._id}/${beerImage}">
-                  </figure>
-                </div>
-                <div class="tile-content">
-                  <p class="tile-title"><a href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a></p>
-                  <p class="tile-subtitle">${review.body}</p>
-                </div>
-              </div>
+       <li class="collection-item avatar">
+         <img src="/uploads/beers/${beerObj.beer._id}/${beerImage}" alt="" class="circle">
+            <span class="title"><a href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a></span>
+            <p>
+              ${review.place}
+              <br>
+              <span class="card-subtitle">${review.body}</span>
+            </p>
+            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+       </li>
       `
     })
   } catch (err) {
@@ -89,6 +88,11 @@ async function getUserRanking () {
 getUserReviews()
 getUserRanking()
 
+// Accordians
+$(document).ready(function () {
+  $('.collapsible').collapsible()
+})
+
 //     const users = await User.find({}, 'country_id reviews ratings images consumes ')
 //     users.filter(userObj => {
 //       if (userObj.country_id === user.country_id) {
@@ -102,3 +106,5 @@ getUserRanking()
 //       return userObj._id === user._id
 //     })
 //     console.log(position)
+
+

@@ -15,6 +15,11 @@ module.exports = {
     const beers = await Beer.find({})
     res.status(200).json(beers)
   },
+  getTopRatedBeers: async (req, res, next) => {
+    const beers = await Beer.find({}).populate('style_id country_id', 'name code flag')
+    const rated = await Beer.findTopRated(beers)
+    res.status(200).json(rated)
+  },
   addBeer: async (req, res, next) => {
     if (!req.session.user) {
       res.redirect('/login')
@@ -157,21 +162,8 @@ module.exports = {
   },
   renderBeer: async (req, res, next) => {
     const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    let brewery, country, style, category
-    if (beer.brewery_id) {
-      brewery = await Brewery.findOne({_id: beer.brewery_id}, 'name')
-    }
-    if (beer.country_id) {
-      country = await Country.findOne({_id: beer.country_id}, 'name code flag')
-    }
-    if (beer.category_id) {
-      category = await Category.findOne({_id: beer.category_id}, 'name style_id')
-    }
-    if (beer.style_id) {
-      style = await Style.findOne({_id: beer.style_id}, 'name')
-    }
-    res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
+    const beer = await Beer.findById(beerId).populate('country_id brewery_id style_id category_id')
+    res.status(200).render('beer', {beer: beer, session: req.session.user})
   },
   consumeBeer: async (req, res, next) => {
     const userId = req.session.user._id
