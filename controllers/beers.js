@@ -162,21 +162,8 @@ module.exports = {
   },
   renderBeer: async (req, res, next) => {
     const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    let brewery, country, style, category
-    if (beer.brewery_id) {
-      brewery = await Brewery.findOne({_id: beer.brewery_id}, 'name')
-    }
-    if (beer.country_id) {
-      country = await Country.findOne({_id: beer.country_id}, 'name code flag')
-    }
-    if (beer.category_id) {
-      category = await Category.findOne({_id: beer.category_id}, 'name style_id')
-    }
-    if (beer.style_id) {
-      style = await Style.findOne({_id: beer.style_id}, 'name')
-    }
-    res.status(200).render('beer', { beer: beer, brewery: brewery, country: country, style: style, category: category, session: req.session.user })
+    const beer = await Beer.findById(beerId).populate('country_id brewery_id style_id category_id')
+    res.status(200).render('beer', {beer})
   },
   consumeBeer: async (req, res, next) => {
     const userId = req.session.user._id

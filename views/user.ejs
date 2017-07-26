@@ -1,221 +1,109 @@
 <%- include header.ejs %>
+
+<% if (session) { %>
+
 <section class="main-section">
  <div class="container">
-   <div class="row flex-column flex-center">
-         <% if (user === undefined || user.active === false) { %>
-          <div class="one-half column">
-            <h1 class="hero-heading">Sorry could not found user</h1>
-          </div>
-            <% } else { %>
-          <div class="one-half column">
-            <div class="card">
-              <div class="card-header flex-center flex-column">
-                <figure class="avatar avatar-xl">
+   <div class="row">
+  <% if (user === undefined || user.active === false) { %>
+    <h1>Sorry could not found user</h1>
+     <% } else { %>
+     <div class="col s4">
+            <div class="card flex-center flex-column ta-center">
+              <div class="pt-1">
                   <% if (user.profileImg.length > 0) { %>
-                    <img src="/uploads/users/<%= user._id %>/<%= user.profileImg %>" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+                    <img src="/uploads/users/<%= user._id %>/<%= user.profileImg %>" class="circle img-responsive" />
                   <% } else { %>
-                    <img src="/images/user-placeholder.png" class="u-max-full-width img-thumbnail img-circle img-responsive" />
+                    <img src="/images/user-placeholder.png" />
                   <% } %>
-                </figure>
-                <div class="card-title">
+                </div>
+                <div class="card-content">
+                <span class="card-title">
                   @<%= user.username %>
                   <img src="/images/flags/SE-32.png" />
-                </div>
-                <div class="card-title">
+                </span>
+                <span class="card-title">
                   <%= user.name %>
-                </div>
-                <div class="card-subtitle">
+                </span>
+                <span class="card-subtitle">
                   Member since <%= user.registered.toDateString() %>
-                </div>
-                  <div class="card-subtitle">
+                </span>
+                <br>
+                  <span class="card-subtitle">
                     <a href="/users/<%= user._id %>/followers"><span id="followers"><%= followers %></span> follower(s)</a>
-                </div>
-              </div>
-              <div class="card-body">
+                </span>
                 <div class="row">
-                  <div class="one-half column ta-center">
+                  <div class="col s6 ta-center">
                       <h6 class="tc-blue">CONTRIBUTIONS</h6>
                         <p class=""><%= user.reviews.length + user.ratings.length + user.consumes.length + user.images.length %></p>
                   </div>
-                  <div class="one-half column ta-center">
+                  <div class="col s6 ta-center">
                       <h6 class="tc-blue">RANK</h6>
                         <p class="" id="ranking-field"></p>
                   </div>
-                </div>
-              </div>
-              <div class="card-footer flex-center flex-column">
-                <% if (session && session._id === user.id) { %>
-                  <a class="button button-primary" href="/users/<%= session._id %>/edit">Edit my profile</a>
-                <% } else { %>
-                  <% if (follower) { %>
-                    <a class="button button-primary" id="follow" data-id="<%= user._id %>" href="">Unfollow</a>
-                  <% } else { %>
-                    <a class="button button-primary" id="follow" data-id="<%= user._id %>" href="">Follow</a>
-                  <% } %>
-                <% } %>
-                <% if (user.description) { %>
+                     <% if (user.description) { %>
                   <p><%= user.description %></p>
                 <% } else { %>
                   <p>User has no description yet.</p>
                 <% } %>
+                </div>
+              </div>
+              <div class="card-action flex-center flex-column">
+                  <% if (follower) { %>
+                    <a class="waves-effect waves-light btn" id="follow" data-id="<%= user._id %>" href="">Unfollow</a>
+                  <% } else { %>
+                    <a class="waves-effect waves-light btn" id="follow" data-id="<%= user._id %>" href="">Follow</a>
+                  <% } %>
+             
               </div>
           </div>
-        </div>
+     </div>
 
- <div class="container mt-10">
-   <div class="row">
-            <div class="card">
-              <div class="accordion">
-                <% if (user.reviews.length > 0) { %>
-                <div class="accordion-item">
-                  <input type="radio" id="accordion-1" name="accordion-radio" hidden="" checked="">
-                  <label class="accordion-header hand" for="accordion-1">
-                    Reviews
-                  </label>
-                  <div class="accordion-body" id="reviews-container">
-                </div>
-              </div>
-              <% } %>
-                            
-                <div class="accordion-item">
-                  <input type="radio" id="accordion-2" name="accordion-radio" hidden="">
-                  <label class="accordion-header hand" for="accordion-2">
-                    Top Rated
-                  </label>
-                  <div class="accordion-body">
-               <div class="filter">
-                <input type="radio" id="tag-action" class="filter-tag" name="filter-radio" hidden="" checked="">
-              	<input type="radio" id="tag-roleplaying" class="filter-tag" name="filter-radio" hidden="">
-                <input type="radio" id="tag-shooter" class="filter-tag" name="filter-radio" hidden="">
-
-                <div class="filter-nav">
-                  <label class="chip" for="tag-action">Beer</label>
-                  <label class="chip" for="tag-shooter">Style</label>
-                  <label class="chip" for="tag-roleplaying">Country</label>
-                </div>
-                <div class="filter-body row">
-                  <div class="one-third column ml-0" data-tag="tag-action">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">Pilsner Urquell</div>
-                              <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>                    
-                    <span class="va-middle">5</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="one-third column ml-0" data-tag="tag-action">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">Omnipollo</div>
-                              <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star_half</i>
-                    <i class="material-icons md-24 grey va-middle">star</i>                    
-                    <span class="va-middle">4.5</span>
-                    </div>
-                  </div>
-                  </div>
-                  <div class="one-third column ml-0" data-tag="tag-action">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">Heineken</div>
-                              <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 va-middle">star</i>
-                    <i class="material-icons md-24 grey va-middle">star</i>                    
-                    <span class="va-middle">4</span>
-                    </div>
-                  </div>
-                  </div>
-                   <div class="one-third column ml-0" data-tag="tag-shooter">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">Pale lager</div>
-                        <div class="card-subtitle">4.5 average | 2234 ratings</div>
-                    </div>
-                  </div>
-                  </div>
-                     <div class="one-third column ml-0" data-tag="tag-shooter">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">Dortmunder Export</div>
-                        <div class="card-subtitle">4.3 average | 1211 ratings</div>
-                    </div>
-                  </div>
-                  </div>
-                     <div class="one-third column ml-0" data-tag="tag-shooter">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">Stout</div>
-                        <div class="card-subtitle">4.1 average | 623 ratings</div>
-                    </div>
-                  </div>
-                  </div>
-                  <div class="one-third column ml-0" data-tag="tag-roleplaying">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">Sweden</div>
-                        <div class="card-subtitle">4.3 average | 1000 ratings</div>
-                      </div>
-                  </div>
-                  </div>
-                  <div class="one-third column ml-0" data-tag="tag-roleplaying">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">Belgium</div>
-                        <div class="card-subtitle">4.2 average | 834 ratings</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="one-third column ml-0" data-tag="tag-roleplaying">
-                    <div class="filter-item card">
-                      <div class="card-header">
-                        <div class="card-title">United States</div>
-                        <div class="card-subtitle">3.9 average | 654 ratings</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                </div>
-              </div>
-                  </div>
-                </div>
-                 <% if (user.images) { %>
-                <div class="accordion-item">
-                  <input type="radio" id="accordion-3" name="accordion-radio" hidden="">
-                  <label class="accordion-header hand" for="accordion-3">
-                    Gallery
-                  </label>
-                  <div class="accordion-body">
-                    <div class="row">
-                  <% user.images.forEach(function(image) { %>
-                  <div class="three columns">
+ <div class="col s8">
+   <div class="card">
+     <ul class="collapsible" data-collapsible="accordion">
+       <% if (user.reviews.length > 0) { %>
+       <li>
+         <div class="collapsible-header"><i class="material-icons">rate_review</i>Reviews</div>
+         <div class="collapsible-body">
+           <ul class="collection" id="reviews-container">
+           </ul>
+         </div>
+       </li>
+        <% } %>
+       <li>
+         <div class="collapsible-header"><i class="material-icons">star</i>Top Rated</div>
+         <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+       </li>
+         <% if (user.images) { %>
+       <li>
+         <div class="collapsible-header"><i class="material-icons">collections</i>Gallery</div>
+         <div class="collapsible-body">
+           <div class="row">
+             <% user.images.forEach(function(image) { %>
+                  <div class="col s3">
                     <a href="/beers/<%= image.beer_id %>">
-                      <img src="/uploads/beers/<%= image.beer_id %>/<%= image.name %>" class="u-max-full-width">
+                      <img src="/uploads/beers/<%= image.beer_id %>/<%= image.name %>" class="img-responsive">
                     </a>
                   </div>
                   <% }); %>
-                </div>
-              </div>
-                </div>
-                <% } %>
-              </div>
-          </div>
- </div>
- </div>
-
-      <% } %>  
-   </div>
- </div>
+           </div>
+         </div>
+       </li>
+      <% } %>
+    </ul>
+  </div>
+</div>
+<% } %>
+</div>
+</div>
  </section> 
 
+          
+
+<% } %>
 <%- include footer.ejs %>
+
 <script src="/js/user.js"></script>
 
 </body>

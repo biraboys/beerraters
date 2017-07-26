@@ -13,8 +13,8 @@
 <link rel="stylesheet" href="/css/spectre.css">
 <link rel="stylesheet" href="/css/custom.css">-->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-<link href="css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+<link href="/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+<link href="/css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
 <!--<link rel="stylesheet" href="/css/style.css">-->
 
@@ -35,8 +35,13 @@
       <ul class="right hide-on-med-and-down">
         <li><a href="/">Home</a></li>
         <li><a href="#">About</a></li>
+        <% if (!session) { %>
         <li><a href="/register">Sign Up</a></li>
         <li><a href="/login">Login</a></li>    
+        <% } else { %>
+        <li><a id="user-session-id" href="/users/<%= session._id %>">My Profile</a></li>
+        <li><a id="logout">Logout</a></li>
+        <% } %>   
       </ul>
 
       <ul id="nav-mobile" class="side-nav">

@@ -48,6 +48,7 @@ const reset = require('./routes/reset')
 const reviews = require('./routes/reviews')
 const toplist = require('./routes/toplist')
 const activation = require('./routes/activation')
+const panel = require('./routes/panel')
 
 app.use('/', index)
 app.use('/users', users)
@@ -65,6 +66,7 @@ app.use('/reset', reset)
 app.use('/reviews', reviews)
 app.use('/toplist', toplist)
 app.use('/activation', activation)
+app.use('/panel', panel)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))
