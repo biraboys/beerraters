@@ -58,7 +58,7 @@ const controller = module.exports = {
           to: newUser.email,
           from: 'noreply@beerraters.com',
           subject: 'Please confirm your account - Beerraters.com',
-          text: `Hi ${newUser.username},\n\n Thanks for your registration!\n Please confirm your account by clicking the following link:\n http://${req.headers.host}/activation/${token}\n\n If you havent done this before ${newUser.registrationTokenExpires.toLocaleString('en-US')}, the activation link will expire and you'll have to register a new account.`
+          text: `Hi ${newUser.username},\n\n Thanks for your registration!\n Please confirm your account by clicking the following link:\n http://${req.headers.host}/activation/${token}\n\n If you havent done this before ${newUser.registrationTokenExpires.toLocaleString('en-US')}, the activation link will expire and you'll have to register again.`
         }
         stmpTransport.sendMail(mailOptions, err => {
           if (err) { console.log(err) }
