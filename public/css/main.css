@@ -71,3 +71,10 @@ body {
 .row .col .img-column .first-img{
   padding-left: 0.75rem;
 }
+
+.select-dropdown .flag-img {
+  height: auto;
+  max-width: 100%;
+  margin-top: 0.9rem;
+
+}
