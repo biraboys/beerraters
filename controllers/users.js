@@ -22,7 +22,7 @@ const controller = module.exports = {
     const [username, name, email, password, country] = [req.body.username, req.body.name, req.body.email, req.body.password, req.body.country]
     const buff = crypto.randomBytes(20)
     const token = buff.toString('hex')
-    // 1 Hour from now
+    // 1 Hour from Date.now()
     const expires = Date.now() + 3600000
 
     const newUser = new User({
@@ -261,7 +261,7 @@ const controller = module.exports = {
           to: user.email,
           from: 'noreply@beerraters.com',
           subject: 'Password reset - Beerraters.com',
-          text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n Please click on the following link, or paste this into your browser to complete the process:\n http://${req.headers.host}/reset/${token}\n If you did not request this, please ignore this email and your password will remain unchanged.\n`
+          text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n Please click on the following link, or paste this into your browser to complete the process:\n\n http://${req.headers.host}/reset/${token}\n\n If you did not request this, please ignore this email and your password will remain unchanged.\n`
         }
         stmpTransport.sendMail(mailOptions, err => {
           console.log('mail sent')
