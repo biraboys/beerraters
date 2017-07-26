@@ -20,7 +20,7 @@ async function followUser () {
     console.log(response.status)
     window.location.href = '/login'
   } else if (response.status === 200) {
-    if (follow.innerHTML === 'Follow') {
+    if (follow.innerHTML[0] === 'F') {
       const value = parseInt(followers.innerHTML) + 1
       followers.innerHTML = value
       follow.innerHTML = 'Unfollow'

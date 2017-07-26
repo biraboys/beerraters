@@ -43,11 +43,11 @@
                   <% beer.images.forEach(function(image, index) { %>
                   <% if (index === 0) { %>
                   <div class="col s3 img-column" style="padding-left: 0.75rem;">
-                    <img class="responsive-img" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
+                    <img class="responsive-img materialboxed" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
                   </div>
                   <% } else { %>
                   <div class="col s3 img-column">
-                    <img class="responsive-img" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
+                    <img class="responsive-img materialboxed" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
                   </div>
                   <% } %>
                   <% }); %>
