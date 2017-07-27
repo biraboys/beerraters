@@ -60,6 +60,14 @@ body {
   color: #bbc1cd;
 }
 
+.card-link {
+  color: #bbc1cd;
+}
+
+.card-link:hover {
+  color: #1EAEDB;
+}
+
 .pt-1 {
   padding-top: 1rem;
 }
@@ -81,4 +89,8 @@ body {
 
 .h-200 {
   height: 200px;
+}
+
+.no-border {
+  border: none;
 }

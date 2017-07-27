@@ -5,7 +5,6 @@
          <% if (beer === undefined) { %>
             <h1>Sorry could not found beer</h1>
             <% } else { %>
-            <div class="col s8">
               <div class="modal modal-sm" id="rating-modal">
                 <div class="modal-overlay"></div>
                 <div class="modal-container" id="rating-modal-body">
@@ -36,56 +35,48 @@
                   </div>
                 </div>
                 </div>
-            <div class="card">
-              <div class="card-image">
-                <div class="row">
-                  <% if (beer.images.length !== 0) { %>
-                  <% beer.images.forEach(function(image, index) { %>
-                  <% if (index === 0) { %>
-                  <div class="col s3 img-column" style="padding-left: 0.75rem;">
-                    <img class="responsive-img materialboxed" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
-                  </div>
-                  <% } else { %>
-                  <div class="col s3 img-column">
-                    <img class="responsive-img materialboxed" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
-                  </div>
-                  <% } %>
-                  <% }); %>
+      <div class="col s12 m3">
+        <div class="card-panel">
+           <% if (beer.images.length !== 0) { %>
+              <% beer.images.forEach(function(image) { %>
+                <img class="responsive-img materialboxed" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
+        <% }); %>
                   <% } else {%>
-                  <div class="col s3 img-column">
                     <img class="responsive-img" src="/images/bottle.png">
-                  </div>
                   <% } %>
-                </div>
-              </div>
-                <div class="card-content">
+  </div>
+                                        
+        </div>
+<div class="col s12 m6">
+            <div class="card">
+              <div class="card-content">
                   <% if (session) { %>
-                  <div class="u-pull-right mt-1">
-                     <a class="tooltip tooltip-bottom" id="consume-link" data-tooltip="Drank it?">
+                  <div class="right">
+                     <a class="tooltipped" data-position="bottom" data-delay="50" id="consume-link" data-tooltip="Drank it?">
                       <svg id="consume-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 0h24v24H0z" fill="none"/>
                         <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
                       </svg>
                     </a> 
-                    <a class="tooltip tooltip-bottom" id="review-link" data-tooltip="Review">
+                    <a class="tooltipped" data-position="bottom" data-delay="50" id="review-link" data-tooltip="Review">
                       <svg id="review-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 0h24v24H0zm15.35 6.41l-1.77-1.77c-.2-.2-.51-.2-.71 0L6 11.53V14h2.47l6.88-6.88c.2-.19.2-.51 0-.71z" fill="none"/>
                         <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 14v-2.47l6.88-6.88c.2-.2.51-.2.71 0l1.77 1.77c.2.2.2.51 0 .71L8.47 14H6zm12 0h-7.5l2-2H18v2z"/>
                       </svg>
                     </a>
-                    <a class="tooltip tooltip-bottom" id="rating-link" data-tooltip="Rate">
+                    <a class="tooltipped" data-position="bottom" data-delay="50" id="rating-link" data-tooltip="Rate">
                       <svg id="rating-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                         <path d="M0 0h24v24H0z" fill="none"/>
                       </svg>
                     </a>
-                    <a class="tooltip tooltip-bottom" id="image-link" data-tooltip="Add image">
+                    <a class="tooltipped" data-position="bottom" data-delay="50" id="image-link" data-tooltip="Add image">
                       <svg id="image-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 0h24v24H0z" fill="none"/>
                         <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                       </svg>
                     </a>  
-                    <a class="tooltip tooltip-bottom" id="edit-link" data-tooltip="Edit">
+                    <a class="tooltipped" data-position="bottom" data-delay="50" id="edit-link" data-tooltip="Edit">
                       <svg id="edit-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                         <path d="M0 0h24v24H0z" fill="none"/>
@@ -93,7 +84,7 @@
                     </a>
                   </div>
                   <% } %>
-                  <div class="card-title" id="beer-name"><%= beer.name %></div>
+                  <span class="card-title" id="beer-name"><%= beer.name %></span>
                   <div class="card-title" id="rating-container">
                   <% if (!beer.avg_rating) { %>
                     <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -119,35 +110,33 @@
                     <span class="card-subtitle">N/A</span>
                   <% } %>
                   </div>
+                <p><%= beer.description %></p>
+              </div>
+                <div class="card-action">
                     <% if (beer.style_id) { %>
-                      <div class="card-subtitle">
-                        <a class="card-link" href="/styles/<%= beer.style_id %>">
+                        <a href="/styles/<%= beer.style_id %>">
                           <%= beer.style_id.name %>
                         </a>
-                      </div>
                     <% } %>
                       <% if (beer.category_id) { %>
-                      <div class="card-subtitle">
+                      <a>
                         <%= beer.category_id.name %>
-                      </div>
+                      </a>
                     <% } %>
-                      <div class="card-subtitle">
                     <% if (beer.brewery_id) { %>
-                        <a class="card-link" href="/breweries/<%= beer.brewery_id %>">
+                        <a href="/breweries/<%= beer.brewery_id %>">
                           <%= beer.brewery_id.name %>
                         </a>
                     <% } %>
                     <% if (beer.country_id) { %>
-                        <a class="card-link" href="/countries/<%= beer.country_id %>">
+                        <a href="/countries/<%= beer.country_id %>">
                           <%= beer.country_id.code %>
                         </a>
-                    <% } %>  
-                      </div>
-                </div>
-                <div class="card-content">
-                 <%= beer.description %>
-                </div>
+                    <% } %>
+                    </div>  
            </div>
+              </div>
+  
             <% if (session) { %>
               <div class="modal" id="edit-modal">
                 <div class="modal-overlay"></div>
@@ -248,11 +237,10 @@
                 </div>
               </div>    
            <% } %>  
-     </div>
-     <div class="col s4">
+     <div class="col s12 m3">
        <div class="card">
-         <div class="card-body">
-           <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+         <div class="card-content">
+           <figure class="flex-center flex-column">
              <img src="/icons/reviews.svg" alt="Reviews" />
              <figcaption>Reviews</figcaption>
              <figcaption><%= beer.reviews.length %></figcaption>
@@ -260,8 +248,8 @@
          </div>
        </div>
        <div class="card">
-         <div class="card-body">
-           <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+         <div class="card-content">
+           <figure class="flex-center flex-column">
              <img src="/icons/ratings.svg" alt="Ratings" />
              <figcaption>Ratings</figcaption>
              <figcaption><%= beer.ratings.length %></figcaption>
@@ -269,19 +257,21 @@
          </div>
        </div>
        <div class="card">
-         <div class="card-body">
-           <figure style="margin: 1em 20px; padding: 0;" class="flex-center flex-column">
+         <div class="card-content">
+           <figure class="flex-center flex-column">
              <img src="/icons/consumes.svg" alt="Consumes" />
              <figcaption>Consumes</figcaption>
              <figcaption><%= beer.consumes.length %></figcaption>
            </figure>
          </div>
        </div>
-     </div>   
-   </div>
+     </div>
+          </div>   
       <% } %>
       <% if (beer.reviews) { %>  
-<div class="row mt-10" id="reviews-container">
+<div class="row">
+  <ul class="collection no-border" id="reviews-container">
+  </ul>
 </div>
 <% } %>  
 
