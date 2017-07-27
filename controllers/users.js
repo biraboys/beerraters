@@ -106,7 +106,7 @@ const controller = module.exports = {
   },
   findUser: async (req, res, next) => {
     const userName = req.query.q
-    const allusers = await User.find({}).populate('country_id')
+    const allusers = await User.find({}, '-password')
     const users = await User.findByName(allusers, userName)
     res.status(200).json(users)
   },

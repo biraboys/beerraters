@@ -23,10 +23,14 @@ if (sessionStorage.getItem('beerCards') !== null) {
 
 // Search buttons and form
 function activeButtons (current) {
-  current.classList.add('button-primary')
+  current.classList.add('active')
+  current.classList.remove('white')
+  current.classList.remove('black-text')
   searchButtonArr.forEach(button => {
-    if (button.classList.contains('button-primary') && button !== current) {
-      button.classList.remove('button-primary')
+    if (button !== current) {
+      button.classList.add('white')
+      button.classList.add('black-text')
+      button.classList.remove('active')
     }
   })
 }
@@ -59,7 +63,6 @@ filterOptions.forEach(option => {
     searchForm.q.select()
     searchForm.q.focus()
     setChecked(this)
-    console.log(this)
   })
 })
 
@@ -75,7 +78,7 @@ searchForm.q.addEventListener('keyup', function () {
 searchForm.addEventListener('submit', function (e) {
   e.preventDefault()
   searchButtonArr.forEach(button => {
-    if (button.classList.contains('button-primary')) {
+    if (button.classList.contains('active')) {
       checkSubmitValue(button.name)
     }
   })
@@ -100,7 +103,7 @@ function checkSubmitValue (searchItem) {
 
 // DB calls
 async function getInputValues (beerName, filter) {
-  loadingContainer.classList.add('loading')
+  loadingContainer.classList.add('active')
   try {
     const response = await fetch(`/search/beers/${filter}/?q=${beerName}`)
     const beers = await response.json()
@@ -136,7 +139,7 @@ async function getInputValues (beerName, filter) {
   } catch (e) {
     console.log(e)
   }
-  loadingContainer.classList.remove('loading')
+  loadingContainer.classList.remove('active')
 }
 
 async function getBeerInfo (beer) {
@@ -150,7 +153,7 @@ async function getBeerInfo (beer) {
 }
 
 async function searchUser (userName) {
-  loadingContainer.classList.add('loading')
+  loadingContainer.classList.add('active')
   try {
     const response = await fetch(`/search/users/?q=${userName}`)
     const users = await response.json()
@@ -188,7 +191,7 @@ async function searchUser (userName) {
   } catch (err) {
     console.log(err)
   }
-  loadingContainer.classList.remove('loading')
+  loadingContainer.classList.remove('active')
 }
 
 function generateBeerCard (beerObj) {
@@ -349,36 +352,33 @@ function generateUserCard (user) {
   }
   if (user.active) {
     const userCard = `
-      <div class="row" style="padding: 0.5rem;">
-        <div class="card">
-          <div class="row">
-            <div class="one-third column">
-              <div class="card-image flex-center mt-2-5">
-                <img class="u-max-half-width circle" src="${profileImg}">
-              </div>
+    <div class="row">
+      <div class="card horizontal">
+            <div class="card-image">
+              <img class="h-200" src="${profileImg}">
             </div>
-            <div class="two-thirds column">
-              <div class="card-header">
-                <div class="card-title">
-                  <a class="card-link" href="/users/${user._id}">@${user.username}</a>
-                  <img src="/images/flags/${user.country_id.flag}">
-                </div> 
-                <div class="card-title">                  
-                  <a class="card-link" href="/users/${user._id}">${user.name}</a>
-                </div>
-                <div class="card-subtitle">
-                  Followers: ${user.followers.length}
-                  Following: ${user.following.length}
-                </div>
-                <div class="card-subtitle">
-                  Consumes: ${user.consumes.length}
-                  Ratings: ${user.ratings.length}
-                  Reviews: ${user.reviews.length}
-                </div>
+            <div class="card-stacked">
+            <div class="card-content">
+              <div class="card-title">
+                <a class="card-link" href="/users/${user._id}">@${user.username}</a>
+                <img src="/images/flags/${user.country_id.flag}">
+              </div> 
+              <div class="card-title">                  
+                <a class="card-link" href="/users/${user._id}">${user.name}</a>
               </div>
-            </div>
+              <div>
+                  <span class="card-subtitle">Followers: ${user.followers.length}</span>
+                  <span class="card-subtitle">Following: ${user.following.length}</span>
+              </div>
+              <div>
+                 <span class="card-subtitle">Consumes: ${user.consumes.length}</span>
+                 <span class="card-subtitle">Ratings: ${user.ratings.length}</span>
+                 <span class="card-subtitle">Reviews: ${user.reviews.length}</span>                 
+              </div>
           </div>
         </div>
+      </div>
+      </div>
         `
     return userCard
   }

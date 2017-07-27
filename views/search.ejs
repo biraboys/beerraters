@@ -11,26 +11,66 @@
 				  <div id="error-container"></div>
 				<div class="row">
 					<h5>Find</h5>
-					<div class="one-half column">
-					  <a class="waves-effect waves-light btn button-primary search-btn" name="beer" id="beer-search-btn">Beer</a>
-					  <a class="waves-effect waves-light btn search-btn" name="user" id="user-search-btn">User</a>
-					</div>
-					<div class="one-half column">
-					</div>					
+					<div class="input-field">
+					  <a class="waves-effect waves-light btn search-btn active" name="beer" id="beer-search-btn">Beer</a>
+					  <a class="waves-effect waves-light btn search-btn white black-text" name="user" id="user-search-btn">User</a>
+					</div>			
 				</div>
+				<div class="row">
 				<div class="input-field" id="filter-options">
 					<h5>Filter by</h5>
-					<input class="filter-option with-gap" type="radio" name="name" value="name" checked />
-					<label for="name">Name</label>
-					<input class="filter-option with-gap" type="radio" name="style" value="style">
-					<label for="style">Style</label>
-					<input class="filter-option with-gap" type="radio" name="brewery" value="brewery">
-					<label for="brewery">Brewery</label>
-					<input class="filter-option with-gap" type="radio" name="country" value="country">
-					<label for="country">Country</label>
+					<input class="filter-option" type="radio" name="name" id="name-option" value="name" checked />
+					<label for="name-option">Name</label>
+					<input class="filter-option" type="radio" name="style" id="style-option" value="style">
+					<label for="style-option">Style</label>
+					<input class="filter-option" type="radio" name="brewery" id="brewery-option" value="brewery">
+					<label for="brewery-option">Brewery</label>
+					<input class="filter-option" type="radio" name="country" id="country-option" value="country">
+					<label for="country-option">Country</label>
+				</div>
 				</div>			
 			</form>
-			  <div id="loading-container"></div>
+			<div id="loading-container" class="preloader-wrapper big">
+    <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+			</div>
 			  <div id="results-container"></div>
 			  <div id="beer-container"></div>
 			  <div id="page-navigation"></div>		
