@@ -5,33 +5,78 @@
 	   <div class="two-thirds column">
 			<form role="search" name="searchForm">
 				<div class="row">
-					<label for="word">What are you after?</label>
+					<h5>What are you after?</h5>
 					<input required class="u-full-width" type="text" placeholder="Search..." name="q" pattern=".{2,}" title="Search must contain at least 3 characters">
 				</div>
 				  <div id="error-container"></div>
-				<label for="word">Find</label>
 				<div class="row">
-					<div class="one-half column">
-					  <a class="button button-primary search-btn" name="beer" id="beer-search-btn">Beer</a>
-					  <a class="button search-btn" name="user" id="user-search-btn">User</a>
-					</div>
-					<div class="one-half column">
-					</div>					
+					<h5>Find</h5>
+					<div class="input-field">
+					  <a class="waves-effect waves-light btn search-btn active" name="beer" id="beer-search-btn">Beer</a>
+					  <a class="waves-effect waves-light btn search-btn white black-text" name="user" id="user-search-btn">User</a>
+					</div>			
 				</div>
-				<div id="filter-options">
-					<label for="options">Filter by</label>
-					<input class="filter-option" type="radio" name="name" value="name" checked>Name
-					<input class="filter-option" type="radio" name="style" value="style">Style
-					<input class="filter-option" type="radio" name="brewery" value="brewery">Brewery
-					<input class="filter-option" type="radio" name="country" value="country">Country
+				<div class="row">
+				<div class="input-field" id="filter-options">
+					<h5>Filter by</h5>
+					<input class="filter-option" type="radio" name="name" id="name-option" value="name" checked />
+					<label for="name-option">Name</label>
+					<input class="filter-option" type="radio" name="style" id="style-option" value="style">
+					<label for="style-option">Style</label>
+					<input class="filter-option" type="radio" name="brewery" id="brewery-option" value="brewery">
+					<label for="brewery-option">Brewery</label>
+					<input class="filter-option" type="radio" name="country" id="country-option" value="country">
+					<label for="country-option">Country</label>
+				</div>
 				</div>			
 			</form>
-			  <div id="loading-container"></div>
+			<div id="loading-container" class="preloader-wrapper big">
+    <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+			</div>
 			  <div id="results-container"></div>
 			  <div id="beer-container"></div>
 			  <div id="page-navigation"></div>		
 		</div>
 
+	</div>
 	</div>
 </section>
 

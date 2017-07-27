@@ -216,7 +216,11 @@ async function checkContributions () {
     }
     if (userImages.indexOf(userId) !== -1) {
       imageIcon.setAttribute('fill', '#000000')
+      console.log(imageLink)
+      console.log(imageLink.getAttribute('data-tooltip'))
       imageLink.setAttribute('data-tooltip', 'Posted photo')
+      console.log(imageLink.getAttribute('data-tooltip'))
+      
     }
     if (ratingUsers.indexOf(userId) !== -1) {
       ratingIcon.setAttribute('fill', '#000000')
@@ -476,40 +480,28 @@ async function checkReviews () {
       credentials: 'same-origin'
     })
     const reviewsObj = await response.json()
-    console.log(reviewsObj)
     if (reviewsObj.reviews.length > 0) {
       reviewsObj.reviews.forEach(async obj => {
-        const [userResponse, reviewResponse] = await Promise.all([
-          fetch(`/users/${obj.user_id}/json`),
-          fetch(`/reviews/${obj.review_id}`)
-        ])
-        const [user, review] = await Promise.all([
-          userResponse.json(),
-          reviewResponse.json()
-        ])
+        const reviewResponse = await fetch(`/reviews/${obj.review_id}`)
+        const review = await reviewResponse.json()
         let profileImg
-        if (user.profileImg.length > 0) { 
-          profileImg = `/uploads/users/${user._id}/${user.profileImg}`
+        if (review.user_id.profileImg.length > 0) {
+          profileImg = `/uploads/users/${review.user_id._id}/${review.user_id.profileImg}`
         } else {
           profileImg = '/images/user-placeholder.png'
         }
-        const countryResponse = await fetch(`/countries/${review.country_id}/json`)
-        const country = await countryResponse.json()
         reviewsContainer.innerHTML += `
-            <div class="card mt-1">
-               <div class="tile">
-                <div class="tile-icon">
-                  <figure class="avatar avatar-lg">
-                    <img src="${profileImg}">
-                  </figure>
-                </div>
-                <div class="tile-content mt-1">
-                  <p class="tile-title"><a href="/users/${user._id}"><strong>${user.displayName}</strong></a></p>
-                  <p class="tile-subtitle"> ${review.place} in <a class="card-link" href="/countries/${country._id}">${country.name}</a></p>
-                  <p>${review.body}</p>
-                </div>
-              </div>
-            </div>
+            <div class="card-panel">
+             <li class="collection-item avatar">
+      <img src="${profileImg}" alt="" class="circle">
+      <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.displayName}</strong></a></span>
+      <p>
+         <span class="card-subtitle">${review.place} in </span><a class="card-link" href="/countries/${review.country_id._id}">${review.country_id.name}</a> <br>
+         ${review.body}
+      </p>
+      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+    </li>
+  </div>
         `
       })
     }
