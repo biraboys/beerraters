@@ -1,29 +1,63 @@
 <%- include header.ejs %>
 
-<div class="container register-form">
-  <div class="row">
-    <div class="columns">
+<div class="content register-form">
+  <div class="section">
+    <div class="container">
       <h4>Edit profile</h4>
-      <form method="post" enctype="multipart/form-data">
-        <div class="six columns">
-          <label for="name">Name:</label>
-          <input type="text" name="name" id="name">
-          <label for="displayname">Displayname:</label>
-          <input type="text" name="displayname" id="displayname">
-          <label for="description">Write something about yourself:</label>
-          <textarea class="u-full-width" name="description" id="description"></textarea>
-          <label for"profileImg">Select a profileimage:</label>
-          <input type="file" name="profileImg"></br></br>
-          <input class="button-primary" type="submit" value="Save">
+      <form enctype="multipart/form-data">
+        <div class="row">
+          <div class="col s6">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name">
+            <label for="displayname">Displayname</label>
+            <input type="text" name="displayname" id="displayname">
+            <div class="file-field input-field">
+              <div class="btn">
+                <span>Profile image</span>
+                <input type="file" name="profileImg" id="profile-image">
+              </div>
+              <div class="file-path-wrapper">
+                <input class="file-path validate" type="text">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <label for="description">Write something about yourself</label>
+                <textarea class="materialize-textarea" name="description" id="description" data-length="120"></textarea>
+              </div>
+            </div>
+            <!-- <label for="description">Write something about yourself</label> -->
+            <!-- <textarea class="u-full-width" name="description" id="description" data-length="120"></textarea> -->
+            <!-- <label for"profileImg">Select a profileimage:</label>
+            <input type="file" name="profileImg"></br></br> -->
+          </div>
+          <div class="col s6">
+            <!-- <label for="confirmpass">Confirm new password:</label>
+            <input type="password" name="confirmpass"> -->
+            <div class="row">
+              <div class="input-field col s12">
+                <input type="password" name="currentpass" class="validate" id="currentpass">
+                <label for="currentpass" data-error id="currentpassmsg">Current password</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input type="password" name="newpass" class="validate" id="newpass">
+                <label for="newpass" data-error id="newpassmsg">New password</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input type="password" name="confirmpass" class="validate" id="confirmpass">
+                <label for="confirmpass" data-error id="confirmpassmsg">Confirm new password</label>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="six columns">
-          <label for="currentpass">Current password:</label>
-          <input type="password" name="currentpass">
-          <label for="newpass">New password</label>
-          <input type="password" name="newpass">
-          <label for="confirmpass">Confirm new password:</label>
-          <input type="password" name="confirmpass">
-        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="action" id="edit-form">Submit
+          <i class="material-icons right">send</i>
+        </button>
+        <a class="waves-effect waves-light btn red" href="/users/<%= session._id %>/edit">Remove my account</a>
       <!-- enctype="multipart/form-data"-->
         <!--<label for="username">Set profile image:</label>-->
         <!--<input class="u-full-width" type="file" name="profileImage">-->

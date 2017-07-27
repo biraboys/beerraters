@@ -132,26 +132,25 @@ const controller = module.exports = {
   editProfile: async (req, res, next) => {
     const user = await User.findOne({ _id: req.session.user._id }, 'profileImg')
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
-
     const currentpass = req.body.currentpass
     const password = req.body.newpass
     const confirmpass = req.body.confirmpass
     let link = user.profileImg
 
-    if (req.files.length > 0) {
-      const profileImg = `${req.files[0].filename}`
-      const path = `public/uploads/users`
-      const image = await Jimp.read(`${path}/${profileImg}`)
-      image.resize(128, 128)
-      image.quality(60)
-      image.write(`${path}/${req.session.user._id}/${profileImg}.png`)
-      const filePath = `${path}/${profileImg}`
-      fs.unlinkSync(filePath)
-      if (user.profileImg.length > 0) {
-        fs.unlinkSync(`${path}/${req.session.user._id}/${user.profileImg}`)
-      }
-      link = `${profileImg}.png`
-    }
+    // if (req.files.length > 0) {
+    //   const profileImg = `${req.files[0].filename}`
+    //   const path = `public/uploads/users`
+    //   const image = await Jimp.read(`${path}/${profileImg}`)
+    //   image.resize(128, 128)
+    //   image.quality(60)
+    //   image.write(`${path}/${req.session.user._id}/${profileImg}.png`)
+    //   const filePath = `${path}/${profileImg}`
+    //   fs.unlinkSync(filePath)
+    //   if (user.profileImg.length > 0) {
+    //     fs.unlinkSync(`${path}/${req.session.user._id}/${user.profileImg}`)
+    //   }
+    //   link = `${profileImg}.png`
+    // }
 
     if (currentpass && password && confirmpass) {
       const user = await User.findOne({ _id: req.session.user._id }, 'password')
@@ -159,8 +158,21 @@ const controller = module.exports = {
         if (password === confirmpass) {
           user.password = password
           await user.save(err => {
-            if (err.errors.password) {
-              res.json({ errMsg: err.errors.password.message })
+            if (err !== null) {
+              if (err.errors) {
+                // console.log(err.errors.password.message)
+                res.json({ message: err.errors.password.message })
+              }
+            } else {
+              User.findOneAndUpdate({ _id: req.session.user._id }, {
+                $set: {
+                  name: name,
+                  displayName: displayName,
+                  description: description,
+                  profileImg: link
+                }
+              })
+              res.json({ message: 'Success!' })
             }
           })
         } else {
@@ -170,15 +182,6 @@ const controller = module.exports = {
         res.json({ message: 'Current password does not match.' })
       }
     }
-
-    await User.findOneAndUpdate({ _id: req.session.user._id }, {
-      $set: {
-        name: name,
-        displayName: displayName,
-        description: description,
-        profileImg: link
-      }
-    })
   },
   followUser: async (req, res, next) => {
     if (req.session.user) {
