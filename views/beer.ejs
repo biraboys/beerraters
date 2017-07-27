@@ -114,7 +114,7 @@
               </div>
                 <div class="card-action">
                     <% if (beer.style_id) { %>
-                        <a href="/styles/<%= beer.style_id %>">
+                        <a href="/styles/<%= beer.style_id._id %>">
                           <%= beer.style_id.name %>
                         </a>
                     <% } %>
@@ -124,12 +124,12 @@
                       </a>
                     <% } %>
                     <% if (beer.brewery_id) { %>
-                        <a href="/breweries/<%= beer.brewery_id %>">
+                        <a href="/breweries/<%= beer.brewery_id._id %>">
                           <%= beer.brewery_id.name %>
                         </a>
                     <% } %>
                     <% if (beer.country_id) { %>
-                        <a href="/countries/<%= beer.country_id %>">
+                        <a href="/countries/<%= beer.country_id._id %>">
                           <%= beer.country_id.code %>
                         </a>
                     <% } %>

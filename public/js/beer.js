@@ -482,29 +482,21 @@ async function checkReviews () {
     const reviewsObj = await response.json()
     if (reviewsObj.reviews.length > 0) {
       reviewsObj.reviews.forEach(async obj => {
-        const [userResponse, reviewResponse] = await Promise.all([
-          fetch(`/users/${obj.user_id}/json`),
-          fetch(`/reviews/${obj.review_id}`)
-        ])
-        const [user, review] = await Promise.all([
-          userResponse.json(),
-          reviewResponse.json()
-        ])
+        const reviewResponse = await fetch(`/reviews/${obj.review_id}`)
+        const review = await reviewResponse.json()
         let profileImg
-        if (user.profileImg.length > 0) { 
-          profileImg = `/uploads/users/${user._id}/${user.profileImg}`
+        if (review.user_id.profileImg.length > 0) {
+          profileImg = `/uploads/users/${review.user_id._id}/${review.user_id.profileImg}`
         } else {
           profileImg = '/images/user-placeholder.png'
         }
-        const countryResponse = await fetch(`/countries/${review.country_id}/json`)
-        const country = await countryResponse.json()
         reviewsContainer.innerHTML += `
             <div class="card-panel">
              <li class="collection-item avatar">
       <img src="${profileImg}" alt="" class="circle">
-      <span class="title"><a href="/users/${user._id}"><strong>${user.displayName}</strong></a></span>
+      <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.displayName}</strong></a></span>
       <p>
-         <span class="card-subtitle">${review.place} in </span><a class="card-link" href="/countries/${country._id}">${country.name}</a> <br>
+         <span class="card-subtitle">${review.place} in </span><a class="card-link" href="/countries/${review.country_id._id}">${review.country_id.name}</a> <br>
          ${review.body}
       </p>
       <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
