@@ -65,7 +65,6 @@
  <div class="col s8">
    <div class="card">
      <ul class="collapsible" data-collapsible="accordion">
-       <% if (user.reviews.length > 0) { %>
        <li>
          <div class="collapsible-header"><i class="material-icons">rate_review</i>Reviews</div>
          <div class="collapsible-body">
@@ -73,7 +72,6 @@
            </ul>
          </div>
        </li>
-        <% } %>
        <li>
          <div class="collapsible-header"><i class="material-icons">star</i>Top Rated</div>
          <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
@@ -97,17 +95,19 @@
     </ul>
   </div>
 </div>
-<% } %>
+<% } %> 
+<% } else { %>
+  <h3 class="ta-center">You have to log in to view this content</h3>
+  <% } %>
 </div>
 </div>
  </section> 
 
           
-
-<% } %>
 <%- include footer.ejs %>
-
+<% if (session) { %>
 <script src="/js/user.js"></script>
+<% } %>
 
 </body>
 </html>

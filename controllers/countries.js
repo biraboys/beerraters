@@ -5,7 +5,7 @@ const User = require('../models/user')
 
 module.exports = {
   index: async (req, res, next) => {
-    const countries = await Country.find({}, 'name beers breweries users')
+    const countries = await Country.find({}, 'name flag beers breweries users')
     res.status(201).json(countries)
   },
   getCountryJson: async (req, res, next) => {

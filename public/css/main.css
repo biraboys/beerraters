@@ -121,3 +121,14 @@
   margin-top: -1rem;
 }
 
+.bt-1 {
+  border-top: 1px solid rgba(160,160,160,0.2)
+}
+
+.chip-link {
+  color: rgba(0,0,0,0.6);
+}
+
+.chip-link:hover {
+  color: #1EAEDB;
+}
