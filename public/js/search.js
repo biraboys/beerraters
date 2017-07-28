@@ -11,6 +11,14 @@ const filterOptions = Array.from(document.getElementsByClassName('filter-option'
 const filterOptionsContainer = document.getElementById('filter-options')
 
 // Storage check
+if (sessionStorage.getItem('searchVal') !== null) {
+  const searchVal = sessionStorage.getItem('searchVal')
+  sessionStorage.removeItem('searchVal')
+  searchForm.q.value = searchVal
+  searchForm.q.focus()
+  getInputValues(searchVal, 'name')
+}
+
 if (sessionStorage.getItem('beerCards') !== null) {
   const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
   const resultMessage = JSON.parse(sessionStorage.getItem('resultMessage'))
