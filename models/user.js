@@ -63,6 +63,7 @@ const userSchema = new Schema({
   reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
   ratings: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
   consumes: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
+  country_id: { type: Schema.Types.ObjectId, ref: 'country' },
   following: [],
   followers: [],
   images: [

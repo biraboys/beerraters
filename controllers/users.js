@@ -20,7 +20,7 @@ const controller = module.exports = {
     res.status(200).json(user)
   },
   newUser: async (req, res, next) => {
-    const [username, name, email, password] = [req.body.username, req.body.name, req.body.email, req.body.password]
+    const [username, name, email, password, country] = [req.body.username, req.body.name, req.body.email, req.body.password, req.body.country]
     const buff = crypto.randomBytes(20)
     const token = buff.toString('hex')
     // 1 Hour from Date.now()
@@ -35,7 +35,8 @@ const controller = module.exports = {
       followers: [],
       displaName: username,
       registrationToken: token,
-      registrationTokenExpires: expires
+      registrationTokenExpires: expires,
+      country_id: country
     })
 
     await newUser.save(err => {
@@ -138,7 +139,7 @@ const controller = module.exports = {
     if (req.files.length > 0) {
       const profileImg = `${req.files[0].filename}`
       const path = `public/uploads/users`
-      
+
       const image = await Jimp.read(`${path}/${profileImg}`)
 
       image.resize(150, 150)
