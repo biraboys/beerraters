@@ -206,7 +206,7 @@ async function searchUser (userName) {
 }
 
 function generateBeerCard (beerObj) {
-  let categoryName, styleName, styleLink, breweryName, breweryLink, countryFlag, countryCode, countryLink, rating, beerImage
+  let categoryName, styleName, styleLink, breweryName, countryFlag, countryCode, countryLink, rating, beerImage
   if (beerObj.beer.images.length !== 0) {
     beerImage = `/uploads/beers/${beerObj.beer._id}/${beerObj.beer.images[0].name}`
   } else {
@@ -223,10 +223,8 @@ function generateBeerCard (beerObj) {
   }
   if (beerObj.brewery) {
     breweryName = beerObj.brewery.name
-    breweryLink = `/breweries/${beerObj.brewery._id}`
   } else {
     breweryName = ''
-    breweryLink = '#'
   }
   if (beerObj.country) {
     const img = document.createElement('img')
@@ -246,7 +244,10 @@ function generateBeerCard (beerObj) {
         blackStars = beerObj.rating / 1
         for (let i = 1; i <= blackStars; i++) {
           rating += `
-      <i class="material-icons">star_rate</i>
+               <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+          </svg>
         `
         }
         greyStars = 5 - blackStars
@@ -336,11 +337,11 @@ function generateBeerCard (beerObj) {
               </div>
               <div>
                   <span class="card-subtitle">${categoryName}</span>
-                  <a class="card-subtitle" href="${styleLink}">${styleName}</a>
+                  <a class="card-link" href="${styleLink}">${styleName}</a>
               </div>
               <div>
-                 <a class="card-subtitle" href="${breweryLink}">${breweryName}</a>
-                 <a class="card-subtitle" href="${countryLink}">${countryCode}</a>   
+                 <span class="card-subtitle">${breweryName}</span>
+                 <a class="card-link" href="${countryLink}">${countryCode}</a>   
                   ${countryFlag}
               </div>
           </div>
