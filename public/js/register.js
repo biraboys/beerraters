@@ -60,7 +60,3 @@ registerBtn.addEventListener('click', async function (e) {
     console.log(err)
   }
 })
-
-$(document).ready(function () {
-  $('select').material_select()
-})

@@ -16,9 +16,6 @@ const beerDescriptionForm = document.forms.beerDescription
 const reviewForm = document.forms.reviewForm
 const cancelButton = document.getElementById('cancel-description-btn')
 const closeModal = document.getElementById('close-modal-btn')
-const closeReviewModal = document.getElementById('close-review-modal-btn')
-const closeEditModal = document.getElementById('close-edit-modal-btn')
-const closeImageModal = document.getElementById('close-image-modal-btn')
 const editModal = document.getElementById('edit-modal')
 const imageModal = document.getElementById('image-modal')
 const ratingModalBody = document.getElementById('rating-modal-body')
@@ -45,19 +42,7 @@ editLink.onclick = () => {
   getBeerCountries()
 }
 
-closeEditModal.onclick = () => {
-  editModal.classList.remove('active')
-}
-
-closeReviewModal.onclick = () => {
-  reviewModal.classList.remove('active')
-}
-
 submitImgBtn.onclick = () => {
-  imageModal.classList.remove('active')
-}
-
-closeImageModal.onclick = () => {
   imageModal.classList.remove('active')
 }
 
@@ -462,14 +447,15 @@ async function getCountries () {
     const response = await fetch('/countries')
     const countries = await response.json()
     sortByName(countries)
-    countries.forEach(country => {
+    await countries.forEach(country => {
       reviewForm.location.innerHTML += `
-       <option value="${country._id}">${country.name}</option>
+      <option value="${country._id}" data-icon="/images/flags/${country.flag}" class="flag-img left valign-wrapper">${country.name}</option>
       `
     })
   } catch (err) {
     console.log(err)
   }
+  $('select').material_select()
 }
 
 async function checkReviews () {
