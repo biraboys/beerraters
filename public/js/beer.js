@@ -37,21 +37,13 @@ reviewLink.onclick = () => {
 }
 
 editLink.onclick = () => {
-  editModal.classList.add('active')
+  $('#edit-modal').modal('open')
   getBeerStyles()
   getBeerCountries()
 }
 
 submitImgBtn.onclick = () => {
   imageModal.classList.remove('active')
-}
-
-cancelButton.onclick = () => {
-  editModal.classList.remove('active')
-}
-
-closeModal.onclick = () => {
-  ratingModal.classList.remove('active')
 }
 
 ratingLink.onclick = () => {
@@ -68,17 +60,17 @@ function checkIconColor (icon) {
       break
     case 'rating':
       if (ratingIcon.getAttribute('fill') === '#E8EDFA') {
-        ratingModal.classList.add('active')
+        $('#rating-modal').modal('open')
       }
       break
     case 'image':
       if (imageIcon.getAttribute('fill') === '#E8EDFA') {
-        imageModal.classList.add('active')
+        $('#image-modal').modal('open')
       }
       break
     case 'review':
       if (reviewIcon.getAttribute('fill') === '#E8EDFA') {
-        reviewModal.classList.add('active')
+        $('#review-modal').modal('open')
         getCountries()
       }
       break
@@ -157,14 +149,8 @@ async function postConsume () {
       window.location.href = '/login'
     } else {
       const beerName = document.getElementById('beer-name').innerHTML
-      ratingModal.classList.add('active')
-      ratingModalBody.innerHTML = `
-      <div class="toast toast-success">
-        Hope your ${beerName} tasted good! .
-      </div>
-      `
+      Materialize.toast(`Hope your ${beerName} tasted good!`, 2000)
       setTimeout(() => {
-        ratingModal.classList.remove('active')
         location.reload(true)
       }, 2000)
     }
@@ -194,22 +180,22 @@ async function checkContributions () {
     if (contributions.consumes.indexOf(userId) !== -1) {
       consumeIcon.setAttribute('fill', '#000000')
       consumeLink.setAttribute('data-tooltip', 'Consumed, nice!')
+      $(consumeLink).tooltip()
     }
     if (userReviews.indexOf(userId) !== -1) {
       reviewIcon.setAttribute('fill', '#000000')
       reviewLink.setAttribute('data-tooltip', 'Reviewed')
+      $(reviewLink).tooltip()
     }
     if (userImages.indexOf(userId) !== -1) {
       imageIcon.setAttribute('fill', '#000000')
-      console.log(imageLink)
-      console.log(imageLink.getAttribute('data-tooltip'))
       imageLink.setAttribute('data-tooltip', 'Posted photo')
-      console.log(imageLink.getAttribute('data-tooltip'))
-      
+      $(imageLink).tooltip()
     }
     if (ratingUsers.indexOf(userId) !== -1) {
       ratingIcon.setAttribute('fill', '#000000')
       ratingLink.setAttribute('data-tooltip', 'Already rated')
+      $(ratingLink).tooltip()
     }
   } catch (err) {
     console.log(err)

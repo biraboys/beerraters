@@ -5,36 +5,6 @@
          <% if (beer === undefined) { %>
             <h1>Sorry could not found beer</h1>
             <% } else { %>
-              <div class="modal modal-sm" id="rating-modal">
-                <div class="modal-overlay"></div>
-                <div class="modal-container" id="rating-modal-body">
-                  <div class="modal-header">
-                    <button class="btn btn-clear u-pull-right" id="close-modal-btn"></button>
-                    <div class="modal-header u-cf">
-                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                      </svg>
-                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                      </svg>
-                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                      </svg>
-                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                      </svg>  
-                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                      </svg>
-                    </div>                      
-                  </div>
-                </div>
-                </div>
       <div class="col s12 m3">
         <div class="card-panel">
            <% if (beer.images.length !== 0) { %>
@@ -58,13 +28,13 @@
                         <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
                       </svg>
                     </a> 
-                    <a class="tooltipped modal-trigger" href="#review-modal" data-position="bottom" data-delay="50" id="review-link" data-tooltip="Review">
+                    <a class="tooltipped modal-trigger" data-position="bottom" data-delay="50" id="review-link" data-tooltip="Review">
                       <svg id="review-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 0h24v24H0zm15.35 6.41l-1.77-1.77c-.2-.2-.51-.2-.71 0L6 11.53V14h2.47l6.88-6.88c.2-.19.2-.51 0-.71z" fill="none"/>
                         <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 14v-2.47l6.88-6.88c.2-.2.51-.2.71 0l1.77 1.77c.2.2.2.51 0 .71L8.47 14H6zm12 0h-7.5l2-2H18v2z"/>
                       </svg>
                     </a>
-                    <a class="tooltipped" data-position="bottom" data-delay="50" id="rating-link" data-tooltip="Rate">
+                    <a class="tooltipped modal-trigger" data-position="bottom" data-delay="50" id="rating-link" data-tooltip="Rate">
                       <svg id="rating-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                         <path d="M0 0h24v24H0z" fill="none"/>
@@ -142,16 +112,129 @@
                     </div>  
            </div>
               </div>
-  
-            <% if (session) { %>
-              <div class="modal" id="edit-modal">
-                <div class="modal-overlay"></div>
-                <div class="modal-container" id="edit-modal-body">
-                  <div class="modal-header">
-                    <button class="btn btn-clear u-pull-right" id="close-edit-modal-btn"></button>
+
+     <div class="col s12 m3">
+       <div class="card">
+         <div class="card-content">
+           <figure class="flex-center flex-column">
+             <img src="/icons/reviews.svg" alt="Reviews" />
+             <figcaption>Reviews</figcaption>
+             <figcaption><%= beer.reviews.length %></figcaption>
+           </figure>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-content">
+           <figure class="flex-center flex-column">
+             <img src="/icons/ratings.svg" alt="Ratings" />
+             <figcaption>Ratings</figcaption>
+             <figcaption><%= beer.ratings.length %></figcaption>
+           </figure>
+         </div>
+       </div>
+       <div class="card">
+         <div class="card-content">
+           <figure class="flex-center flex-column">
+             <img src="/icons/consumes.svg" alt="Consumes" />
+             <figcaption>Consumes</figcaption>
+             <figcaption><%= beer.consumes.length %></figcaption>
+           </figure>
+         </div>
+       </div>
+     </div>
+          </div>   
+      <% } %>
+      <% if (beer.reviews) { %>  
+<div class="row">
+  <ul class="collection no-border" id="reviews-container">
+  </ul>
+</div>
+<% } %>  
+
+ </div> <!-- main container -->
+</section>
+
+<!-- Modals -->
+     <div class="modal bottom-sheet" id="review-modal">
+      <div class="modal-content" id="review-modal-body">
+        <div class="container">
+        <h4>Review</h4>
+        <p>Please fill in the fields below to review this beer.</p>
+    <form action="/beers/<%= beer._id %>/review" method="post" name="reviewForm">
+      <div class="row">
+        <div class="col s6">
+          <div class="input-field">
+          <textarea class="materialize-textarea" placeholder="Fire away!" id="review" name="review"></textarea>
+          <label for="review">Review</label>
+          </div>
+        </div>
+        <div class="col s6">
+          <div class="input-field">
+          <input placeholder="On a balcony, at a beach, in a restaurant..." type="text" class="validate" name="place" id="place" required>
+          <label for="place">Where did you drink this beer?</label>
+          </div>
+          <div class="input-field">
+          <select id="location" name="location" required>
+            <option value="" disabled selected>Select country</option>
+          </select>
+          <label for="location">Location</label>
+          </div>
+        </div>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" name="submit">Submit</button>
+      </div>                       
+    </form>
+  </div>
+</div>
+</div>
+        <div class="modal" id="rating-modal">
+                <div class="modal-content" id="rating-modal-body">
+                  <div class="container">
+                  <h4>Rate</h4>
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>  
+                      <svg class="add-rating-symbol" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                      </svg>        
+                  </div>        
                   </div>
-                      <div class="modal-body">
-                        <div class="content">
+                </div>
+
+                              <div class="modal" id="image-modal">
+                <div class="modal-content" id="image-modal-body">
+                          <form action="/beers/<%= beer._id %>/addImage" method="post" enctype="multipart/form-data">
+                                <div class="file-field input-field">
+                                  <div class="btn">
+                                    <span>Add Photo</span>
+                                    <input type="file" name="img">
+                                  </div>
+                                  <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                  </div>
+                                </div>
+                              <button id="submit-img-btn" class="btn waves-effect waves-light right" type="submit" name="submit">Submit</button>
+                          </form>
+                        </div>
+                      </div>
+
+                            <% if (session) { %>
+              <div class="modal" id="edit-modal">
+                <div class="modal-content" id="edit-modal-body">
                           <form method="POST" action="/beers/<%= beer._id %>" class="mt-1" name="beerDescription">
                             <label for="style">Style</label>
                             <select class="u-full-width" id="style" name="style" required>
@@ -200,98 +283,8 @@
                             <input type="button" value="Cancel" id="cancel-description-btn">
                           </form>
                         </div>
-                      </div>
-                </div>
-              </div>
-              <div class="modal" id="image-modal">
-                <div class="modal-overlay"></div>
-                <div class="modal-container" id="image-modal-body">
-                  <div class="modal-header">
-                    <button class="btn btn-clear u-pull-right" id="close-image-modal-btn"></button>
-                  </div>
-                      <div class="modal-body">
-                        <div class="content">
-                          <form action="/beers/<%= beer._id %>/addImage" method="post" enctype="multipart/form-data">
-                            Select a file: <input type="file" name="img">
-                            <input id="submit-img-btn" type="submit" name="submit" value="submit">
-                          </form>
-                        </div>
-                      </div>
-                </div>
-              </div>
-              
+                      </div>              
            <% } %>  
-     <div class="col s12 m3">
-       <div class="card">
-         <div class="card-content">
-           <figure class="flex-center flex-column">
-             <img src="/icons/reviews.svg" alt="Reviews" />
-             <figcaption>Reviews</figcaption>
-             <figcaption><%= beer.reviews.length %></figcaption>
-           </figure>
-         </div>
-       </div>
-       <div class="card">
-         <div class="card-content">
-           <figure class="flex-center flex-column">
-             <img src="/icons/ratings.svg" alt="Ratings" />
-             <figcaption>Ratings</figcaption>
-             <figcaption><%= beer.ratings.length %></figcaption>
-           </figure>
-         </div>
-       </div>
-       <div class="card">
-         <div class="card-content">
-           <figure class="flex-center flex-column">
-             <img src="/icons/consumes.svg" alt="Consumes" />
-             <figcaption>Consumes</figcaption>
-             <figcaption><%= beer.consumes.length %></figcaption>
-           </figure>
-         </div>
-       </div>
-     </div>
-          </div>   
-      <% } %>
-      <% if (beer.reviews) { %>  
-<div class="row">
-  <ul class="collection no-border" id="reviews-container">
-  </ul>
-</div>
-<% } %>  
-
- </div> <!-- main container -->
-</section>
-<!-- Modals -->
-
-  <!-- Modal Structure -->
-     <div class="modal bottom-sheet" id="review-modal">
-      <div class="modal-content" id="review-modal-body">
-        <div class="container">
-        <h4>Review</h4>
-        <p>Please fill in the fields below to review this beer.</p>
-    <form action="/beers/<%= beer._id %>/review" method="post" name="reviewForm">
-      <div class="row">
-        <div class="input-field col s6">
-          <input placeholder="On a balcony, at a beach, in a restaurant..." type="text" class="validate" name="place" id="place" required>
-          <label for="place">Where did you drink this beer?</label>
-        </div>
-        <div class="input-field col s6">
-          <select id="location" name="location" required>
-            <option value="" disabled selected>Select country</option>
-          </select>
-          <label for="location">Location</label>
-        </div>
-        </div>
-        <div class="input-field">
-          <textarea class="materialize-textarea" placeholder="Fire away!" id="review" name="review"></textarea>
-          <label for="review">Review</label>
-        </div>
-        <button class="btn waves-effect waves-light" type="submit" name="submit">Submit</button>
-      </div>                       
-    </form>
-  </div>
-</div>
-</div>  
   <!-- <div id="modal1" class="modal bottom-sheet">
     <div class="modal-content">
       <h4>Modal Header</h4>
@@ -303,11 +296,6 @@
   </div> -->
 <%- include footer.ejs %>
 
-<script>
-  $(document).ready(function(){
-    $('.modal').modal();
-  });
-</script>
 <script src="/js/beer.js"></script>
 </body>
 </html>

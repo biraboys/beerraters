@@ -63,23 +63,22 @@
      </div>
 
  <div class="col s8">
-   <div class="card">
-     <ul class="collapsible" data-collapsible="accordion">
+     <ul class="collapsible popout" data-collapsible="accordion">
        <li>
-         <div class="collapsible-header"><i class="material-icons">rate_review</i>Reviews</div>
-         <div class="collapsible-body">
+         <div class="collapsible-header active"><i class="material-icons">rate_review</i>Reviews</div>
+         <div class="collapsible-body white">
            <ul class="collection" id="reviews-container">
            </ul>
          </div>
        </li>
        <li>
-         <div class="collapsible-header"><i class="material-icons">star</i>Top Rated</div>
-         <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+         <div class="collapsible-header"><i class="material-icons">star</i>Rated</div>
+         <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
        </li>
          <% if (user.images) { %>
        <li>
          <div class="collapsible-header"><i class="material-icons">collections</i>Gallery</div>
-         <div class="collapsible-body">
+         <div class="collapsible-body white">
            <div class="row">
              <% user.images.forEach(function(image) { %>
                   <div class="col s3">
@@ -93,7 +92,6 @@
        </li>
       <% } %>
     </ul>
-  </div>
 </div>
 <% } %> 
 <% } else { %>

@@ -133,3 +133,7 @@
 .chip-link:hover {
   color: #1EAEDB;
 }
+
+a {
+  cursor: pointer;
+}
