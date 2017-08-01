@@ -5,7 +5,7 @@ const Country = require('../models/country')
 module.exports = {
   index: async (req, res, next) => {
     const breweries = await Brewery.find({})
-    res.status(201).json(breweries)
+    res.status(200).json(breweries)
   },
   newBrewery: async (req, res, next) => {
     const newBrewery = new Brewery(req.body)
@@ -23,7 +23,7 @@ module.exports = {
     if (brewery.country_id) {
       country = await Country.findById(brewery.country_id)
     }
-    res.status(200).render('brewery', { brewery: brewery, state: state, country: country, session: req.session.user })
+    res.status(200).json({ brewery: brewery, state: state, country: country, session: req.session.user })
   },
   findBrewery: async(req, res, next) => {
     const breweryName = req.query.q
