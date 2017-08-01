@@ -23,6 +23,9 @@ router.route('/:userId/reviews')
 router.route('/:userId/edit')
   .post(upload.any(), UsersController.editProfile)
 
+router.route('/:userId/changepassword')
+  .post(UsersController.changePassword)
+
 router.get('/:userId/edit', function (req, res) {
   if (req.session.user._id === req.params.userId) {
     res.status(200).render('edit', { session: req.session.user })

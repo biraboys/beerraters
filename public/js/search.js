@@ -180,12 +180,9 @@ async function searchUser (userName) {
       clearContent(beerContainer)
       clearContent(pageNavigation)
       users.forEach(async (user, index) => {
-        if (user.active) {
-          console.log(user.active)
-          if (index <= 50) {
-            const userCard = generateUserCard(user)
-            await displayBeer(userCard)
-          }
+        if (index <= 50) {
+          const userCard = generateUserCard(user)
+          await displayBeer(userCard)
         }
       })
       if (users.length > 50) {

@@ -1,70 +1,100 @@
 <%- include header.ejs %>
 
-<div class="content register-form">
-  <div class="section">
-    <div class="container">
-      <h4>Edit profile</h4>
-      <form enctype="multipart/form-data">
-        <div class="row">
-          <div class="col s6">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name">
-            <label for="displayname">Displayname</label>
-            <input type="text" name="displayname" id="displayname">
-            <div class="file-field input-field">
-              <div class="btn">
-                <span>Profile image</span>
-                <input type="file" name="profileImg" id="profile-image">
-              </div>
-              <div class="file-path-wrapper">
-                <input class="file-path validate" type="text">
-              </div>
-            </div>
+<section class="main-section">
+  <div class="container">
+    <div class="card">
+      <div class="card-tabs">
+        <ul class="tabs tabs-fixed-width">
+          <li class="tab"><a class="active" href="#edit-profile">Edit profile info</a></li>
+          <li class="tab"><a href="#change-password">Change password</a></li>
+          <li class="tab"><a href="#remove-account">Remove account</a></li>
+        </ul>
+      </div>
+      <div class="card-content white">
+        <div id="edit-profile">
+          <form method="post" enctype="multipart/form-data" action="/users/<%= session._id %>/edit">
             <div class="row">
-              <div class="col s12">
+              <div class="col s6">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name">
+                <label for="displayname">Displayname</label>
+                <input type="text" name="displayname" id="displayname">
+                <div class="file-field input-field">
+                  <div class="btn">
+                    <span>Profile image</span>
+                    <input type="file" name="profileImg" id="profile-image">
+                  </div>
+                  <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                  </div>
+                </div>
                 <label for="description">Write something about yourself</label>
                 <textarea class="materialize-textarea" name="description" id="description" data-length="120"></textarea>
+                <button class="btn waves-effect waves-light" type="submit" id="edit-form">Submit
+                  <i class="material-icons right">send</i>
+                </button>
               </div>
             </div>
-            <!-- <label for="description">Write something about yourself</label> -->
-            <!-- <textarea class="u-full-width" name="description" id="description" data-length="120"></textarea> -->
-            <!-- <label for"profileImg">Select a profileimage:</label>
-            <input type="file" name="profileImg"></br></br> -->
-          </div>
-          <div class="col s6">
-            <!-- <label for="confirmpass">Confirm new password:</label>
-            <input type="password" name="confirmpass"> -->
-            <div class="row">
-              <div class="input-field col s12">
-                <input type="password" name="currentpass" class="validate" id="currentpass">
-                <label for="currentpass" data-error id="currentpassmsg">Current password</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12">
-                <input type="password" name="newpass" class="validate" id="newpass">
-                <label for="newpass" data-error id="newpassmsg">New password</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12">
-                <input type="password" name="confirmpass" class="validate" id="confirmpass">
-                <label for="confirmpass" data-error id="confirmpassmsg">Confirm new password</label>
-              </div>
-            </div>
-          </div>
+          </form>
         </div>
-        <button class="btn waves-effect waves-light" type="submit" name="action" id="edit-form">Submit
-          <i class="material-icons right">send</i>
-        </button>
-        <a class="waves-effect waves-light btn red" href="/users/<%= session._id %>/edit">Remove my account</a>
-      <!-- enctype="multipart/form-data"-->
-        <!--<label for="username">Set profile image:</label>-->
-        <!--<input class="u-full-width" type="file" name="profileImage">-->
-      </form>
+        <div id="change-password">
+          <form method="post" action="/users/<%= session._id %>/changepassword">
+            <div class="row">
+              <div class="col s6">
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input type="password" name="currentpass" class="validate" id="currentpass">
+                    <label for="currentpass" data-error id="currentpassmsg">Current password</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input type="password" name="newpass" class="validate" id="newpass">
+                    <label for="newpass" data-error id="newpassmsg">New password</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input type="password" name="confirmpass" class="validate" id="confirmpass">
+                    <label for="confirmpass" data-error id="confirmpassmsg">Confirm new password</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit" id="edit-form">Submit
+              <i class="material-icons right">send</i>
+            </button>
+          <!-- enctype="multipart/form-data"-->
+            <!--<label for="username">Set profile image:</label>-->
+            <!--<input class="u-full-width" type="file" name="profileImage">-->
+          </form>
+        </div>
+        <div id="remove-account">
+          <form method="post" action="/users/<%= session._id %>/removeaccount">
+            <div class="row">
+              <div class="col s6">
+                <!-- <label for="confirmpass">Confirm new password:</label>
+                <input type="password" name="confirmpass"> -->
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input type="password" name="currentpass" class="validate" id="currentpass">
+                    <label for="currentpass" data-error id="currentpassmsg">Verify password</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn waves-effect waves-light red" type="submit" id="edit-form">Remove my account
+              <i class="material-icons right">send</i>
+            </button>
+          <!-- enctype="multipart/form-data"-->
+            <!--<label for="username">Set profile image:</label>-->
+            <!--<input class="u-full-width" type="file" name="profileImage">-->
+          </form>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <%- include footer.ejs %>
 

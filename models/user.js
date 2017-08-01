@@ -85,7 +85,7 @@ const userSchema = new Schema({
 userSchema.static('findByName', function (userArr, userName) {
   userName.toLowerCase()
   userArr = userArr.filter(user => {
-    if (user.username.toLowerCase().includes(userName) || user.name.toLowerCase().includes(userName)) return user
+    if (user.username.toLowerCase().includes(userName) || user.name.toLowerCase().includes(userName)) if (user.active) { return user }
   })
   return userArr
 })

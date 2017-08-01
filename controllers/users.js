@@ -6,6 +6,7 @@ const async = require('async')
 const bcrypt = require('bcryptjs')
 const Jimp = require('jimp')
 const fs = require('fs')
+const sizeOf = require('image-size')
 
 const controller = module.exports = {
   index: async (req, res, next) => {
@@ -130,49 +131,50 @@ const controller = module.exports = {
     }
   },
   editProfile: async (req, res, next) => {
-    const user = await User.findOne({ _id: req.session.user._id }, 'profileImg')
+    const user = await User.findOne({ _id: req.session.user._id }, 'profileImg _id')
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
-    const currentpass = req.body.currentpass
-    const password = req.body.newpass
-    const confirmpass = req.body.confirmpass
     let link = user.profileImg
 
-    // if (req.files.length > 0) {
-    //   const profileImg = `${req.files[0].filename}`
-    //   const path = `public/uploads/users`
-    //   const image = await Jimp.read(`${path}/${profileImg}`)
-    //   image.resize(128, 128)
-    //   image.quality(60)
-    //   image.write(`${path}/${req.session.user._id}/${profileImg}.png`)
-    //   const filePath = `${path}/${profileImg}`
-    //   fs.unlinkSync(filePath)
-    //   if (user.profileImg.length > 0) {
-    //     fs.unlinkSync(`${path}/${req.session.user._id}/${user.profileImg}`)
-    //   }
-    //   link = `${profileImg}.png`
-    // }
+    if (req.files.length > 0) {
+      const profileImg = `${req.files[0].filename}`
+      const path = `public/uploads/users`
+      
+      const image = await Jimp.read(`${path}/${profileImg}`)
+
+      image.resize(150, 150)
+      image.quality(60)
+      image.write(`${path}/${req.session.user._id}/${profileImg}.png`)
+      const filePath = `${path}/${profileImg}`
+      fs.unlinkSync(filePath)
+      if (user.profileImg.length > 0) {
+        fs.unlinkSync(`${path}/${req.session.user._id}/${user.profileImg}`)
+      }
+      link = `${profileImg}.png`
+    }
+    await User.findOneAndUpdate({ _id: req.session.user._id }, {
+      $set: {
+        name: name,
+        displayName: displayName,
+        description: description,
+        profileImg: link
+      }
+    })
+  },
+  changePassword: async (req, res, next) => {
+    const [currentpass, password, confirmpass] = [req.body.currentpass, req.body.newpass, req.body.confirmpass]
 
     if (currentpass && password && confirmpass) {
       const user = await User.findOne({ _id: req.session.user._id }, 'password')
       if (bcrypt.compareSync(currentpass, user.password)) {
         if (password === confirmpass) {
           user.password = password
-          await user.save(err => {
-            if (err !== null) {
+          user.save(err => {
+            if (err) {
               if (err.errors) {
-                // console.log(err.errors.password.message)
                 res.json({ message: err.errors.password.message })
               }
             } else {
-              User.findOneAndUpdate({ _id: req.session.user._id }, {
-                $set: {
-                  name: name,
-                  displayName: displayName,
-                  description: description,
-                  profileImg: link
-                }
-              })
-              res.json({ message: 'Success!' })
+              res.json({ message: 'Successfully update user profile!' })
             }
           })
         } else {
