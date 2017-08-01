@@ -27,6 +27,9 @@ if (sessionStorage.getItem('beerCards') !== null) {
   resultsContainer.innerHTML = resultMessage
   beerContainer.innerHTML = beerCards
   pageNavigation.innerHTML = navigationButtons
+  if (beersJSON.length > 50) {
+    generateButtons(beersJSON.length, beersJSON)
+  }
 }
 
 // Search buttons and form
@@ -243,10 +246,7 @@ function generateBeerCard (beerObj) {
         blackStars = beerObj.rating / 1
         for (let i = 1; i <= blackStars; i++) {
           rating += `
-        <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-          <path d="M0 0h24v24H0z" fill="none"/>
-        </svg>
+      <i class="material-icons">star_rate</i>
         `
         }
         greyStars = 5 - blackStars
@@ -263,10 +263,10 @@ function generateBeerCard (beerObj) {
         blackStars = beerObj.rating / 1
         for (let i = 1; i <= Math.floor(blackStars); i++) {
           rating += `
-        <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 17.27L18.18 21l-1.64-c7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-          <path d="M0 0h24v24H0z" fill="none"/>
-        </svg>
+          <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+          </svg>
         `
         }
         rating += `
