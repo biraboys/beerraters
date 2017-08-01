@@ -3,11 +3,9 @@
  <div class="container">
    <div class="row ta-center">
          <% if (country === undefined) { %>
-          <div class="one-half column">
-            <h1 class="hero-heading">Sorry could not found country</h1>
-          </div>
+            <h2>Sorry, could not found country</h2>
             <% } else { %>
-             <h1 class="hero-heading"><%= country.name %> <img class="u-max-full-width" src="/images/flags/<%= country.flag %>"></h1>
+             <h2><%= country.name %> <img class="responsive-img" src="/images/flags/<%= country.flag %>"></h2>
             
 <canvas id="myChart"></canvas>
       <% } %>  

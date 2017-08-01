@@ -11,7 +11,7 @@ async function getCountries () {
     })
     sortByBeersAmount(countries)
     const topFive = countries.filter((country, index) => {
-      if (index <= 5 & country !== current) {
+      if (index <= 5 && country !== current) {
         return country
       }
     })
