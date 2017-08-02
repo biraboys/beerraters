@@ -36,6 +36,7 @@ passChangeForm.addEventListener('submit', async function (e) {
   e.preventDefault()
   const path = window.location.pathname.split('/')
   const url = `/${path[1]}/${path[2]}/changepassword`
+  const profile = `/${path[1]}/${path[2]}`
   currentpass.className = 'validate'
   currentpassMsg.attributes[1].value = ''
   confirmpass.className = 'validate'
@@ -64,7 +65,7 @@ passChangeForm.addEventListener('submit', async function (e) {
       } else {
         Materialize.toast(data.message, 3000)
         setTimeout(() => {
-          location.reload(true)
+          location.href = profile
         }, 3000)
       }
     }
