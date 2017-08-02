@@ -1,21 +1,12 @@
 const name = document.getElementById('name')
 const displayname = document.getElementById('displayname')
 const description = document.getElementById('description')
-// const editForm = document.getElementById('edit-form')
 const currentpass = document.getElementById('currentpass')
 const newpass = document.getElementById('newpass')
 const confirmpass = document.getElementById('confirmpass')
-const changePassBtn = document.getElementById('changepass')
-const pass = document.getElementById('pass')
-const info = document.getElementById('info')
-const remove = document.getElementById('remove')
 const currentpassMsg = document.getElementById('currentpassmsg')
-const newpassMsg = document.getElementById('newpassmsg')
 const confirmpassMsg = document.getElementById('confirmpassmsg')
 const passChangeForm = document.getElementById('pass-change')
-const editProfile = document.getElementById('edit-profile')
-const changePassword = document.getElementById('change-password')
-const removeAccount = document.getElementById('remove-account')
 
 async function test () {
   const path = window.location.pathname.split('/')
@@ -81,5 +72,3 @@ passChangeForm.addEventListener('submit', async function (e) {
     console.log(err)
   }
 })
-// newpassMsg
-// confirmpassMsg
