@@ -159,6 +159,9 @@ const controller = module.exports = {
         description: description,
         profileImg: link
       }
+    }, (err) => {
+      if (err) { console.log(err) }
+      res.json({ message: 'Succuessfully updated profile info!' })
     })
   },
   changePassword: async (req, res, next) => {
@@ -175,7 +178,7 @@ const controller = module.exports = {
                 res.json({ message: err.errors.password.message })
               }
             } else {
-              res.json({ message: 'Successfully update user profile!' })
+              res.json({ message: 'Password has now been changed!' })
             }
           })
         } else {

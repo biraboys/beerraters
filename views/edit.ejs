@@ -4,13 +4,13 @@
   <div class="container">
     <div class="card">
       <div class="card-tabs">
-        <ul class="tabs tabs-fixed-width">
-          <li class="tab"><a class="active" href="#edit-profile">Edit profile info</a></li>
-          <li class="tab"><a href="#change-password">Change password</a></li>
-          <li class="tab"><a href="#remove-account">Remove account</a></li>
+        <ul id="tabs-swipe" class="tabs tabs-fixed-width">
+          <li class="tab"><a id="info" class="active" href="#edit-profile">Edit profile info</a></li>
+          <li class="tab"><a id="pass" class href="#change-password">Change password</a></li>
+          <li class="tab"><a id="remove" class href="#remove-account">Remove account</a></li>
         </ul>
       </div>
-      <div class="card-content white">
+       <div class="card-content white"> 
         <div id="edit-profile">
           <form method="post" enctype="multipart/form-data" action="/users/<%= session._id %>/edit">
             <div class="row">
@@ -38,30 +38,30 @@
           </form>
         </div>
         <div id="change-password">
-          <form method="post" action="/users/<%= session._id %>/changepassword">
+          <form id="pass-change">
             <div class="row">
               <div class="col s6">
                 <div class="row">
                   <div class="input-field col s12">
-                    <input type="password" name="currentpass" class="validate" id="currentpass">
-                    <label for="currentpass" data-error id="currentpassmsg">Current password</label>
+                    <input type="password" name="currentpass" class="validate" id="currentpass" title="Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35." pattern="^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{8,35}$" required>
+                    <label for="currentpass" data-error="Wrong" id="currentpassmsg">Current password</label>
                   </div>
                 </div>
                 <div class="row">
                   <div class="input-field col s12">
-                    <input type="password" name="newpass" class="validate" id="newpass">
-                    <label for="newpass" data-error id="newpassmsg">New password</label>
+                    <input type="password" name="newpass" class="validate" id="newpass" title="Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35." pattern="^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{8,35}$" required>
+                    <label for="newpass" data-error="Wrong" id="newpassmsg">New password</label>
                   </div>
                 </div>
                 <div class="row">
                   <div class="input-field col s12">
-                    <input type="password" name="confirmpass" class="validate" id="confirmpass">
-                    <label for="confirmpass" data-error id="confirmpassmsg">Confirm new password</label>
+                    <input type="password" name="confirmpass" class="validate" id="confirmpass" title="Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35." pattern="^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{8,35}$" required>
+                    <label for="confirmpass" data-error="Wrong" id="confirmpassmsg">Confirm new password</label>
                   </div>
                 </div>
               </div>
             </div>
-            <button class="btn waves-effect waves-light" type="submit" id="edit-form">Submit
+            <button class="btn waves-effect waves-light" type="submit" id="changepass">Submit
               <i class="material-icons right">send</i>
             </button>
           </form>
