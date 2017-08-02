@@ -7,6 +7,7 @@ const confirmpass = document.getElementById('confirmpass')
 const currentpassMsg = document.getElementById('currentpassmsg')
 const confirmpassMsg = document.getElementById('confirmpassmsg')
 const passChangeForm = document.getElementById('pass-change')
+const changePassBtn = document.getElementById('changepass-btn')
 
 async function test () {
   const path = window.location.pathname.split('/')
@@ -41,6 +42,7 @@ passChangeForm.addEventListener('submit', async function (e) {
   currentpassMsg.attributes[1].value = ''
   confirmpass.className = 'validate'
   confirmpassMsg.attributes[1].nodeValue = ''
+  changePassBtn.classList.add('disabled')
   try {
     const response = await fetch(url, {
       headers: new Headers({
@@ -59,9 +61,11 @@ passChangeForm.addEventListener('submit', async function (e) {
       if (data.message[0] === 'C') {
         currentpass.className = 'validate invalid'
         currentpassMsg.attributes[1].nodeValue = data.message
+        changePassBtn.classList.remove('disabled')
       } else if (data.message[0] === 'M') {
         confirmpass.className = 'validate invalid'
         confirmpassMsg.attributes[1].nodeValue = data.message
+        changePassBtn.classList.remove('disabled')
       } else {
         Materialize.toast(data.message, 3000)
         setTimeout(() => {

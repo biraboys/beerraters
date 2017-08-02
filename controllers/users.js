@@ -63,7 +63,7 @@ const controller = module.exports = {
         }
         stmpTransport.sendMail(mailOptions, err => {
           if (err) { console.log(err) }
-          res.json({ message: `Thanks for registering!</br>An email has been sent to ${newUser.email}, follow the instructions to complete the registration.` })
+          res.json({ message: `An email has been sent to ${newUser.email}, follow the instructions to complete the registration.` })
         })
       }
     })
