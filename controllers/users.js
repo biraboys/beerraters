@@ -248,7 +248,7 @@ const controller = module.exports = {
       },
       (token, done) => {
         User.findOne({ email: req.body.email }, (err, user) => {
-          if (!user) {
+          if (!user || err) {
             res.json({ success: false, message: 'No user found with that email adress.' })
           } else {
             User.findOneAndUpdate({ _id: user._id }, { $set: { resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 } }, err => {

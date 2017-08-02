@@ -1,9 +1,11 @@
-const forgotPassword = document.getElementById('forgot')
-const emailField = document.getElementById('email')
-const message = document.getElementById('message')
+const forgotPassForm = document.getElementById('form-forgot')
+const forgotPassMsg = document.getElementById('forgot')
+const email = document.getElementById('email')
 
-forgotPassword.onclick = async function () {
-  const email = emailField.value
+forgotPassForm.addEventListener('submit', async function (e) {
+  e.preventDefault()
+  forgotPassMsg.attributes[1].nodeValue = ''
+  email.className = 'validate'
   try {
     const response = await fetch('/forgot', {
       headers: new Headers({
@@ -11,18 +13,20 @@ forgotPassword.onclick = async function () {
       }),
       method: 'post',
       body: JSON.stringify({
-        email: email
+        email: email.value
       })
     })
     const data = await response.json()
     if (data.success === true) {
-      message.innerHTML = data.message
-      emailField.value = ''
+      Materialize.toast(data.message, 3000)
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 3000)
     } else {
-      message.innerHTML = data.message
-      emailField.value = ''
+      email.className = 'validate invalid'
+      forgotPassMsg.attributes[1].nodeValue = data.message
     }
   } catch (err) {
     console.log(err)
   }
-}
+})
