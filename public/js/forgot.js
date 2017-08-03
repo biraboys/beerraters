@@ -13,7 +13,7 @@ forgotPassForm.addEventListener('submit', async function (e) {
   try {
     const response = await fetch('/forgot', {
       headers: new Headers({
-        'Content-Type': 'application/json; charset=utf-8'
+        'Content-Type': 'application/json'
       }),
       method: 'post',
       body: JSON.stringify({
@@ -21,7 +21,8 @@ forgotPassForm.addEventListener('submit', async function (e) {
       })
     })
     const data = await response.json()
-    if (data.success === true) {
+    if (data.success) {
+      email.className = 'validate valid'
       forgotPassMsg.attributes[2].nodeValue = 'Success!'
       Materialize.toast(data.message, 3200)
       setTimeout(() => {

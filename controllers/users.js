@@ -120,15 +120,15 @@ const controller = module.exports = {
         if (bcrypt.compareSync(password, user.password)) {
           const userSession = { _id: user._id }
           req.session.user = userSession
-          res.redirect(req.session.previousPage)
+          res.json({ success: true, message: 'Success!' })
         } else {
-          res.status(400).render('login', { success: false, message: 'Password does not match.', username: username, session: req.session.user })
+          res.json({ success: false, active: true, message: 'Password does not match.' })
         }
       } else {
-        res.json({ message: 'Please verify your account before logging in.' })
+        res.json({ success: false, active: false, message: 'Please verify your account before logging in.' })
       }
     } else {
-      res.status(400).render('login', { success: false, message: `Could not find a user with username - ${username}`, username: username, session: req.session.user })
+      res.json({ success: false, active: true, message: 'Could not find user with username' })
     }
   },
   editProfile: async (req, res, next) => {
