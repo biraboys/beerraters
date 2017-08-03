@@ -49,6 +49,9 @@ registerForm.addEventListener('submit', async function (e) {
         $('#modal').modal('open', {
           dismissible: false
         })
+        setTimeout(() => {
+          location.href = '/'
+        }, 5000)
       }
     }
   } catch (err) {
