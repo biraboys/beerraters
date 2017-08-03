@@ -3,8 +3,10 @@ const UsersController = require('../controllers/users')
 
 router.route('/')
   .get((req, res, next) => {
-    req.session.previousPage = req.header('Referer') || '/'
-    res.render('login', { success: '', username: '', message: '', session: req.session.user })
+    // req.session.user.previousPage = req.header('Referer') || '/'
+    // console.log(req.session.previousPage)
+    // res.render('login')
+    res.render('login', { session: req.session.user })
   })
   .post(UsersController.loginUser)
 
