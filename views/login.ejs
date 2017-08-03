@@ -1,33 +1,38 @@
 <%- include header.ejs %>
-<section class="section">
-<div class="container">
-  <div class="row">
-    <div class="col s6">
-      <h4>Login</h4>
-      <p><a href="/forgot">Forgot password?</a></p>
-    </div>
-    <div class="col s6">
-      <form method="post" name="login">
-        <div class="input-field">
-          <i class="material-icons prefix">account_circle</i>
-          <input id="username" type="text" name="username" placeholder="Username" value="<%= username %>" required autofocus>
-          <label for="username"></label>
+<section class="main-section">
+  <div class="container">
+    <div class="row">
+      <div class="col s6">
+        <h4>Login</h4>
+        <p><a href="/forgot">Forgot password?</a></p>
+      </div>
+      <div class="col s6">
+        <div class="card">
+          <div class="card-content">
+            <form method="post">
+              <div class="row">
+                <div class="col s12">
+                  <div class="row">
+                    <div class="input-field s12">
+                      <i class="material-icons prefix">account_circle</i>
+                      <input id="username" type="text" name="username" class="validate" required autofocus>
+                      <label for="username" data-error="Wrong">Username</label>
+                    </div>
+                    <div class="input-field s12">
+                      <i class="material-icons prefix">security</i>
+                      <input id="password" type="password" name="password" class="validate" required>
+                      <label for="password" data-error="Wrong">Password</label>
+                    </div>
+                  </div>
+                  <button id="submit-btn" class="btn waves-effect waves-light" type="submit">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="input-field">
-          <i class="material-icons prefix">security</i>
-          <input id="password" type="password" name="password" placeholder="Password" required>
-          <label for="password"></label>
-        </div>
-        <button class="btn waves-effect waves-light" id="register-btn" type="submit" name="login">Login</button>
-      </form>
-        <% if (success) { %>
-          <p>User created successfully. Please log in.</p>
-        <% } else { %>
-          <p class="error-register-new-user"><%= message %></p>
-        <% } %>
+      </div>
     </div>
-  </div> 
-</div>
+  </div>
 </section>
 
 <%- include footer.ejs %>
