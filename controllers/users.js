@@ -16,7 +16,7 @@ const controller = module.exports = {
   },
   getUserJson: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findOne({_id: userId}, 'profileImg displayName name description')
+    const user = await User.findOne({_id: userId}, '-password -_v')
     res.status(200).json(user)
   },
   newUser: async (req, res, next) => {
@@ -70,7 +70,7 @@ const controller = module.exports = {
   },
   getUser: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findById(userId)
+    const user = await User.findById(userId).populate('images.beer_id', 'name')
     const profileId = user.id
     if (req.session.user) {
       const session = await User.findById(req.session.user._id)

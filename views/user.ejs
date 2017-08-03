@@ -36,6 +36,10 @@
                   <div class="col s6 ta-center">
                       <h6 class="tc-blue">CONTRIBUTIONS</h6>
                         <p class=""><%= user.reviews.length + user.ratings.length + user.consumes.length + user.images.length %></p>
+                        <p>Reviews: <%= user.reviews.length %></p>
+                        <p>Ratings: <%= user.ratings.length %></p>
+                        <p>Consumes: <%= user.consumes.length %></p>
+                        <p>Photos: <%= user.images.length %></p>                        
                   </div>
                   <div class="col s6 ta-center">
                       <h6 class="tc-blue">RANK</h6>
@@ -63,6 +67,7 @@
      </div>
 
  <div class="col s8">
+  <canvas id="myChart"></canvas>
      <ul class="collapsible popout" data-collapsible="accordion">
        <li>
          <div class="collapsible-header active"><i class="material-icons">rate_review</i>Reviews</div>
@@ -81,12 +86,21 @@
          <div class="collapsible-body white">
            <div class="row">
              <% user.images.forEach(function(image) { %>
-                  <div class="col s3">
-                    <a href="/beers/<%= image.beer_id %>">
-                      <img src="/uploads/beers/<%= image.beer_id %>/<%= image.name %>" class="responsive-img">
+               <div class="col s12 m3">
+                <div class="card">
+                  <div class="card-image">
+                    <a href="/beers/<%= image.beer_id._id %>">
+                      <img src="/uploads/beers/<%= image.beer_id._id %>/<%= image.name %>" class="responsive-img">
                     </a>
+                        <div class="card-content grey lighten-5">
+                          <p class="ta-center">
+                            <a href="/beers/<%= image.beer_id._id %>"><%= image.beer_id.name %></a>
+                          </p>
+                        </div>
                   </div>
-                  <% }); %>
+                </div>
+               </div>
+            <% }); %>
            </div>
          </div>
        </li>
@@ -104,7 +118,14 @@
           
 <%- include footer.ejs %>
 <% if (session) { %>
+<script>
+  $(document).ready(function () {
+  $('.collapsible').collapsible()
+})
+</script>
+<script src="/js/libs/chart.min.js"></script>
 <script src="/js/user.js"></script>
+
 <% } %>
 
 </body>

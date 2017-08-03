@@ -2,6 +2,7 @@ const follow = document.getElementById('follow')
 const followers = document.getElementById('followers')
 const userIdElement = location.href
 const userId = userIdElement.split('/')[4]
+const ctx = document.getElementById('myChart').getContext('2d')
 
 if (follow) {
   follow.addEventListener('click', function (e) {
@@ -85,26 +86,46 @@ async function getUserRanking () {
   }
 }
 
+async function getUser () {
+  try {
+    const response = await fetch(`/users/${userId}/json`, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    const userJson = await response.json()
+    createChart(userJson.reviews.length, 0, userJson.images.length, userJson.consumes.length)
+    console.log(userJson)
+  } catch (err) {
+    console.log(err)
+  }
+}
+function createChart (reviews, rankings, images, consumes) {
+const myDoughnutChart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Reviews', 'Rankings', 'Images', 'Consumes'],
+    datasets: [{
+           label: 'Contributions',
+           data: [reviews, rankings, images, consumes],
+           backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+          ],
+           borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+          ],
+           borderWidth: 1
+         }]
+  },
+  options: {
+  }
+})
+}
 getUserReviews()
 getUserRanking()
-
-// Accordians
-$(document).ready(function () {
-  $('.collapsible').collapsible()
-})
-
-//     const users = await User.find({}, 'country_id reviews ratings images consumes ')
-//     users.filter(userObj => {
-//       if (userObj.country_id === user.country_id) {
-//         return userObj
-//       }
-//     })
-//     users.sort((a, b) => {
-//       return ((a.reviews.length + a.ratings.length + a.consumes.length + a.images.length) < (b.reviews.length + b.ratings.length + b.consumes.length + b.images.length)) ? -1 : ((a.reviews.length + a.ratings.length + a.consumes.length + a.images.length) > (b.reviews.length + b.ratings.length + b.consumes.length + b.images.length)) ? 1 : 0
-//     })
-//     const position = users.findIndex(userObj => {
-//       return userObj._id === user._id
-//     })
-//     console.log(position)
-
-
+getUser()
