@@ -18,17 +18,18 @@ async function followUser () {
     credentials: 'same-origin'
   })
   if (response.status === 401) {
-    console.log(response.status)
     window.location.href = '/login'
   } else if (response.status === 200) {
     if (follow.innerHTML[0] === 'F') {
       const value = parseInt(followers.innerHTML) + 1
       followers.innerHTML = value
       follow.innerHTML = 'Unfollow'
+      location.href = `/users/${id}`
     } else {
       const value = parseInt(followers.innerHTML) - 1
       followers.innerHTML = value
       follow.innerHTML = 'Follow'
+      location.href = `/users/${id}`
     }
   }
 }
@@ -46,10 +47,16 @@ async function getUserReviews () {
       const beerObj = await beerResponse.json()
       const beerImageResponse = await fetch(`/beers/${review.beer_id}/images`)
       const beerImageArr = await beerImageResponse.json()
-      const beerImage = beerImageArr[0].name
+      let beerImage
+      if (beerImageArr.length > 0) {
+      const beerImageName = beerImageArr[0].name
+      beerImage = `/uploads/beers/${beerObj.beer._id}/${beerImageName}`
+      } else {
+        beerImage = '/images/bottle.png'
+      }
       reviewsContainer.innerHTML += `
        <li class="collection-item avatar">
-         <img src="/uploads/beers/${beerObj.beer._id}/${beerImage}" alt="" class="circle">
+         <img src="${beerImage}" alt="" class="circle">
             <span class="title"><a href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a></span>
             <p>
               ${review.place}
@@ -94,7 +101,6 @@ async function getUser () {
     })
     const userJson = await response.json()
     createChart(userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length)
-    console.log(userJson)
   } catch (err) {
     console.log(err)
   }

@@ -71,7 +71,6 @@ const controller = module.exports = {
   getUser: async (req, res, next) => {
     const { userId } = req.params
     const user = await User.findById(userId, '-password').populate('images.beer_id followers following', 'name username profileImg')
-    console.log(user.images)
     const profileId = user.id
     if (req.session.user) {
       const session = await User.findById(req.session.user._id)
