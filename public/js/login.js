@@ -45,9 +45,8 @@ loginForm.addEventListener('submit', async function (e) {
         loginBtn.classList.remove('disabled')
         console.log(data)
       } else {
-				// console.log('hej')
         location.href = document.referrer
-        console.log(data)
+        console.log(data.message)
       }
     }
   } catch (err) {
