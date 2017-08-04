@@ -63,7 +63,7 @@ async function getUserReviews () {
               <br>
               <span class="card-subtitle">${review.body}</span>
             </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+            <a href="#!" class="secondary-content"><i class="material-icons">mode_edit</i></a>
        </li>
       `
     })
@@ -102,6 +102,7 @@ async function getUser () {
     const userJson = await response.json()
     createChart(userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length)
     displayUserConsumes(userJson)
+    displayUserRatings(userJson)
   } catch (err) {
     console.log(err)
   }
@@ -149,7 +150,27 @@ function displayUserConsumes (user) {
     <span class="card-title">No user consumes</span>
     `
   }
+}
 
+function displayUserRatings (user) {
+  const userRatingsList = document.getElementById('ratings-list')
+  if (user.ratings.length > 0) {
+    user.ratings.forEach(beer => {
+    let rating = 0
+    beer.ratings.forEach(ratingObj => {
+      if (ratingObj.user === userId) {
+        rating = ratingObj.rating
+      }
+    })
+      userRatingsList.innerHTML += `
+        <a href="/beers/${beer._id}" class="collection-item">${beer.name} <span class="badge right">${rating}</span></a>
+      `
+    })
+  } else {
+    userRatingsList.innerHTML += `
+    <span class="card-title">No user consumes</span>
+    `
+  }
 }
 
 getUserReviews()

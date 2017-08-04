@@ -16,7 +16,7 @@ const controller = module.exports = {
   },
   getUserJson: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findOne({_id: userId}, '-password -_v').populate('consumes')
+    const user = await User.findOne({_id: userId}, '-password -_v').populate('consumes ratings')
     res.status(200).json(user)
   },
   newUser: async (req, res, next) => {
