@@ -101,6 +101,7 @@ async function getUser () {
     })
     const userJson = await response.json()
     createChart(userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length)
+    displayUserConsumes(userJson)
   } catch (err) {
     console.log(err)
   }
@@ -134,6 +135,23 @@ function createChart (reviews, rankings, images, consumes) {
   }
 })
 }
+
+function displayUserConsumes (user) {
+  const userConsumesList = document.getElementById('consume-list')
+  if (user.consumes.length > 0) {
+    user.consumes.forEach(beer => {
+      userConsumesList.innerHTML += `
+        <a href="/beers/${beer._id}" class="collection-item">${beer.name}</a>
+      `
+    })
+  } else {
+    userConsumesList.innerHTML += `
+    <span class="card-title">No user consumes</span>
+    `
+  }
+
+}
+
 getUserReviews()
 getUserRanking()
 getUser()
