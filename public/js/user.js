@@ -93,36 +93,38 @@ async function getUser () {
       credentials: 'same-origin'
     })
     const userJson = await response.json()
-    createChart(userJson.reviews.length, 0, userJson.images.length, userJson.consumes.length)
+    createChart(userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length)
     console.log(userJson)
   } catch (err) {
     console.log(err)
   }
 }
 function createChart (reviews, rankings, images, consumes) {
-const myDoughnutChart = new Chart(ctx, {
-  type: 'doughnut',
+  const myDoughnutChart = new Chart(ctx, {
+  type: 'pie',
   data: {
     labels: ['Reviews', 'Rankings', 'Images', 'Consumes'],
     datasets: [{
-           label: 'Contributions',
-           data: [reviews, rankings, images, consumes],
-           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-          ],
-           borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-          ],
-           borderWidth: 1
-         }]
+      data: [reviews, rankings, images, consumes],
+      backgroundColor: [
+             'rgba(255, 99, 132, 0.2)',
+             'rgba(54, 162, 235, 0.2)',
+             'rgba(255, 206, 86, 0.2)',
+             'rgba(75, 192, 192, 0.2)'
+           ],
+      borderColor: [
+             'rgba(255,99,132,1)',
+             'rgba(54, 162, 235, 1)',
+             'rgba(255, 206, 86, 1)',
+             'rgba(75, 192, 192, 1)'
+           ],
+      borderWidth: 1
+    }]
   },
   options: {
+    legend: {
+      display: false
+    }
   }
 })
 }
