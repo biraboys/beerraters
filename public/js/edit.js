@@ -8,6 +8,12 @@ const currentpassMsg = document.getElementById('currentpassmsg')
 const confirmpassMsg = document.getElementById('confirmpassmsg')
 const passChangeForm = document.getElementById('pass-change')
 const changePassBtn = document.getElementById('changepass-btn')
+const password = document.getElementById('password')
+const passwordMsg = document.getElementById('password-msg')
+const yes = document.getElementById('yes')
+const no = document.getElementById('no')
+
+const removeAccountForm = document.getElementById('remove-account-form')
 
 async function test () {
   const path = window.location.pathname.split('/')
@@ -33,6 +39,7 @@ async function test () {
 
 test()
 
+// Change user password
 passChangeForm.addEventListener('submit', async function (e) {
   e.preventDefault()
   const path = window.location.pathname.split('/')
@@ -77,3 +84,57 @@ passChangeForm.addEventListener('submit', async function (e) {
     console.log(err)
   }
 })
+
+// Remove account
+removeAccountForm.addEventListener('submit', async function (e) {
+  e.preventDefault()
+  const path = window.location.pathname.split('/')
+  const url = `/${path[1]}/${path[2]}/check-pass`
+  try {
+    const response = await fetch(url, {
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      method: 'post',
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        password: password.value
+      })
+    })
+
+    const data = await response.json()
+    if (data) {
+      if (data.success) {
+        $('#modal').modal('open', {
+          dismissible: false
+        })
+        removeAccountConfirmation()
+      } else {
+        console.log('errorhandling to be done')
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+async function removeAccountConfirmation () {
+  const path = window.location.pathname.split('/')
+  const url = `/${path[1]}/${path[2]}/remove-account`
+  yes.addEventListener('click', async () => {
+    const response = await fetch(url, {
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      method: 'post',
+      credentials: 'same-origin'
+    })
+    const data = await response.json()
+    if (data) {
+      console.log(data)
+    }
+  })
+  no.addEventListener('click', async () => {
+    $('#modal').modal('close')
+  })
+}

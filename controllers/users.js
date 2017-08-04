@@ -165,6 +165,26 @@ const controller = module.exports = {
       res.json({ message: 'Succuessfully updated profile info!' })
     })
   },
+  checkUserPassword: async (req, res, next) => {
+    const [id, password] = [req.params.userId, req.body.password]
+    const user = await User.findOne({ _id: id }, 'password')
+    if (bcrypt.compareSync(password, user.password)) {
+      res.json({ success: true })
+    } else {
+      res.json({ message: 'Password does not match' })
+    }
+  },
+  removeUserAccount: async (req, res, next) => {
+    const id = req.params.userId
+    await User.findByIdAndRemove({ _id: id }, (err, data) => {
+      if (!err) {
+        res.json({ message: 'You have successfully deleted your account' })
+      } else {
+        res.json({ message: err })
+      }
+    })
+    // res.json({ message: `Removing account with id ${id}`, user: user })
+  },
   changePassword: async (req, res, next) => {
     const [currentpass, password, confirmpass] = [req.body.currentpass, req.body.newpass, req.body.confirmpass]
 

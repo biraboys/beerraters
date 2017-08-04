@@ -26,6 +26,12 @@ router.route('/:userId/edit')
 router.route('/:userId/changepassword')
   .post(UsersController.changePassword)
 
+router.route('/:userId/check-pass')
+  .post(UsersController.checkUserPassword)
+
+router.route('/:userId/remove-account')
+  .post(UsersController.removeUserAccount)
+
 router.get('/:userId/edit', function (req, res) {
   if (req.session.user._id === req.params.userId) {
     res.status(200).render('edit', { session: req.session.user })
