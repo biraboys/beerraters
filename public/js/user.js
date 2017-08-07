@@ -94,7 +94,6 @@ async function getUser () {
     })
     const userJson = await response.json()
     createChart(userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length)
-    console.log(userJson)
   } catch (err) {
     console.log(err)
   }

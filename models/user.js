@@ -100,6 +100,29 @@ userSchema.pre('save', function (next) {
   next()
 })
 
+// // Remove user.id from all other docs
+// userSchema.pre('remove', function (next) {
+//   this.model('user').update({
+//     followers: this._id,
+//     following: this._id
+//   }, {
+//     $pull: {
+//       followers: this._id,
+//       following: this._id
+//     }}, {
+//       multi: true
+//     }, next)
+// })
+// Remove all the assignment docs that reference the removed person.
+// userSchema.pre('remove', function (next) {
+//   this.model('user').update({
+//     $pull: {
+//       followers: this._id,
+//       following: this._id
+//     }
+//   }, next)
+// })
+
 // Titlize name
 userSchema.plugin(titlize, {
   paths: [ 'name' ]

@@ -12,7 +12,7 @@ const password = document.getElementById('password')
 const passwordMsg = document.getElementById('password-msg')
 const yes = document.getElementById('yes')
 const no = document.getElementById('no')
-
+const removeAccountBtn = document.getElementById('remove-account-btn')
 const removeAccountForm = document.getElementById('remove-account-form')
 
 async function test () {
@@ -88,6 +88,8 @@ passChangeForm.addEventListener('submit', async function (e) {
 // Remove account
 removeAccountForm.addEventListener('submit', async function (e) {
   e.preventDefault()
+  passwordMsg.attributes[1].nodeValue = ''
+  password.className = 'validate'
   const path = window.location.pathname.split('/')
   const url = `/${path[1]}/${path[2]}/check-pass`
   try {
@@ -105,12 +107,14 @@ removeAccountForm.addEventListener('submit', async function (e) {
     const data = await response.json()
     if (data) {
       if (data.success) {
+        removeAccountBtn.classList.add('disabled')
         $('#modal').modal('open', {
           dismissible: false
         })
         removeAccountConfirmation()
       } else {
-        console.log('errorhandling to be done')
+        passwordMsg.attributes[1].nodeValue = 'Password does not match'
+        password.className = 'validate invalid'
       }
     }
   } catch (err) {
@@ -136,5 +140,6 @@ async function removeAccountConfirmation () {
   })
   no.addEventListener('click', async () => {
     $('#modal').modal('close')
+    location.href = document.referrer
   })
 }

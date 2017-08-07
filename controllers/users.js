@@ -176,14 +176,12 @@ const controller = module.exports = {
   },
   removeUserAccount: async (req, res, next) => {
     const id = req.params.userId
-    await User.findByIdAndRemove({ _id: id }, (err, data) => {
-      if (!err) {
-        res.json({ message: 'You have successfully deleted your account' })
-      } else {
-        res.json({ message: err })
-      }
-    })
-    // res.json({ message: `Removing account with id ${id}`, user: user })
+    const user = await User.findById({ _id: id }, '_id')
+    if (!user) {
+      res.json({ message: 'No user found' })
+    } else {
+      res.json({ user: user })
+    }
   },
   changePassword: async (req, res, next) => {
     const [currentpass, password, confirmpass] = [req.body.currentpass, req.body.newpass, req.body.confirmpass]
