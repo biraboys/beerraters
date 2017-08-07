@@ -348,11 +348,11 @@ const controller = module.exports = {
                   console.log(err)
                 }
               } else {
-                res.json({ success: true, message: `<span style="color:green">Successfully changed password! Login <a href="/login">here</a></span>`, session: req.session.user })
+                res.json({ success: true, session: req.session.user })
               }
             })
           } else {
-            res.json({ message: '<span style="color:red">Password does not match.</span>' })
+            res.json({ success: false })
           }
         })
       }
