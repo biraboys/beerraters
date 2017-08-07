@@ -15,7 +15,7 @@ const no = document.getElementById('no')
 const removeAccountBtn = document.getElementById('remove-account-btn')
 const removeAccountForm = document.getElementById('remove-account-form')
 
-async function test () {
+async function getUserJson () {
   const path = window.location.pathname.split('/')
   const url = `/${path[1]}/${path[2]}/json`
   try {
@@ -37,7 +37,7 @@ async function test () {
   }
 }
 
-test()
+getUserJson()
 
 // Change user password
 passChangeForm.addEventListener('submit', async function (e) {
@@ -74,6 +74,9 @@ passChangeForm.addEventListener('submit', async function (e) {
         confirmpassMsg.attributes[1].nodeValue = data.message
         changePassBtn.classList.remove('disabled')
       } else {
+        password.className = 'validate valid'
+        currentpass.className = 'validate valid'
+        newpass.className = 'validate valid'
         Materialize.toast(data.message, 3000)
         setTimeout(() => {
           location.href = profile
