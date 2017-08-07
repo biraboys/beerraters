@@ -105,6 +105,7 @@ removeAccountForm.addEventListener('submit', async function (e) {
     })
 
     const data = await response.json()
+
     if (data) {
       if (data.success) {
         removeAccountBtn.classList.add('disabled')
