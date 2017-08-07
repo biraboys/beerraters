@@ -10,6 +10,8 @@ resetPassForm.addEventListener('submit', async function (e) {
   e.preventDefault()
   submitBtn.classList.add('disabled')
   loading.classList.add('active')
+  confirmpassMsg.attributes[2].nodeValue = ''
+  confirmpass.className = 'validate'
   const pass = password.value
   const confirm = confirmpass.value
   try {
@@ -26,15 +28,12 @@ resetPassForm.addEventListener('submit', async function (e) {
     const data = await response.json()
     if (data) {
       if (data.success) {
-        console.log(data)
-        loading.classList.remove('active')
-        confirmpassMsg.attributes[2].nodeValue = 'Success!'
         confirmpass.className = 'validate valid'
+        Materialize.toast('Successfully changed password, redirecting to login...', 3000)
         setTimeout(() => {
           location.href = '/login'
         }, 3000)
       } else {
-        console.log(data)
         submitBtn.classList.remove('disabled')
         loading.classList.remove('active')
         confirmpassMsg.attributes[2].nodeValue = 'Make sure new password match'
