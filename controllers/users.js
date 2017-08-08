@@ -180,7 +180,7 @@ const controller = module.exports = {
     if (!user) {
       res.json({ message: 'No user found' })
     } else {
-      res.json({ user: user })
+      res.json({ user: user._id })
     }
   },
   changePassword: async (req, res, next) => {
