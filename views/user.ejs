@@ -10,7 +10,7 @@
      <% } else { %>
      <div class="col s12 m3">
             <div class="card flex-center flex-column ta-center">
-              <div>
+              <div class="card-image">
                   <% if (user.profileImg.length > 0) { %>
                     <img src="/uploads/users/<%= user._id %>/<%= user.profileImg %>" class="circle responsive-img" />
                   <% } else { %>
@@ -49,7 +49,24 @@
             </div>
               <ul class="collapsible" data-collapsible="accordion">
     <li>
-      <div class="collapsible-header">Followers <span class="card-subtitle" id="followers"><%= followers %></span><i class="material-icons right">chevron_right</i></div>
+      <div class="collapsible-header">Followers <span class="card-subtitle">(<span id="followers"><%= followers %></span>)</span><i class="material-icons right">chevron_right</i></div>
+      <div class="collapsible-body p-0">
+        <ul class="collection">
+          <% user.followers.forEach(function(follower) { %>
+    <li class="collection-item avatar">
+    <% if (follower.profileImg.length > 0) { %>
+      <img src="/uploads/users/<%= follower._id %>/<%= follower.profileImg %>" class="circle responsive-img" />
+    <% } else { %>
+      <img src="/images/user-placeholder.png" class="circle responsive-img" />
+    <% } %>
+      <span class="title"><a href="/users/<%= follower._id %>"><%= follower.username %></a></span>
+    </li>
+          <% }); %>
+        </ul>
+      </div>
+    </li>
+       <li>
+      <div class="collapsible-header">Following <span class="card-subtitle">(<span id="following"><%= user.following.length %></span>)</span><i class="material-icons right">chevron_right</i></div>
       <div class="collapsible-body p-0">
         <ul class="collection">
           <% user.following.forEach(function(following) { %>
@@ -65,23 +82,6 @@
         </ul>
       </div>
     </li>
-       <li>
-      <div class="collapsible-header">Following <span class="card-subtitle" id="following">(<%= user.following.length %>)</span><i class="material-icons right">chevron_right</i></div>
-      <div class="collapsible-body p-0">
-                <ul class="collection">
-          <% user.followers.forEach(function(follower) { %>
-    <li class="collection-item avatar">
-    <% if (follower.profileImg.length > 0) { %>
-      <img src="/uploads/users/<%= follower._id %>/<%= follower.profileImg %>" class="circle responsive-img" />
-    <% } else { %>
-      <img src="/images/user-placeholder.png" class="circle responsive-img" />
-    <% } %>
-      <span class="title"><a href="/users/<%= follower._id %>"><%= follower.username %></a></span>
-    </li>
-          <% }); %>
-        </ul>
-      </div>
-    </li>
     </ul>
           </div>
 
@@ -90,6 +90,7 @@
       <ul class="tabs tabs-fixed-width">
         <li class="tab"><a class="active" href="#reviews">Reviews</a></li>
         <li class="tab"><a href="#ratings">Ratings</a></li>
+        <li class="tab"><a href="#consumes">Consumes</a></li>        
         <li class="tab"><a href="#gallery">Gallery</a></li>        
       </ul>
     </div>
@@ -97,16 +98,25 @@
       <div id="reviews" class="col s12">
        <ul class="collection no-border" id="reviews-container"></ul>
       </div>
-      <div id="ratings" class="col s12"></div>
+      <div id="ratings" class="col s12">
+        <div class="collection no-border" id="ratings-list">
+        </div>
+      </div>
       <div id="gallery" class="col s12">
-        <% if (user.images) { %>
+        <% if (user.images.length > 0) { %>
           <div class="carousel">
             <% user.images.forEach(function(image) { %>
               <a class="carousel-item tooltipped" data-position="top" data-delay="50" data-tooltip="<%= image.beer_id.name %>" href="/beers/<%= image.beer_id._id %>"><img src="/uploads/beers/<%= image.beer_id._id %>/<%= image.name %>"></a>
             <% }); %>
           </div>
-       <% } %>
-   </div>      
+       <% } else { %>
+        <span class="card-title">No user images</span>
+        <% } %>
+   </div>
+      <div id="consumes" class="col s12">
+        <div class="collection no-border" id="consume-list">
+        </div>
+      </div>            
   </div>
 </div>
 
@@ -155,14 +165,15 @@
                 <div class="card-content">
                   <span class="card-title ta-center">Contributions <span class="card-subtitle">(<%= user.reviews.length + user.ratings.length + user.consumes.length + user.images.length %>)</span></span>                   
                     <canvas id="myChart"></canvas>
-       
-                      <!-- <h6 class="tc-blue">RANK</h6>
-                        <p class="" id="ranking-field"></p> -->   
+                        
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-content">
+                   <span class="card-title ta-center">Rank <span class="card-subtitle" id="ranking-field"></span></span>        
                 </div>
               </div>
             
-                      <!-- <h6 class="tc-blue">RANK</h6>
-                        <p class="" id="ranking-field"></p> -->   
    
   </div>
 <% } %> 

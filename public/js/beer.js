@@ -471,7 +471,7 @@ async function checkReviews () {
          <span class="card-subtitle">${review.place} in </span><a class="card-link" href="/countries/${review.country_id._id}">${review.country_id.name}</a> <br>
          ${review.body}
       </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+      <a href="#!" class="secondary-content"><i class="material-icons">mode_edit</i></a>
     </li>
   </div>
         `

@@ -2,11 +2,14 @@ const Country = require('../models/country')
 const Brewery = require('../models/brewery')
 const State = require('../models/state')
 const User = require('../models/user')
+const JSONStream = require('JSONStream')
 
 module.exports = {
   index: async (req, res, next) => {
-    const countries = await Country.find({}, 'name flag beers breweries users')
-    res.status(201).json(countries)
+    Country.find().cursor().pipe(JSONStream.stringify()).pipe(res)
+
+    // const countries = await Country.find({}, 'name flag beers breweries users')
+    // res.status(200).json(countries)
   },
   getCountryJson: async (req, res, next) => {
     const { countryId } = req.params
