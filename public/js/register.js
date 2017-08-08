@@ -58,3 +58,32 @@ registerForm.addEventListener('submit', async function (e) {
     console.log(err)
   }
 })
+
+async function getCountries () {
+  try {
+    const response = await fetch('/countries')
+    const countries = await response.json()
+    sortByName(countries)
+    await countries.forEach(country => {
+      registerForm.country.innerHTML += `
+      <option value="${country._id}" data-icon="/images/flags/${country.flag}" class="flag-img left valign-wrapper">${country.name}</option>
+      `
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// Helper functions
+function sortByName (array) {
+  return array.sort((a, b) => {
+    return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
+  })
+}
+
+registerForm.password.addEventListener('select', function () {
+  $('select').material_select()
+})
+
+// Function invokes
+getCountries()

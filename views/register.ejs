@@ -39,9 +39,6 @@
           <i class="material-icons prefix">location_on</i>
           <select class="icons" id="country" name="country" required>
           <option value="" disabled selected>Select country</option>
-          <% countries.forEach(function(country) { %>
-            <option value="<%= country._id %>" data-icon="/images/flags/<%= country.flag %>" class="flag-img left valign-wrapper"><%= country.name %></option>
-          <% }); %>
           </select>
           <label for="country">Country</label>
         </div>
@@ -55,11 +52,6 @@
 
 <%- include footer.ejs %>
 
-<script>
-$(document).ready(function () {
-  $('select').material_select()
-})
-</script>
 <script src="/js/register.js"></script>
 </body>
 </html>
