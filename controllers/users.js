@@ -161,7 +161,7 @@ const controller = module.exports = {
       }
     }, (err) => {
       if (err) { console.log(err) }
-      res.json({ message: 'Succuessfully updated profile info!' })
+      res.redirect(`/users/${req.params.userId}`)
     })
   },
   checkUserPassword: async (req, res, next) => {
