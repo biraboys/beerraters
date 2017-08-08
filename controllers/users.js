@@ -164,6 +164,24 @@ const controller = module.exports = {
       res.json({ message: 'Succuessfully updated profile info!' })
     })
   },
+  checkUserPassword: async (req, res, next) => {
+    const [id, password] = [req.params.userId, req.body.password]
+    const user = await User.findOne({ _id: id }, 'password')
+    if (bcrypt.compareSync(password, user.password)) {
+      res.json({ success: true })
+    } else {
+      res.json({ message: 'Password does not match' })
+    }
+  },
+  removeUserAccount: async (req, res, next) => {
+    const id = req.params.userId
+    const user = await User.findById({ _id: id }, '_id')
+    if (!user) {
+      res.json({ message: 'No user found' })
+    } else {
+      res.json({ user: user._id })
+    }
+  },
   changePassword: async (req, res, next) => {
     const [currentpass, password, confirmpass] = [req.body.currentpass, req.body.newpass, req.body.confirmpass]
 
@@ -294,11 +312,13 @@ const controller = module.exports = {
   getConfirmationToken: async(req, res) => {
     await User.findOne({ registrationToken: req.params.token, registrationTokenExpires: { $gt: Date.now() } }, (err, user) => {
       if (!user) {
-        res.json({ message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.' })
+        res.status(200).render('activation', { success: false, message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.', session: req.session.user })
+        // res.json('activation', { success: false, message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.' })
       } else {
         User.findOneAndUpdate({ _id: user._id }, { $set: { active: true }, $unset: { registrationToken: '', registrationTokenExpires: '' } }, err => {
           if (err) { console.log(err) }
-          res.json({ message: 'Successfully activated account!' })
+          res.status(200).render('activation', { success: true, message: 'You have successfully activated your account! You may now login', session: req.session.user })
+          // res.json('activation', { success: true, message: 'You have successfully activated your account!' })
         })
       }
     })
@@ -329,11 +349,11 @@ const controller = module.exports = {
                   console.log(err)
                 }
               } else {
-                res.json({ success: true, message: `<span style="color:green">Successfully changed password! Login <a href="/login">here</a></span>`, session: req.session.user })
+                res.json({ success: true, session: req.session.user })
               }
             })
           } else {
-            res.json({ message: '<span style="color:red">Password does not match.</span>' })
+            res.json({ success: false })
           }
         })
       }

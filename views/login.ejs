@@ -1,6 +1,19 @@
 <%- include header.ejs %>
 <section class="main-section">
   <div class="container">
+
+    <!-- Modal Structure -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <h4>Remove my account</h4>
+        <p>Are you sure you want to remove your account?</p>
+      </div>
+      <div class="modal-footer">
+        <a id="no" class="modal-action modal-close waves-effect waves-red btn-flat">No</a>
+        <a id="yes" class="modal-action modal-close waves-effect waves-green btn-flat">Yes</a>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col s6">
         <h4>Login</h4>
