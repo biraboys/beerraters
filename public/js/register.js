@@ -66,7 +66,7 @@ async function getCountries () {
     sortByName(countries)
     await countries.forEach(country => {
       registerForm.country.innerHTML += `
-      <option value="${country._id}" data-icon="/images/flags/${country.flag}" class="flag-img left valign-wrapper">${country.name}</option>
+      <option value="${country._id}" class="flag-img left valign-wrapper">${country.name}</option>
       `
     })
   } catch (err) {
@@ -81,7 +81,7 @@ function sortByName (array) {
   })
 }
 
-registerForm.password.addEventListener('select', function () {
+registerForm.password.addEventListener('focus', function () {
   $('select').material_select()
 })
 
