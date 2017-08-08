@@ -313,11 +313,13 @@ const controller = module.exports = {
   getConfirmationToken: async(req, res) => {
     await User.findOne({ registrationToken: req.params.token, registrationTokenExpires: { $gt: Date.now() } }, (err, user) => {
       if (!user) {
-        res.json({ message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.' })
+        res.status(200).render('activation', { success: false, message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.', session: req.session.user })
+        // res.json('activation', { success: false, message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.' })
       } else {
         User.findOneAndUpdate({ _id: user._id }, { $set: { active: true }, $unset: { registrationToken: '', registrationTokenExpires: '' } }, err => {
           if (err) { console.log(err) }
-          res.json({ message: 'Successfully activated account!' })
+          res.status(200).render('activation', { success: true, message: 'You have successfully activated your account! You may now login', session: req.session.user })
+          // res.json('activation', { success: true, message: 'You have successfully activated your account!' })
         })
       }
     })
