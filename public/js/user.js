@@ -34,44 +34,44 @@ async function followUser () {
   }
 }
 
-async function getUserReviews () {
-  const reviewsContainer = document.getElementById('reviews-container')
-  try {
-    const response = await fetch(`/users/${userId}/reviews`, {
-      method: 'get',
-      credentials: 'same-origin'
-    })
-    const reviewsObj = await response.json()
-    reviewsObj.reviews.forEach(async review => {
-      const beerResponse = await fetch(`/beers/fetch/${review.beer_id}`)
-      const beerObj = await beerResponse.json()
-      const beerImageResponse = await fetch(`/beers/${review.beer_id}/images`)
-      const beerImageArr = await beerImageResponse.json()
-      let beerImage
-      if (beerImageArr.length > 0) {
-        const beerImageName = beerImageArr[0].name
-        beerImage = `/uploads/beers/${beerObj.beer._id}/${beerImageName}`
-      } else {
-        beerImage = '/images/bottle.png'
-      }
-      reviewsContainer.innerHTML += `
-       <li class="collection-item avatar">
-         <img src="${beerImage}" alt="" class="circle">
-            <span class="title"><a href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a></span>
-            <p>
-              ${review.place}
-              <br>
-              <span class="card-subtitle">${review.body}</span>
-            </p>
-            <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
-       </li>
-      `
-    })
-    addReviewEdit()
-  } catch (err) {
-    console.log(err)
-  }
-}
+// async function getUserReviews () {
+//   const reviewsContainer = document.getElementById('reviews-container')
+//   try {
+//     const response = await fetch(`/users/${userId}/reviews`, {
+//       method: 'get',
+//       credentials: 'same-origin'
+//     })
+//     const reviewsObj = await response.json()
+//     reviewsObj.reviews.forEach(async review => {
+//       const beerResponse = await fetch(`/beers/fetch/${review.beer_id}`)
+//       const beerObj = await beerResponse.json()
+//       const beerImageResponse = await fetch(`/beers/${review.beer_id}/images`)
+//       const beerImageArr = await beerImageResponse.json()
+//       let beerImage
+//       if (beerImageArr.length > 0) {
+//         const beerImageName = beerImageArr[0].name
+//         beerImage = `/uploads/beers/${beerObj.beer._id}/${beerImageName}`
+//       } else {
+//         beerImage = '/images/bottle.png'
+//       }
+//       reviewsContainer.innerHTML += `
+//        <li class="collection-item avatar">
+//          <img src="${beerImage}" alt="" class="circle">
+//             <span class="title"><a href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a></span>
+//             <p>
+//               ${review.place}
+//               <br>
+//               <span class="card-subtitle">${review.body}</span>
+//             </p>
+//             <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
+//        </li>
+//       `
+//     })
+//     addReviewEdit()
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
 
 async function getUserRanking () {
   const rankingField = document.getElementById('ranking-field')
@@ -185,6 +185,6 @@ function addReviewEdit () {
   })
 }
 
-getUserReviews()
+// getUserReviews()
 getUserRanking()
 getUser()

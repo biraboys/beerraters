@@ -96,7 +96,28 @@
     </div>
     <div class="card-content">
       <div id="reviews" class="col s12">
-       <ul class="collection no-border" id="reviews-container"></ul>
+         <% if (user.reviews.length > 0) { %>   
+       <ul class="collection no-border" id="reviews-container">
+       <% user.reviews.forEach(function(review) { %>
+              <li class="collection-item avatar">
+                <% if (review.beer_id.images.length > 0) { %>
+                  <img src="/uploads/beers/<%= review.beer_id._id %>/<%= review.beer_id.images[0].name %>" alt="" class="circle">  
+                  <% } else { %>
+                    <img src="/images/bottle.png" alt="" class="circle">
+                  <% } %>
+            <span class="title"><a href="/beers/<%= review.beer_id._id %>"><%= review.beer_id.name %></a></span>
+            <p>
+             <%= review.place %>
+              <br>
+              <span class="card-subtitle"><%= review.body %></span>
+            </p>
+             <% if (session.user_id === user._id) { %>
+            <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
+          <% } %>
+       </li>
+        <% }); %>
+       </ul>
+         <% } %>
       </div>
       <div id="ratings" class="col s12">
         <div class="collection no-border" id="ratings-list">

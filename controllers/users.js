@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Beer = require('../models/beer')
 const Review = require('../models/review')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
@@ -69,7 +70,10 @@ const controller = module.exports = {
   },
   getUser: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findById(userId, '-password').populate('images.beer_id followers following', 'name username profileImg')
+    const user = await User.findById(userId, '-password -_v').populate('images.beer_id followers following', '-password -_v').populate({
+      path: 'reviews',
+      populate: {path: 'beer_id'}
+    })
     const profileId = user.id
     if (req.session.user) {
       const session = await User.findById(req.session.user._id)

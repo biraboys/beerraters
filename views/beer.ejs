@@ -9,7 +9,7 @@
         <div class="card-panel">
            <% if (beer.images.length !== 0) { %>
               <% beer.images.forEach(function(image) { %>
-                <img class="responsive-img materialboxed caption-images" src="/uploads/beers/<%= beer._id %>/<%= image.name %>" data-caption="Posted by <%= image.user_id.name %>" data-target="<%= image.user_id._id %>">
+                <img class="responsive-img materialboxed caption-images" src="/uploads/beers/<%= beer._id %>/<%= image.name %>" data-caption="Posted by <%= image.user_id.displayName %>" data-target="<%= image.user_id._id %>">
         <% }); %>
                   <% } else {%>
                     <img class="responsive-img" src="/images/bottle.png">
