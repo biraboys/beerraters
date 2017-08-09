@@ -36,7 +36,8 @@ router.get('/:userId/edit', function (req, res) {
   if (req.session.user._id === req.params.userId) {
     res.status(200).render('edit', { session: req.session.user })
   } else {
-    res.status(401).json({ message: 'You dont have access to this page.' })
+    // res.status(401).json({ message: 'You dont have access to this page.' })
+    res.redirect(`/users/${req.session.user._id}`)
   }
 })
 

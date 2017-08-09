@@ -21,7 +21,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   saveUninitialized: false,
   resave: false,
-  cookie: { secure: !true },
+  cookie: {
+    secure: !true,
+    maxAge: 14 * 24 * 60 * 60
+  },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: 14 * 24 * 60 * 60
