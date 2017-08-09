@@ -105,13 +105,16 @@
                   <% } else { %>
                     <img src="/images/bottle.png" alt="" class="circle">
                   <% } %>
-            <span class="title"><a href="/beers/<%= review.beer_id._id %>"><%= review.beer_id.name %></a></span>
+            <span class="title">
+              <a href="/beers/<%= review.beer_id._id %>" data-target="<%= review._id %>"><%= review.beer_id.name %></a>
+            </span>
             <p>
              <%= review.place %>
-              <br>
+            </p>
+            <p>
               <span class="card-subtitle"><%= review.body %></span>
             </p>
-             <% if (session.user_id === user._id) { %>
+             <% if (session._id === id) { %>
             <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
           <% } %>
        </li>
@@ -127,7 +130,7 @@
         <% if (user.images.length > 0) { %>
           <div class="row">
             <% user.images.forEach(function(image) { %>
-              <div class="col s12 m3">
+              <div class="col s12 m3 image-column">
                 <img class="materialboxed responsive-img" data-caption="<%= image.beer_id.name %>" src="/uploads/beers/<%= image.beer_id._id %>/<%= image.name %>" />
               </div>
                 <% }); %>
@@ -146,11 +149,18 @@
   <div id="edit-modal" class="modal">
     <div class="modal-content">
       <h4>Edit Review</h4>
-      <h6 id="review-modal-title"></h6>
-      <p id="review-modal-body"></p>
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn">Submit</a>
+      <h5 id="edit-modal-title"></h5>
+       <div class="row">
+    <form class="col s12" name="editReviewForm">
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea id="body" name="body" autofocus class="materialize-textarea"></textarea>
+          <label for="body">Review</label>
+        </div>
+      </div>
+      <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+    </form>
+  </div>
     </div>
   </div>
 

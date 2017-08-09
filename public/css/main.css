@@ -141,3 +141,7 @@
 a {
   cursor: pointer;
 }
+
+.row .image-column {
+  padding: 0 0;
+}

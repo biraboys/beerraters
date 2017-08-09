@@ -3,12 +3,58 @@ const followers = document.getElementById('followers')
 const userIdElement = location.href
 const userId = userIdElement.split('/')[4]
 const ctx = document.getElementById('myChart').getContext('2d')
+const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'))
+const editReviewForm = document.forms.editReviewForm
+const editModalTitle = document.getElementById('edit-modal-title')
 
 if (follow) {
   follow.addEventListener('click', function (e) {
     e.preventDefault()
     followUser()
   })
+}
+
+if (modalTriggers.length > 0) {
+  modalTriggers.forEach(trigger => {
+    trigger.addEventListener('click', function () {
+      const title = this.parentNode.childNodes[3].innerHTML
+      const body = this.parentNode.childNodes[7].innerText
+      editModalTitle.innerHTML = title
+      editReviewForm.body.value = body
+      $('#body').trigger('autoresize')
+    })
+  })
+}
+
+editReviewForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  const body = this.body.value
+  const title = document.getElementById('edit-modal-title')
+  const reviewId = title.childNodes[1].getAttribute('data-target')
+  editReview(reviewId, body)
+})
+
+async function editReview (reviewId, text) {
+  try {
+    const response = await fetch(`/reviews/${reviewId}`, {
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      method: 'post',
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        review: text
+      })
+    })
+    if (response.status === 200) {
+      Materialize.toast(`Review sucessfully updated! Reloading...`, 2000)
+      setTimeout(() => {
+        location.reload(true)
+      }, 2000)
+    }
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 async function followUser () {
@@ -33,45 +79,6 @@ async function followUser () {
     }
   }
 }
-
-// async function getUserReviews () {
-//   const reviewsContainer = document.getElementById('reviews-container')
-//   try {
-//     const response = await fetch(`/users/${userId}/reviews`, {
-//       method: 'get',
-//       credentials: 'same-origin'
-//     })
-//     const reviewsObj = await response.json()
-//     reviewsObj.reviews.forEach(async review => {
-//       const beerResponse = await fetch(`/beers/fetch/${review.beer_id}`)
-//       const beerObj = await beerResponse.json()
-//       const beerImageResponse = await fetch(`/beers/${review.beer_id}/images`)
-//       const beerImageArr = await beerImageResponse.json()
-//       let beerImage
-//       if (beerImageArr.length > 0) {
-//         const beerImageName = beerImageArr[0].name
-//         beerImage = `/uploads/beers/${beerObj.beer._id}/${beerImageName}`
-//       } else {
-//         beerImage = '/images/bottle.png'
-//       }
-//       reviewsContainer.innerHTML += `
-//        <li class="collection-item avatar">
-//          <img src="${beerImage}" alt="" class="circle">
-//             <span class="title"><a href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a></span>
-//             <p>
-//               ${review.place}
-//               <br>
-//               <span class="card-subtitle">${review.body}</span>
-//             </p>
-//             <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
-//        </li>
-//       `
-//     })
-//     addReviewEdit()
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
 
 async function getUserRanking () {
   const rankingField = document.getElementById('ranking-field')
@@ -116,17 +123,17 @@ function createChart (reviews, rankings, images, consumes) {
       datasets: [{
         data: [reviews, rankings, images, consumes],
         backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)'
-      ],
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)'
+        ],
         borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)'
-      ],
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)'
+        ],
         borderWidth: 1
       }]
     },
@@ -174,17 +181,5 @@ function displayUserRatings (user) {
   }
 }
 
-function addReviewEdit () {
-  const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'))
-  console.log(modalTriggers)
-
-  modalTriggers.forEach(trigger => {
-    trigger.addEventListener('click', function () {
-      console.log(this)
-    })
-  })
-}
-
-// getUserReviews()
 getUserRanking()
 getUser()
