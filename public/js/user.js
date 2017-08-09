@@ -49,8 +49,8 @@ async function getUserReviews () {
       const beerImageArr = await beerImageResponse.json()
       let beerImage
       if (beerImageArr.length > 0) {
-      const beerImageName = beerImageArr[0].name
-      beerImage = `/uploads/beers/${beerObj.beer._id}/${beerImageName}`
+        const beerImageName = beerImageArr[0].name
+        beerImage = `/uploads/beers/${beerObj.beer._id}/${beerImageName}`
       } else {
         beerImage = '/images/bottle.png'
       }
@@ -63,10 +63,11 @@ async function getUserReviews () {
               <br>
               <span class="card-subtitle">${review.body}</span>
             </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">mode_edit</i></a>
+            <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
        </li>
       `
     })
+    addReviewEdit()
   } catch (err) {
     console.log(err)
   }
@@ -109,32 +110,32 @@ async function getUser () {
 }
 function createChart (reviews, rankings, images, consumes) {
   const myDoughnutChart = new Chart(ctx, {
-  type: 'pie',
-  data: {
-    labels: ['Reviews', 'Rankings', 'Images', 'Consumes'],
-    datasets: [{
-      data: [reviews, rankings, images, consumes],
-      backgroundColor: [
-             'rgba(255, 99, 132, 0.2)',
-             'rgba(54, 162, 235, 0.2)',
-             'rgba(255, 206, 86, 0.2)',
-             'rgba(75, 192, 192, 0.2)'
-           ],
-      borderColor: [
-             'rgba(255,99,132,1)',
-             'rgba(54, 162, 235, 1)',
-             'rgba(255, 206, 86, 1)',
-             'rgba(75, 192, 192, 1)'
-           ],
-      borderWidth: 1
-    }]
-  },
-  options: {
-    legend: {
-      display: false
+    type: 'pie',
+    data: {
+      labels: ['Reviews', 'Rankings', 'Images', 'Consumes'],
+      datasets: [{
+        data: [reviews, rankings, images, consumes],
+        backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)'
+      ],
+        borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)'
+      ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      legend: {
+        display: false
+      }
     }
-  }
-})
+  })
 }
 
 function displayUserConsumes (user) {
@@ -156,12 +157,12 @@ function displayUserRatings (user) {
   const userRatingsList = document.getElementById('ratings-list')
   if (user.ratings.length > 0) {
     user.ratings.forEach(beer => {
-    let rating = 0
-    beer.ratings.forEach(ratingObj => {
-      if (ratingObj.user === userId) {
-        rating = ratingObj.rating
-      }
-    })
+      let rating = 0
+      beer.ratings.forEach(ratingObj => {
+        if (ratingObj.user === userId) {
+          rating = ratingObj.rating
+        }
+      })
       userRatingsList.innerHTML += `
         <a href="/beers/${beer._id}" class="collection-item">${beer.name} <span class="badge right">${rating}</span></a>
       `
@@ -171,6 +172,17 @@ function displayUserRatings (user) {
     <span class="card-title">No user consumes</span>
     `
   }
+}
+
+function addReviewEdit () {
+  const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'))
+  console.log(modalTriggers)
+
+  modalTriggers.forEach(trigger => {
+    trigger.addEventListener('click', function () {
+      console.log(this)
+    })
+  })
 }
 
 getUserReviews()

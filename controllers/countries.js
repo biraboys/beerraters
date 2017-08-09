@@ -7,9 +7,6 @@ const JSONStream = require('JSONStream')
 module.exports = {
   index: async (req, res, next) => {
     Country.find().cursor().pipe(JSONStream.stringify()).pipe(res)
-
-    // const countries = await Country.find({}, 'name flag beers breweries users')
-    // res.status(200).json(countries)
   },
   getCountryJson: async (req, res, next) => {
     const { countryId } = req.params

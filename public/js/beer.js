@@ -435,13 +435,19 @@ async function getCountries () {
     sortByName(countries)
     await countries.forEach(country => {
       reviewForm.location.innerHTML += `
-      <option value="${country._id}" data-icon="/images/flags/${country.flag}" class="flag-img left valign-wrapper">${country.name}</option>
+      <option value="${country._id}" class="flag-img left valign-wrapper">${country.name}</option>
       `
     })
   } catch (err) {
     console.log(err)
   }
+}
+
+reviewForm.place.addEventListener('focus', displayCountries)
+
+function displayCountries () {
   $('select').material_select()
+  this.removeEventListener('focus', displayCountries)
 }
 
 async function checkReviews () {

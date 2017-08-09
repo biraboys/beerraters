@@ -104,10 +104,12 @@
       </div>
       <div id="gallery" class="col s12">
         <% if (user.images.length > 0) { %>
-          <div class="carousel">
+          <div class="row">
             <% user.images.forEach(function(image) { %>
-              <a class="carousel-item tooltipped" data-position="top" data-delay="50" data-tooltip="<%= image.beer_id.name %>" href="/beers/<%= image.beer_id._id %>"><img src="/uploads/beers/<%= image.beer_id._id %>/<%= image.name %>"></a>
-            <% }); %>
+              <div class="col s12 m3">
+                <img class="materialboxed responsive-img" data-caption="<%= image.beer_id.name %>" src="/uploads/beers/<%= image.beer_id._id %>/<%= image.name %>" />
+              </div>
+                <% }); %>
           </div>
        <% } else { %>
         <span class="card-title">No user images</span>
@@ -120,45 +122,17 @@
   </div>
 </div>
 
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <h4>Edit Review</h4>
+      <h6 id="review-modal-title"></h6>
+      <p id="review-modal-body"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn">Submit</a>
+    </div>
+  </div>
 
-     <!-- <ul class="collapsible popout" data-collapsible="accordion">
-       <li>
-         <div class="collapsible-header active"><i class="material-icons">rate_review</i>Reviews</div>
-         <div class="collapsible-body white">
-           <ul class="collection" id="reviews-container">
-           </ul>
-         </div>
-       </li>
-       <li>
-         <div class="collapsible-header"><i class="material-icons">star</i>Ratings</div>
-         <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
-       </li>
-         <% if (user.images) { %>
-       <li>
-         <div class="collapsible-header"><i class="material-icons">collections</i>Gallery</div>
-         <div class="collapsible-body white">
-           <div class="row">
-             <% user.images.forEach(function(image) { %>
-               <div class="col s12 m4">
-                <div class="card">
-                  <div class="card-image">
-                    <a href="/beers/<%= image.beer_id._id %>">
-                      <img src="/uploads/beers/<%= image.beer_id._id %>/<%= image.name %>" class="responsive-img">
-                    </a>
-                        <div class="card-content grey lighten-5">
-                          <p class="ta-center">
-                            <a href="/beers/<%= image.beer_id._id %>"><%= image.beer_id.name %></a>
-                          </p>
-                        </div>
-                  </div>
-                </div>
-               </div>
-            <% }); %>
-           </div>
-         </div>
-       </li>
-      <% } %>
-    </ul> -->
 
   <div class="col s12 m3">
               <div class="card">
@@ -190,8 +164,7 @@
 <script>
   $(document).ready(function () {
     $('.collapsible').collapsible()
-    $('.carousel').carousel()
-    $('.tooltipped').tooltip()        
+    $('.modal').modal()              
 })
 </script>
 <script src="/js/libs/chart.min.js"></script>

@@ -9,7 +9,7 @@
         <div class="card-panel">
            <% if (beer.images.length !== 0) { %>
               <% beer.images.forEach(function(image) { %>
-                <img class="responsive-img materialboxed" src="/uploads/beers/<%= beer._id %>/<%= image.name %>">
+                <img class="responsive-img materialboxed caption-images" src="/uploads/beers/<%= beer._id %>/<%= image.name %>" data-caption="Posted by <%= image.user_id.name %>" data-target="<%= image.user_id._id %>">
         <% }); %>
                   <% } else {%>
                     <img class="responsive-img" src="/images/bottle.png">
@@ -157,31 +157,31 @@
 <!-- Modals -->
      <div class="modal bottom-sheet" id="review-modal">
       <div class="modal-content" id="review-modal-body">
-        <div class="container">
-        <h4>Review</h4>
-        <p>Please fill in the fields below to review this beer.</p>
-    <form action="/beers/<%= beer._id %>/review" method="post" name="reviewForm">
-      <div class="row">
+        <form action="/beers/<%= beer._id %>/review" method="post" name="reviewForm">
+          <div class="container">
+            <div class="row">
+              <div class="col s6">
+                <h4>Review</h4>
+                <p>Please fill in the fields below to review this beer.</p>
+              </div>
         <div class="col s6">
           <div class="input-field">
           <textarea class="materialize-textarea" placeholder="Fire away!" id="review" name="review"></textarea>
           <label for="review">Review</label>
           </div>
-        </div>
-        <div class="col s6">
           <div class="input-field">
           <input placeholder="On a balcony, at a beach, in a restaurant..." type="text" class="validate" name="place" id="place" required>
           <label for="place">Where did you drink this beer?</label>
           </div>
           <div class="input-field">
-          <select id="location" name="location" required>
-            <option value="" disabled selected>Select country</option>
-          </select>
-          <label for="location">Location</label>
+            <select id="location" name="location" required>
+              <option value="" disabled selected>Select country</option>
+            </select>
+            <label for="location">Location</label>
           </div>
-        </div>
-        </div>
         <button class="btn waves-effect waves-light" type="submit" name="submit">Submit</button>
+        </div>
+        </div>
       </div>                       
     </form>
   </div>
