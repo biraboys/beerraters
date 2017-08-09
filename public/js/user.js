@@ -63,7 +63,7 @@ async function getUserReviews () {
               <br>
               <span class="card-subtitle">${review.body}</span>
             </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">mode_edit</i></a>
+            <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
        </li>
       `
     })
