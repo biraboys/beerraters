@@ -10,7 +10,7 @@
      <% } else { %>
      <div class="col s12 m3">
             <div class="card flex-center flex-column ta-center">
-              <div class="card-image">
+              <div class="card-image profile">
                   <% if (user.profileImg.length > 0) { %>
                     <img src="/uploads/users/<%= user._id %>/<%= user.profileImg %>" class="circle responsive-img" />
                   <% } else { %>
@@ -18,6 +18,11 @@
                   <% } %>
                 </div>
                 <div class="card-content">
+                <% if (user.status) { %>
+                  <span class="user-status light-green accent-3"></span> Online
+                <% } else { %>
+                  <span class="user-status grey lighten-2"></span> Offline
+                <% } %>
                 <span class="card-title">
                   @<%= user.username %>
                   <img src="/images/flags/SE-32.png" />
@@ -37,7 +42,7 @@
                   <p><%= user.description %></p>
                 <% } else { %>
                   <p>User has no description yet.</p>
-                <% } %>
+                <% } %></br>
                 </div>
                 <div class="card-action flex-center flex-column">
                   <% if (session && session._id === user.id) { %>
