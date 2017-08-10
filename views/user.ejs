@@ -5,7 +5,7 @@
 <section class="main-section">
  <div class="container">
    <div class="row">
-  <% if (user === undefined || user.active === false) { %>
+  <% if (user === undefined) { %>
     <h1>Sorry could not found user</h1>
      <% } else { %>
      <div class="col s12 m3">
@@ -26,7 +26,11 @@
                   <%= user.name %>
                 </span>
                 <span class="card-subtitle">
-                  Member since <%= user.registered.toDateString() %>
+                  <% if (user.active === true) { %>
+                    Member since <%= user.registered.toDateString() %>
+                  <% } else { %>
+                    Member is not active
+                  <% } %>
                 </span>
                 <br>
                                   <% if (user.description) { %>
@@ -53,13 +57,13 @@
       <div class="collapsible-body p-0">
         <ul class="collection">
           <% user.followers.forEach(function(follower) { %>
-    <li class="collection-item avatar">
+    <li class="collection-item avatar follower-list">
     <% if (follower.profileImg.length > 0) { %>
       <img src="/uploads/users/<%= follower._id %>/<%= follower.profileImg %>" class="circle responsive-img" />
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
     <% } %>
-      <span class="title"><a href="/users/<%= follower._id %>"><%= follower.username %></a></span>
+      <span class="title follower-span"><a href="/users/<%= follower._id %>"><%= follower.username %></a></span>
     </li>
           <% }); %>
         </ul>
@@ -70,13 +74,13 @@
       <div class="collapsible-body p-0">
         <ul class="collection">
           <% user.following.forEach(function(following) { %>
-    <li class="collection-item avatar">
+    <li class="collection-item avatar follower-list">
     <% if (following.profileImg.length > 0) { %>
       <img src="/uploads/users/<%= following._id %>/<%= following.profileImg %>" class="circle responsive-img" />
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
     <% } %>
-      <span class="title"><a href="/users/<%= following._id %>"><%= following.username %></a></span>
+      <span class="title follower-span"><a href="/users/<%= following._id %>"><%= following.username %></a></span>
     </li>
           <% }); %>
         </ul>

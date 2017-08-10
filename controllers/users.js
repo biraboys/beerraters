@@ -33,7 +33,6 @@ const controller = module.exports = {
       password: password,
       following: [],
       followers: [],
-      displaName: username,
       registrationToken: token,
       registrationTokenExpires: expires,
       country_id: country
@@ -181,11 +180,35 @@ const controller = module.exports = {
   },
   removeUserAccount: async (req, res, next) => {
     const id = req.params.userId
-    const user = await User.findById({ _id: id }, '_id')
+    const user = await User.findByIdAndUpdate(id, {
+      $unset: {
+        password: '',
+        name: '',
+        resetPasswordExpires: '',
+        resetPasswordToken: '',
+        profileImg: '',
+        followers: '',
+        following: '',
+        description: '',
+        country_id: ''
+      },
+      $set: {
+        active: false
+      }
+    })
     if (!user) {
       res.json({ message: 'No user found' })
     } else {
-      res.json({ user: user._id })
+      console.log(req.session)
+      req.session.destroy(err => {
+        if (err) {
+          res.status(500).json({ err: 'Internal server error' })
+        } else {
+          // Remove user profileImg
+          // res.json({ message: 'Your account has successfully been deleted', user: user })
+          res.json({ message: 'Your account has successfully been deleted', user: user })
+        }
+      })
     }
   },
   changePassword: async (req, res, next) => {

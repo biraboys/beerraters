@@ -472,7 +472,7 @@ async function checkReviews () {
             <div class="card-panel">
              <li class="collection-item avatar">
       <img src="${profileImg}" alt="" class="circle">
-      <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.displayName}</strong></a></span>
+      <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.username}</strong></a></span>
       <p>
          <span class="card-subtitle">${review.place} in </span><a class="card-link" href="/countries/${review.country_id._id}">${review.country_id.name}</a> <br>
          ${review.body}

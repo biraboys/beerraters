@@ -1,5 +1,4 @@
 const name = document.getElementById('name')
-const displayname = document.getElementById('displayname')
 const description = document.getElementById('description')
 const currentpass = document.getElementById('currentpass')
 const newpass = document.getElementById('newpass')
@@ -29,7 +28,6 @@ async function getUserJson () {
 
     if (data) {
       name.value = data.name
-      displayname.value = data.displayName || ''
       description.value = data.description
     }
   } catch (err) {
@@ -139,7 +137,10 @@ async function removeAccountConfirmation () {
     })
     const data = await response.json()
     if (data) {
-      console.log(data)
+      Materialize.toast(data.message, 3000)
+      setTimeout(() => {
+        location.href = '/'
+      }, 3000)
     }
   })
   no.addEventListener('click', async () => {
