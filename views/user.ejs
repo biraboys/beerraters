@@ -120,7 +120,11 @@
        </li>
         <% }); %>
        </ul>
-         <% } %>
+         <% } else { %>
+          <div class="row">
+            <span class="card-title">No user reviews</span>
+          </div>
+           <% } %>
       </div>
       <div id="ratings" class="col s12">
         <div class="collection no-border" id="ratings-list">
@@ -136,7 +140,9 @@
                 <% }); %>
           </div>
        <% } else { %>
-        <span class="card-title">No user images</span>
+        <div class="row">
+          <span class="card-title">No user images</span>
+        </div>
         <% } %>
    </div>
       <div id="consumes" class="col s12">

@@ -176,7 +176,7 @@ function displayUserRatings (user) {
     })
   } else {
     userRatingsList.innerHTML += `
-    <span class="card-title">No user consumes</span>
+    <span class="card-title">No user ratings</span>
     `
   }
 }
