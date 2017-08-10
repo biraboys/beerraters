@@ -21,14 +21,13 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   saveUninitialized: false,
   resave: false,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  }),
   cookie: {
     secure: !true,
-    maxAge: 14 * 24 * 60 * 60
-  },
-  store: new MongoStore({
-    mongooseConnection: mongoose.connection,
-    ttl: 14 * 24 * 60 * 60
-  })
+    expires: new Date(Date.now() + 12096e5)
+  }
 }))
 
 app.use(cookieParser())
