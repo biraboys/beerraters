@@ -269,18 +269,15 @@ const controller = module.exports = {
       return follower
     }
   },
-  getUserFollowers: async (req, res, next) => {
+  getUserFollowing: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findById(userId)
-    const currentUser = { username: user.username, id: user._id }
-
-    const followers = await User.find({ '_id': user.followers }, { password: 0, following: 0, description: 0, email: 0, ratings: 0, reviews: 0, consumes: 0 }, (err, result) => {
-      if (err) {
-        console.log(err)
-      }
-      return result
+    const user = await User.findById(userId, '_id following').populate('following', '_id')
+    .populate({
+      path: 'following',
+      populate: {path: '_id'},
+      select: 'ratings images reviews consumes username'
     })
-    res.status(200).render('followers', { user: currentUser, followers: followers, session: req.session.user })
+    res.json(user)
   },
   forgotPassword: async(req, res, next) => {
     async.waterfall([

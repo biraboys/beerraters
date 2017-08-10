@@ -41,7 +41,7 @@ router.get('/:userId/edit', function (req, res) {
   }
 })
 
-router.route('/:userId/followers')
-  .get(UsersController.getUserFollowers)
+router.route('/:userId/following')
+  .get(UsersController.getUserFollowing)
 
 module.exports = router
