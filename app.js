@@ -26,6 +26,7 @@ app.use(session({
   }),
   cookie: {
     secure: !true,
+    // Cookie last for 2 weeks
     expires: new Date(Date.now() + 12096e5)
   }
 }))
