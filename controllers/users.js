@@ -122,9 +122,6 @@ const controller = module.exports = {
         if (bcrypt.compareSync(password, user.password)) {
           const userSession = { _id: user._id }
           req.session.user = userSession
-          console.log(req.session.cookie)
-          console.log(req.cookies['connect.sid'])
-          console.log(req.sessionID)
           res.json({ success: true, message: 'Success!' })
         } else {
           res.json({ success: false, active: true, message: 'Password does not match.' })
