@@ -18,13 +18,13 @@
                   <% } %>
                 </div>
                 <div class="card-content">
+                <% if (user.status) { %>
+                  <span class="user-status light-green accent-3"></span> Online
+                <% } else { %>
+                  <span class="user-status grey lighten-2"></span> Offline
+                <% } %>
                 <span class="card-title">
                   @<%= user.username %>
-                  <% if (user.status) { %>
-                    <span class="user-status light-green accent-3"></span>
-                  <% } else { %>
-                    <span class="user-status grey lighten-2"></span>
-                  <% } %>
                   <img src="/images/flags/SE-32.png" />
                 </span>
                 <span class="card-title">
@@ -42,7 +42,7 @@
                   <p><%= user.description %></p>
                 <% } else { %>
                   <p>User has no description yet.</p>
-                <% } %>
+                <% } %></br>
                 </div>
                 <div class="card-action flex-center flex-column">
                   <% if (session && session._id === user.id) { %>
