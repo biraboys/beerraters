@@ -48,7 +48,11 @@
       </div>
       <div class="col s5">
       <ul class="right hide-on-med-and-down">
+        <% if (!session) { %>
         <li><a href="/">Home</a></li>
+          <% } else { %>
+        <li><a href="/">Feed</a></li>            
+          <% } %>
         <li><a href="/search">Search</a></li>
         <% if (!session) { %>
         <li><a href="/register">Sign Up</a></li>

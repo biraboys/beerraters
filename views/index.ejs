@@ -1,5 +1,5 @@
 <%- include header.ejs %>
-
+<% if (!session) { %>
 <div class="section no-pad-bot" id="index-banner">
     <div class="container">
       <br><br>
@@ -52,7 +52,26 @@
     </div>
     <br><br>
   </div>
+<% } else { %>
+<section class="main-section">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m6">
+        <h4 class="ta-center">Activity</h4>
+      </div>
+        <div class="col s12 m6">
+          <h4 class="ta-center">Friends</h4>
+      </div>
+    </div>      
+  </div>
+</section>
+ <% } %>
+
 <%- include footer.ejs %>
 
+<% if (session) { %>
+
+  <script src="/js/feed.js"></script>    
+          <% } %>
 </body>
 </html>
