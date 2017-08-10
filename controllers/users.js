@@ -122,6 +122,7 @@ const controller = module.exports = {
         if (bcrypt.compareSync(password, user.password)) {
           const userSession = { _id: user._id }
           req.session.user = userSession
+          await User.findByIdAndUpdate(userSession, { $set: { status: true } })
           res.json({ success: true, message: 'Success!' })
         } else {
           res.json({ success: false, active: true, message: 'Password does not match.' })
@@ -132,6 +133,17 @@ const controller = module.exports = {
     } else {
       res.json({ success: false, active: true, message: 'Could not find user with username' })
     }
+  },
+  logoutUser: async (req, res, next) => {
+    await User.findByIdAndUpdate(req.session.user._id, { $set: { status: false } })
+    req.session.destroy(err => {
+      if (err) {
+        res.status(500).json({ err: 'Internal server error' })
+      }
+      if (req.session === undefined) {
+        res.status(200).json({ msg: 'Successfully logged out!' })
+      }
+    })
   },
   editProfile: async (req, res, next) => {
     const user = await User.findOne({ _id: req.session.user._id }, 'profileImg _id')

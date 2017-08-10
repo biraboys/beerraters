@@ -154,3 +154,14 @@ a {
   display: block;
   padding-top: 9px;
 }
+
+.card .card-image.profile {
+  margin-top: 20px;
+}
+
+.user-status {
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}

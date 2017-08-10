@@ -1,15 +1,7 @@
 const router = require('express-promise-router')()
+const UsersController = require('../controllers/users')
 
 router.route('/')
-  .post((req, res) => {
-    req.session.destroy(err => {
-      if (err) {
-        res.status(500).json({ err: 'Internal server error' })
-      }
-      if (req.session === undefined) {
-        res.status(200).json({ msg: 'Successfully logged out!' })
-      }
-    })
-  })
+  .post(UsersController.logoutUser)
 
 module.exports = router
