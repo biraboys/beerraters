@@ -145,3 +145,12 @@ a {
 .row .image-column {
   padding: 0 0;
 }
+
+.collection .collection-item.avatar.follower-list {
+  min-height: 62px;
+}
+
+.collection .collection-item.avatar .title.follower-span {
+  display: block;
+  padding-top: 9px;
+}
