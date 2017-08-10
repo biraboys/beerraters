@@ -5,7 +5,7 @@
 <section class="main-section">
  <div class="container">
    <div class="row">
-  <% if (user === undefined || user.active === false) { %>
+  <% if (user === undefined) { %>
     <h1>Sorry could not found user</h1>
      <% } else { %>
      <div class="col s12 m3">
@@ -26,7 +26,11 @@
                   <%= user.name %>
                 </span>
                 <span class="card-subtitle">
-                  Member since <%= user.registered.toDateString() %>
+                  <% if (user.active === true) { %>
+                    Member since <%= user.registered.toDateString() %>
+                  <% } else { %>
+                    Member is not active
+                  <% } %>
                 </span>
                 <br>
                                   <% if (user.description) { %>

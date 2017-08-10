@@ -76,7 +76,6 @@ const userSchema = new Schema({
   profileImg: { type: String, default: '' },
   resetPasswordToken: { type: String, default: '' },
   resetPasswordExpires: { type: Date, default: null },
-  displayName: { type: String },
   role: { type: String, default: 'User' },
   active: { type: Boolean, required: true, default: false },
   registrationToken: { type: String, required: true },
@@ -86,7 +85,11 @@ const userSchema = new Schema({
 userSchema.static('findByName', function (userArr, userName) {
   userName.toLowerCase()
   userArr = userArr.filter(user => {
-    if (user.username.toLowerCase().includes(userName) || user.name.toLowerCase().includes(userName)) if (user.active) { return user }
+    if (user.active === true) {
+      if (user.username.toLowerCase().includes(userName) || user.name.toLowerCase().includes(userName)) {
+        return user
+      }
+    }
   })
   return userArr
 })
