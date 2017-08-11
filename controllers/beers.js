@@ -182,7 +182,7 @@ module.exports = {
   addBeerRating: async (req, res, next) => {
     const { beerId } = req.params
     const userId = req.session.user._id
-    const user = await User.findOne({_id: userId}, 'ratings')
+    const user = await User.findOne({_id: userId}, 'username ratings')
 
     if (user.ratings.indexOf(beerId) === -1) {
       const rating = req.body.rating
@@ -190,7 +190,7 @@ module.exports = {
       await Beer.findByIdAndUpdate(beerId, { $push: { ratings: {rating: rating, user: userId} } })
       await User.findByIdAndUpdate(userId, { $push: { ratings: beerId } })
 
-      const beer = await Beer.findOne({_id: beerId}, 'ratings')
+      const beer = await Beer.findOne({_id: beerId}, 'name ratings')
 
       const beerRatings = beer.ratings.map(obj => {
         return obj.rating
@@ -200,7 +200,7 @@ module.exports = {
       avgRating.toFixed(1)
 
       await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
-
+      res.io.emit('socketToMe', { user: user, beer: beer, rating: rating })
       res.redirect(`/beers/${beerId}`)
     } else {
       res.send('Already Rated')
