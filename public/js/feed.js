@@ -44,3 +44,17 @@ async function getUserContributions () {
 }
 
 getUserFollowing()
+
+async function getUsersOnline() {
+  console.log(userId)
+  try {
+    const response = await fetch(location.pathname, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+getUsersOnline()
