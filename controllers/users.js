@@ -287,7 +287,7 @@ const controller = module.exports = {
     .populate({
       path: 'following',
       populate: {path: '_id'},
-      select: 'ratings images reviews consumes username'
+      select: 'ratings images reviews consumes username status profileImg'
     })
     res.json(user)
   },

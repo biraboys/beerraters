@@ -1,5 +1,9 @@
 const userId = document.getElementById('user-session-id').href.split('/')[4]
 const activityList = document.getElementById('activity-list')
+const onlineList = document.getElementById('online')
+const offlineList = document.getElementById('offline')
+const offlineFollowers = document.getElementById('offline-followers')
+const onlineFollowers = document.getElementById('online-followers')
 
 if (localStorage.getItem('activity') !== null) {
   const activity = localStorage.getItem('activity')
@@ -50,13 +54,46 @@ if (localStorage.getItem('activity') !== null) {
 // getUserFollowing()
 
 async function getUsersOnline () {
-  console.log(userId)
+  const url = `/users/${userId}/following`
   try {
-    const response = await fetch(location.pathname, {
+    const response = await fetch(url, {
       method: 'get',
       credentials: 'same-origin'
     })
-    console.log(response)
+    const user = await response.json()
+    console.log(user)
+
+    user.following.forEach(following => {
+      if (following.status === true) {
+        if (following.profileImg.length > 0) {
+          onlineList.innerHTML +=
+          `<li class="collection-item avatar follower-list">
+            <img src="/uploads/users/${following._id}/${following.profileImg}" class="circle responsive-img">
+            <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
+          </li>`
+        } else {
+          onlineList.innerHTML +=
+          `<li class="collection-item avatar follower-list">
+            <img src="/images/user-placeholder.png" class="circle responsive-img">
+            <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
+          </li>`
+        }
+      } else {
+        if (following.profileImg.length > 0) {
+          offlineList.innerHTML +=
+          `<li class="collection-item avatar follower-list">
+            <img src="/uploads/users/${following._id}/${following.profileImg}" class="circle responsive-img">
+            <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
+          </li>`
+        } else {
+          offlineList.innerHTML +=
+          `<li class="collection-item avatar follower-list">
+            <img src="/images/user-placeholder.png" class="circle responsive-img">
+            <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
+          </li>`
+        }
+      }
+    })
   } catch (err) {
     console.log(err)
   }
