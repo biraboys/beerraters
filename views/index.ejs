@@ -99,7 +99,15 @@
 <%- include footer.ejs %>
 
 <% if (session) { %>
-  <script src="/js/feed.js"></script>    
+  <script src="/js/feed.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io.connect('//localhost:6889')
+  socket.on('socketToMe', function (data) {
+    const list = document.getElementById('activity-list')
+    list.innerHTML = data
+  })
+</script>    
   <% } %>
 </body>
 </html>

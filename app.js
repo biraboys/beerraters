@@ -11,8 +11,14 @@ const MongoStore = require('connect-mongo')(session)
 require('dotenv').config()
 
 const app = express()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
 
 // Middleware
+app.use(function (req, res, next) {
+  res.io = io
+  next()
+})
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -117,4 +123,4 @@ db.once('open', function () {
 mongoose.Promise = global.Promise
 mongoose.connect(uri, options)
 
-module.exports = app
+module.exports = { app: app, server: server }
