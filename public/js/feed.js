@@ -61,10 +61,12 @@ async function getUsersOnline () {
       credentials: 'same-origin'
     })
     const user = await response.json()
-    console.log(user)
+    let usersOnline = 0
+    let usersOffline = 0
 
     user.following.forEach(following => {
       if (following.status === true) {
+        usersOnline += 1
         if (following.profileImg.length > 0) {
           onlineList.innerHTML +=
           `<li class="collection-item avatar follower-list">
@@ -79,6 +81,7 @@ async function getUsersOnline () {
           </li>`
         }
       } else {
+        usersOffline += 1
         if (following.profileImg.length > 0) {
           offlineList.innerHTML +=
           `<li class="collection-item avatar follower-list">
@@ -94,6 +97,8 @@ async function getUsersOnline () {
         }
       }
     })
+    onlineFollowers.innerHTML = usersOnline
+    offlineFollowers.innerHTML = usersOffline
   } catch (err) {
     console.log(err)
   }
