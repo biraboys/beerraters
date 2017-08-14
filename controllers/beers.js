@@ -234,9 +234,11 @@ module.exports = {
     }
     image.quality(60)
     image.write(`${path}/${beerId}/${name}.png`)
-    await Beer.findByIdAndUpdate(beerId, { $push: { images: { name: `${name}.png`, user_id: req.session.user } } })
-    await User.findByIdAndUpdate(req.session.user, { $push: { images: { name: `${name}.png`, beer_id: beerId } } })
+    // await Beer.findByIdAndUpdate(beerId, { $push: { images: { name: `${name}.png`, user_id: req.session.user } } })
+    // await User.findByIdAndUpdate(req.session.user, { $push: { images: { name: `${name}.png`, beer_id: beerId } } })
     const filePath = `${path}/${name}`
+
+
     fs.unlinkSync(filePath)
     res.redirect(`/beers/${beerId}`)
   },

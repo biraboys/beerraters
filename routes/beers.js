@@ -2,6 +2,7 @@ const router = require('express-promise-router')()
 const BeersController = require('../controllers/beers')
 const multer = require('multer')
 const upload = multer({ dest: `public/uploads/beers/` })
+// const upload = multer({ dest: `http://192.168.1.225:3000/images/beer` })
 const Beer = require('../models/beer')
 
 // const storage = multer.diskStorage({

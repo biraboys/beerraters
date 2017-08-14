@@ -21,6 +21,7 @@
     "express-session": "^1.15.3",
     "image-size": "^0.6.0",
     "jimp": "^0.2.28",
+    "jsftp": "^2.0.0",
     "mongoose": "^4.10.8",
     "mongoose-password-plugin": "^0.1.2",
     "mongoose-title-case": "0.0.4",
