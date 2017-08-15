@@ -38,7 +38,6 @@ app.use(session({
 }))
 
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
 
 // Routes
 const index = require('./routes/index')
