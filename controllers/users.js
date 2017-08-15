@@ -155,7 +155,6 @@ const controller = module.exports = {
   },
   editProfile: async (req, res, next) => {
     const { userId } = req.params
-
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
     if (req.file !== undefined) {
       const image = await Jimp.read(req.file.buffer)
