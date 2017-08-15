@@ -231,30 +231,29 @@ module.exports = {
   },
   addBeerImage: async (req, res, next) => {
     const { beerId } = req.params
-    const name = `${req.files[0].filename}`
-    await ftp.raw('mkd', `/uploads/imageapi/public/images/beers/${req.session.user._id}`, function (err, data) {
-      if (err.code === 550) {
-        ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
-          if (!hadError) {
-            console.log('File transferred successfully!')
-          } else {
-            console.log(hadError)
-          }
-        })
-      } else if (!err) {
-        ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
-          if (!hadError) {
-            console.log('File transferred successfully!')
-          } else {
-            console.log(hadError)
-          }
-        })
-      } else {
-        return console.error(err)
-      }
-      console.log(data.text) // Show the FTP response text to the user
-      console.log(data.code) // Show the FTP response code to the user
-    })
+    const path = req.files[0].path
+    const name = req.files[0].filename
+    console.log(req.files[0])
+    await Beer.findByIdAndUpdate(beerId, { $set: { img: { data: fs.readFileSync(path), contentType: 'image/png' } } })
+    // const dimensions = sizeOf(path)
+    // const image = await Jimp.read(path)
+    // if (dimensions.width > dimensions.height) {
+    //   image.resize(Jimp.AUTO, 250)
+    // } else {
+    //   image.resize(250, Jimp.AUTO)
+    // }
+    // image.quality(60)
+    // image.write(`public/uploads/beers/${beerId}/${name}.png`)
+    // // await Beer.findByIdAndUpdate(beerId, { $push: { images: { name: `${name}.png`, user_id: req.session.user } } })
+    // // await User.findByIdAndUpdate(req.session.user, { $push: { images: { name: `${name}.png`, beer_id: beerId } } })
+    // fs.unlinkSync(path)
+    // ftp.put(`public/uploads/beers/${beerId}/${name}.png`, `/projects/image-host/public/uploads/beers/${beerId}/${name}`, function (hadError) {
+    //   if (!hadError) {
+    //     console.log('File transferred successfully!')
+    //   } else {
+    //     console.log(hadError)
+    //   }
+    // })
     res.redirect(`/beers/${beerId}`)
     // const {beerId} = req.params
     // const path = `public/uploads/beers`
@@ -296,5 +295,13 @@ module.exports = {
     } else {
       res.send('Already reviwed')
     }
+  },
+  getBeerImage: async (req, res, next) => {
+    const { beerId } = req.params
+    Beer.findById(beerId, function (err, doc) {
+      if (err) return next(err)
+      res.contentType(doc.img.contentType)
+      res.send(doc.img.data)
+    })
   }
 }
