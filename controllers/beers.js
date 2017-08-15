@@ -10,6 +10,14 @@ const Jimp = require('jimp')
 const sizeOf = require('image-size')
 const fs = require('fs')
 
+const JSFtp = require('jsftp')
+const ftp = new JSFtp({
+  host: process.env.FTP_HOST,
+  port: 21, // defaults to 21
+  user: process.env.FTP_USERNAME, // defaults to "anonymous"
+  pass: process.env.FTP_USER_PASS // defaults to "@anonymous"
+})
+
 module.exports = {
   index: async (req, res, next) => {
     const beers = await Beer.find({})
@@ -222,25 +230,50 @@ module.exports = {
     res.status(200).json({beer: beer, user: userId})
   },
   addBeerImage: async (req, res, next) => {
-    const {beerId} = req.params
-    const path = `public/uploads/beers`
+    const { beerId } = req.params
     const name = `${req.files[0].filename}`
-    const dimensions = sizeOf(`${path}/${name}`)
-    const image = await Jimp.read(`${path}/${name}`)
-    if (dimensions.width > dimensions.height) {
-      image.resize(Jimp.AUTO, 250)
-    } else {
-      image.resize(250, Jimp.AUTO)
-    }
-    image.quality(60)
-    image.write(`${path}/${beerId}/${name}.png`)
-    // await Beer.findByIdAndUpdate(beerId, { $push: { images: { name: `${name}.png`, user_id: req.session.user } } })
-    // await User.findByIdAndUpdate(req.session.user, { $push: { images: { name: `${name}.png`, beer_id: beerId } } })
-    const filePath = `${path}/${name}`
-
-
-    fs.unlinkSync(filePath)
+    await ftp.raw('mkd', `/uploads/imageapi/public/images/beers/${req.session.user._id}`, function (err, data) {
+      if (err.code === 550) {
+        ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
+          if (!hadError) {
+            console.log('File transferred successfully!')
+          } else {
+            console.log(hadError)
+          }
+        })
+      } else if (!err) {
+        ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
+          if (!hadError) {
+            console.log('File transferred successfully!')
+          } else {
+            console.log(hadError)
+          }
+        })
+      } else {
+        return console.error(err)
+      }
+      console.log(data.text) // Show the FTP response text to the user
+      console.log(data.code) // Show the FTP response code to the user
+    })
     res.redirect(`/beers/${beerId}`)
+    // const {beerId} = req.params
+    // const path = `public/uploads/beers`
+    // const name = `${req.files[0].filename}`
+    // const dimensions = sizeOf(`${path}/${name}`)
+    // const image = await Jimp.read(`${path}/${name}`)
+    // if (dimensions.width > dimensions.height) {
+    //   image.resize(Jimp.AUTO, 250)
+    // } else {
+    //   image.resize(250, Jimp.AUTO)
+    // }
+    // image.quality(60)
+    // image.write(`${path}/${beerId}/${name}.png`)
+    // // await Beer.findByIdAndUpdate(beerId, { $push: { images: { name: `${name}.png`, user_id: req.session.user } } })
+    // // await User.findByIdAndUpdate(req.session.user, { $push: { images: { name: `${name}.png`, beer_id: beerId } } })
+    // const filePath = `${path}/${name}`
+
+    // fs.unlinkSync(filePath)
+    // res.redirect(`/beers/${beerId}`)
   },
   addBeerReview: async (req, res, next) => {
     const userId = req.session.user._id

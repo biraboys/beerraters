@@ -8,6 +8,13 @@ const bcrypt = require('bcryptjs')
 const Jimp = require('jimp')
 const fs = require('fs')
 const sizeOf = require('image-size')
+const JSFtp = require('jsftp')
+const ftp = new JSFtp({
+  host: process.env.FTP_HOST,
+  port: 21, // defaults to 21
+  user: process.env.FTP_USERNAME, // defaults to "anonymous"
+  pass: process.env.FTP_USER_PASS // defaults to "@anonymous"
+})
 
 const controller = module.exports = {
   index: async (req, res, next) => {
@@ -149,6 +156,30 @@ const controller = module.exports = {
     const user = await User.findOne({ _id: req.session.user._id }, 'profileImg _id')
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
     let link = user.profileImg
+    
+    await ftp.raw('mkd', `/uploads/imageapi/public/images/beers/${req.session.user._id}`, function (err, data) {
+      if (err.code === 550) {
+        ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
+          if (!hadError) {
+            console.log('File transferred successfully!')
+          } else {
+            console.log(hadError)
+          }
+        })
+      } else if (!err) {
+        ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
+          if (!hadError) {
+            console.log('File transferred successfully!')
+          } else {
+            console.log(hadError)
+          }
+        })
+      } else {
+        return console.error(err)
+      }
+      console.log(data.text) // Show the FTP response text to the user
+      console.log(data.code) // Show the FTP response code to the user
+    })
 
     if (req.files.length > 0) {
       const profileImg = `${req.files[0].filename}`
@@ -160,11 +191,22 @@ const controller = module.exports = {
       image.quality(60)
       image.write(`${path}/${req.session.user._id}/${profileImg}.png`)
       const filePath = `${path}/${profileImg}`
-      fs.unlinkSync(filePath)
-      if (user.profileImg.length > 0) {
-        fs.unlinkSync(`${path}/${req.session.user._id}/${user.profileImg}`)
-      }
+      await fs.unlinkSync(filePath)
+      // if (user.profileImg.length > 0) {
+      //   await fs.unlinkSync(`${path}/${req.session.user._id}/${user.profileImg}`)
+      // }
       link = `${profileImg}.png`
+      // console.log(`${path}/${req.session.user._id}/${profileImg}.png`)
+      // console.log(`../public/uploads/users/${req.session.user._id}/${profileImg}.png`, `/uploads/imageapi/public/images/users/${profileImg}.png`)
+      await Ftp.put(image, `/uploads/imageapi/public/images/users/${profileImg}.png`, function (hadError) {
+        if (!hadError) {
+          console.log('File transferred successfully!')
+          console.log(`${path}/${req.session.user._id}/${profileImg}.png`)
+        } else {
+          console.log(`${path}/${req.session.user._id}/${profileImg}.png`)
+          console.log(hadError)
+        }
+      })
     }
     await User.findOneAndUpdate({ _id: req.session.user._id }, {
       $set: {
