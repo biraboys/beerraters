@@ -223,27 +223,14 @@ module.exports = {
   },
   addBeerImage: async (req, res, next) => {
     const { beerId } = req.params
-    await Beer.findByIdAndUpdate(beerId, { $push: { images: { data: req.file.buffer, contentType: 'image/png', user_id: req.session.user } } })
-    await User.findByIdAndUpdate(req.session.user, { $push: { images: { data: req.file.buffer, contentType: 'image/png', beer_id: beerId } } })
-        // const dimensions = sizeOf(path)
-    // const image = await Jimp.read(path)
-    // if (dimensions.width > dimensions.height) {
-    //   image.resize(Jimp.AUTO, 250)
-    // } else {
-    //   image.resize(250, Jimp.AUTO)
-    // }
-    // image.quality(60)
-    // image.write(`public/uploads/beers/${beerId}/${name}.png`)
-    // // await Beer.findByIdAndUpdate(beerId, { $push: { images: { name: `${name}.png`, user_id: req.session.user } } })
-
-    // fs.unlinkSync(path)
-    // ftp.put(`public/uploads/beers/${beerId}/${name}.png`, `/projects/image-host/public/uploads/beers/${beerId}/${name}`, function (hadError) {
-    //   if (!hadError) {
-    //     console.log('File transferred successfully!')
-    //   } else {
-    //     console.log(hadError)
-    //   }
-    // })
+    const image = await Jimp.read(req.file.buffer)
+    image.resize(Jimp.AUTO, 250)
+    image.quality(60)
+    image.getBuffer('image/png', async function (err, data) {
+      if (err) throw err
+      await Beer.findByIdAndUpdate(beerId, { $push: { images: { data: data, contentType: 'image/png', user_id: req.session.user } } })
+      await User.findByIdAndUpdate(req.session.user, { $push: { images: { data: data, contentType: 'image/png', beer_id: beerId } } })
+    })
     res.redirect(`/beers/${beerId}`)
   },
   addBeerReview: async (req, res, next) => {

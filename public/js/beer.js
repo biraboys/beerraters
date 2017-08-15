@@ -519,12 +519,12 @@ async function getBeerImage () {
           index: i
         })
       })
+      const image = document.createElement('img')
       const img = await response.blob()
       console.log(img)
-      const image = document.createElement('img')
-      image.setAttribute('class', 'responsive-img materialboxed caption-images')
       const objectURL = URL.createObjectURL(img)
       image.src = objectURL
+      image.setAttribute('class', 'responsive-img materialboxed caption-images')
       imageContainer.appendChild(image)
       i++
     }
