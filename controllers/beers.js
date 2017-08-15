@@ -223,10 +223,7 @@ module.exports = {
   },
   addBeerImage: async (req, res, next) => {
     const { beerId } = req.params
-    const path = req.files[0].path
-    const name = req.files[0].filename
-    console.log(req.files[0])
-    await Beer.findByIdAndUpdate(beerId, { $set: { img: { data: fs.readFileSync(path), contentType: 'image/png' } } })
+    await Beer.findByIdAndUpdate(beerId, { $set: { img: { data: req.file.buffer, contentType: 'image/png' } } })
     // const dimensions = sizeOf(path)
     // const image = await Jimp.read(path)
     // if (dimensions.width > dimensions.height) {

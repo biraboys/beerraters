@@ -1,17 +1,9 @@
 const router = require('express-promise-router')()
 const BeersController = require('../controllers/beers')
 const multer = require('multer')
-const upload = multer({ dest: `public/uploads/beers/` })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 const Beer = require('../models/beer')
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, '/public/uploads/beers')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.fieldname + '-' + Date.now() + '.jpg')
-//   }
-// })
 
 router.route('/')
   .get(BeersController.index)
@@ -40,7 +32,7 @@ router.route('/:beerId/contributions')
   .get(BeersController.getContributions)
 
 router.route('/:beerId/addImage')
-  .post(upload.any(), BeersController.addBeerImage)
+  .post(upload.single('img'), BeersController.addBeerImage)
 
 router.route('/:beerId/getImage')
   .get(BeersController.getBeerImage)
