@@ -161,17 +161,17 @@ const controller = module.exports = {
       if (err.code === 550) {
         ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
           if (!hadError) {
-            console.log('File transferred successfully!')
+            return console.log('File transferred successfully!')
           } else {
-            console.log(hadError)
+            return console.log(hadError)
           }
         })
       } else if (!err) {
         ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
           if (!hadError) {
-            console.log('File transferred successfully!')
+            return console.log('File transferred successfully!')
           } else {
-            console.log(hadError)
+            return console.log(hadError)
           }
         })
       } else {
