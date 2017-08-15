@@ -2,7 +2,13 @@ const router = require('express-promise-router')()
 const BeersController = require('../controllers/beers')
 const multer = require('multer')
 const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 50000000,
+    files: 1
+  }
+})
 const Beer = require('../models/beer')
 
 router.route('/')
