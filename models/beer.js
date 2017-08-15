@@ -52,11 +52,11 @@ const beerSchema = new Schema({
   ],
   images: [
     {
-      name: String,
+      data: Buffer,
+      contentType: String,
       user_id: { type: Schema.Types.ObjectId, ref: 'user' }
     }
-  ],
-  img: { data: Buffer, contentType: String }
+  ]
 })
 
 beerSchema.static('findByName', function (beerArr, beerName) {

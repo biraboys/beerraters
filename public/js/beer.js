@@ -501,8 +501,41 @@ async function checkReviews () {
 
 //   }
 // }
+
+async function getBeerImage () {
+  const imageContainer = document.getElementById('image-container')
+  try {
+    const response = await fetch(`/beers/${beerId}/images`)
+    const imageAmount = await response.text()
+    let i = 0
+    while (i < imageAmount) {
+      const response = await fetch(`/beers/${beerId}/getImage`, {
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        method: 'post',
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          index: i
+        })
+      })
+      const img = await response.blob()
+      console.log(img)
+      const image = document.createElement('img')
+      image.setAttribute('class', 'responsive-img materialboxed caption-images')
+      const objectURL = URL.createObjectURL(img)
+      image.src = objectURL
+      imageContainer.appendChild(image)
+      i++
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // Init calls
 checkContributions()
 avgRatingSymbols()
 checkReviews()
+getBeerImage()
 // getImages()

@@ -35,7 +35,7 @@ router.route('/:beerId/addImage')
   .post(upload.single('img'), BeersController.addBeerImage)
 
 router.route('/:beerId/getImage')
-  .get(BeersController.getBeerImage)
+  .post(BeersController.getBeerImage)
 
 router.route('/fetch/:beerId')
   .get(BeersController.getBeer)
@@ -43,7 +43,7 @@ router.route('/fetch/:beerId')
 router.get('/:beerId/images', async function (req, res, next) {
   const {beerId} = req.params
   const beer = await Beer.findById(beerId)
-  res.json(beer.images)
+  res.json(beer.images.length)
 })
 
 module.exports = router
