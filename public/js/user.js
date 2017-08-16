@@ -6,6 +6,9 @@ const ctx = document.getElementById('myChart').getContext('2d')
 const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'))
 const editReviewForm = document.forms.editReviewForm
 const editModalTitle = document.getElementById('edit-modal-title')
+const imageContainer = document.getElementById('profile-img')
+
+if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
 
 if (follow) {
   follow.addEventListener('click', function (e) {
@@ -115,9 +118,6 @@ async function getUser () {
     console.log(err)
   }
 }
-const imageContainer = document.getElementById('profile-img')
-
-if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
 
 async function getUserProfileImg () {
   try {

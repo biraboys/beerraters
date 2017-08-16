@@ -153,14 +153,14 @@ const controller = module.exports = {
     const { userId } = req.params
 
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
-    
+
     if (req.file !== undefined) {
       const image = await Jimp.read(req.file.buffer)
-      
+
       // console.log(image.bitmap)
       // const width = image.bitmap.width
       // const height = image.bitmap.height
-      
+
       // if (width > height) { image.rotate(90) }
 
       image.cover(150, 150)
@@ -225,8 +225,6 @@ const controller = module.exports = {
         if (err) {
           res.status(500).json({ err: 'Internal server error' })
         } else {
-          // Remove user profileImg
-          // res.json({ message: 'Your account has successfully been deleted', user: user })
           res.json({ message: 'Your account has successfully been deleted', user: user })
         }
       })
