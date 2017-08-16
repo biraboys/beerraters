@@ -115,9 +115,11 @@ async function getUser () {
     console.log(err)
   }
 }
+const imageContainer = document.getElementById('profile-img')
+
+if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
 
 async function getUserProfileImg () {
-  const imageContainer = document.getElementById('profile-img')
   try {
     const response = await fetch(`/users/${userId}/get-profileimage`, {
       method: 'get',
@@ -202,4 +204,4 @@ function displayUserRatings (user) {
 
 // getUserRanking()
 // getUser()
-getUserProfileImg()
+// getUserProfileImg()

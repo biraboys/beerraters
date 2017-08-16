@@ -34,13 +34,17 @@ const controller = module.exports = {
       followers: [],
       registrationToken: token,
       registrationTokenExpires: expires,
-      country_id: country
+      country_id: country,
+      profileImg: {
+        data: null,
+        contentType: ''
+      }
     })
 
     await newUser.save(err => {
       if (err) {
         if (err.errors) {
-          console.log('error')
+          console.log(err)
           res.json({ message: err.errors })
         } else if (err.code === 11000) {
           res.json({ message: err.message })
@@ -177,7 +181,7 @@ const controller = module.exports = {
     const { userId } = req.params
     User.findById(userId, (err, doc) => {
       if (err) return next(err)
-      console.log(doc.profileImg.contentType)
+
       res.contentType(doc.profileImg.contentType)
       res.send(doc.profileImg.data)
     })
@@ -212,7 +216,6 @@ const controller = module.exports = {
     if (!user) {
       res.json({ message: 'No user found' })
     } else {
-      console.log(req.session)
       req.session.destroy(err => {
         if (err) {
           res.status(500).json({ err: 'Internal server error' })

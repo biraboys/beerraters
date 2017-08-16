@@ -11,8 +11,10 @@
      <div class="col s12 m3">
             <div class="card flex-center flex-column ta-center">
               <div id="profile-img" class="card-image">
-                  <img class="responsive-img circle" src="/images/user-placeholder.png" />
-              </div>
+                <% if (user.profileImg.data === null) { %>
+                  <img src="/images/user-placeholder.png" class="responsive-img card-image profile" />
+                <% } %>
+                </div>
                 <div class="card-content">
                 <% if (user.status) { %>
                   <span class="user-status light-green accent-3"></span> Online
