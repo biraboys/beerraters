@@ -74,7 +74,7 @@ const userSchema = new Schema({
     }
   ],
   description: { type: String, default: '' },
-  profileImg: { type: String, default: '' },
+  profileImg: { data: Buffer, contentType: String },
   resetPasswordToken: { type: String, default: '' },
   resetPasswordExpires: { type: Date, default: null },
   role: { type: String, default: 'User' },

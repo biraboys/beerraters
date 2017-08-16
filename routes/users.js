@@ -1,7 +1,14 @@
 const router = require('express-promise-router')()
 const UsersController = require('../controllers/users')
 const multer = require('multer')
-const upload = multer({ dest: `public/uploads/users/` })
+const storage = multer.memoryStorage()
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 50000000,
+    files: 1
+  }
+})
 
 router.route('/')
   .get(UsersController.index)
@@ -20,8 +27,11 @@ router.route('/:userId/reviews')
   .get(UsersController.getUserReviews)
   .post(UsersController.newUserReview)
 
+router.route('/:userId/get-profileimage')
+  .get(UsersController.getProfileImage)
+
 router.route('/:userId/edit')
-  .post(upload.any(), UsersController.editProfile)
+  .post(upload.single('profileImg'), UsersController.editProfile)
 
 router.route('/:userId/changepassword')
   .post(UsersController.changePassword)

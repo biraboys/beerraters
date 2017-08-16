@@ -115,6 +115,25 @@ async function getUser () {
     console.log(err)
   }
 }
+
+async function getUserProfileImg () {
+  const imageContainer = document.getElementById('profile-img')
+  try {
+    const response = await fetch(`/users/${userId}/get-profileimage`, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    const img = await response.blob()
+    const image = document.createElement('img')
+    const objectURL = URL.createObjectURL(img)
+    image.src = objectURL
+    image.setAttribute('class', 'responsive-img card-image profile')
+    imageContainer.appendChild(image)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 function createChart (reviews, rankings, images, consumes) {
   const myDoughnutChart = new Chart(ctx, {
     type: 'pie',
@@ -181,5 +200,6 @@ function displayUserRatings (user) {
   }
 }
 
-getUserRanking()
-getUser()
+// getUserRanking()
+// getUser()
+getUserProfileImg()
