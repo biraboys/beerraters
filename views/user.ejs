@@ -10,10 +10,8 @@
      <% } else { %>
      <div class="col s12 m3">
             <div class="card flex-center flex-column ta-center">
-              <div class="card-image profile">
-                  <% if (user.profileImg.length > 0) { %>
-                    <img src="/uploads/users/<%= user._id %>/<%= user.profileImg %>" class="circle responsive-img" />
-                  <% } else { %>
+              <div id="profile-img" class="card-image">
+                  <% if (!user.profileImg) { %>
                     <img src="/images/user-placeholder.png" />
                   <% } %>
                 </div>
@@ -64,7 +62,7 @@
           <% user.followers.forEach(function(follower) { %>
     <li class="collection-item avatar follower-list">
     <% if (follower.profileImg.length > 0) { %>
-      <img src="/uploads/users/<%= follower._id %>/<%= follower.profileImg %>" class="circle responsive-img" />
+      <img src="" class="circle responsive-img" />
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
     <% } %>
@@ -81,7 +79,7 @@
           <% user.following.forEach(function(following) { %>
     <li class="collection-item avatar follower-list">
     <% if (following.profileImg.length > 0) { %>
-      <img src="/uploads/users/<%= following._id %>/<%= following.profileImg %>" class="circle responsive-img" />
+      <img src="" class="circle responsive-img" />
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
     <% } %>
@@ -110,7 +108,7 @@
        <% user.reviews.forEach(function(review) { %>
               <li class="collection-item avatar">
                 <% if (review.beer_id.images.length > 0) { %>
-                  <img src="/uploads/beers/<%= review.beer_id._id %>/<%= review.beer_id.images[0].name %>" alt="" class="circle">  
+                  <img src="" alt="" class="circle">  
                   <% } else { %>
                     <img src="/images/bottle.png" alt="" class="circle">
                   <% } %>
@@ -144,7 +142,7 @@
           <div class="row">
             <% user.images.forEach(function(image) { %>
               <div class="col s12 m3 image-column">
-                <img class="materialboxed responsive-img" data-caption="<%= image.beer_id.name %>" src="/uploads/beers/<%= image.beer_id._id %>/<%= image.name %>" />
+                <img class="materialboxed responsive-img" data-caption="<%= image.beer_id.name %>" src="" />
               </div>
                 <% }); %>
           </div>

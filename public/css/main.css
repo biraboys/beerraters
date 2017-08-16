@@ -157,6 +157,7 @@ a {
 
 .card .card-image.profile {
   margin-top: 20px;
+  border-radius: 50%;
 }
 
 .user-status {

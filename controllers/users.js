@@ -153,71 +153,45 @@ const controller = module.exports = {
     })
   },
   editProfile: async (req, res, next) => {
-    const user = await User.findOne({ _id: req.session.user._id }, 'profileImg _id')
+    const { userId } = req.params
+
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
-    let link = user.profileImg
     
-    await ftp.raw('mkd', `/uploads/imageapi/public/images/beers/${req.session.user._id}`, function (err, data) {
-      if (err.code === 550) {
-        ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
-          if (!hadError) {
-            return console.log('File transferred successfully!')
-          } else {
-            return console.log(hadError)
-          }
-        })
-      } else if (!err) {
-        ftp.put(`${req.files[0].path}`, `/uploads/imageapi/public/images/beers/${req.session.user._id}/${name}.png`, function (hadError) {
-          if (!hadError) {
-            return console.log('File transferred successfully!')
-          } else {
-            return console.log(hadError)
-          }
-        })
-      } else {
-        return console.error(err)
-      }
-      console.log(data.text) // Show the FTP response text to the user
-      console.log(data.code) // Show the FTP response code to the user
-    })
+    if (req.file !== undefined) {
+      const image = await Jimp.read(req.file.buffer)
+      
+      // console.log(image.bitmap)
+      // const width = image.bitmap.width
+      // const height = image.bitmap.height
+      
+      // if (width > height) { image.rotate(90) }
 
-    if (req.files.length > 0) {
-      const profileImg = `${req.files[0].filename}`
-      const path = `public/uploads/users`
-
-      const image = await Jimp.read(`${path}/${profileImg}`)
-
-      image.resize(150, 150)
+      image.cover(150, 150)
       image.quality(60)
-      image.write(`${path}/${req.session.user._id}/${profileImg}.png`)
-      const filePath = `${path}/${profileImg}`
-      await fs.unlinkSync(filePath)
-      // if (user.profileImg.length > 0) {
-      //   await fs.unlinkSync(`${path}/${req.session.user._id}/${user.profileImg}`)
-      // }
-      link = `${profileImg}.png`
-      // console.log(`${path}/${req.session.user._id}/${profileImg}.png`)
-      // console.log(`../public/uploads/users/${req.session.user._id}/${profileImg}.png`, `/uploads/imageapi/public/images/users/${profileImg}.png`)
-      await Ftp.put(image, `/uploads/imageapi/public/images/users/${profileImg}.png`, function (hadError) {
-        if (!hadError) {
-          console.log('File transferred successfully!')
-          console.log(`${path}/${req.session.user._id}/${profileImg}.png`)
-        } else {
-          console.log(`${path}/${req.session.user._id}/${profileImg}.png`)
-          console.log(hadError)
-        }
+      image.getBuffer('image/png', async function (err, data) {
+        if (err) throw err
+        await User.findByIdAndUpdate(userId, { $set: { profileImg: { data: data, contentType: 'image/png' } } })
       })
     }
+
     await User.findOneAndUpdate({ _id: req.session.user._id }, {
       $set: {
         name: name,
         displayName: displayName,
-        description: description,
-        profileImg: link
+        description: description
       }
     }, (err) => {
       if (err) { console.log(err) }
       res.redirect(`/users/${req.params.userId}`)
+    })
+  },
+  getProfileImage: async (req, res, next) => {
+    const { userId } = req.params
+    User.findById(userId, (err, doc) => {
+      if (err) return next(err)
+      console.log(doc.profileImg.contentType)
+      res.contentType(doc.profileImg.contentType)
+      res.send(doc.profileImg.data)
     })
   },
   checkUserPassword: async (req, res, next) => {
