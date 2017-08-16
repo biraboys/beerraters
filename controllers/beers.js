@@ -10,14 +10,6 @@ const Jimp = require('jimp')
 const sizeOf = require('image-size')
 const fs = require('fs')
 
-const JSFtp = require('jsftp')
-const ftp = new JSFtp({
-  host: process.env.FTP_HOST,
-  port: 21, // defaults to 21
-  user: process.env.FTP_USERNAME, // defaults to "anonymous"
-  pass: process.env.FTP_USER_PASS // defaults to "@anonymous"
-})
-
 module.exports = {
   index: async (req, res, next) => {
     const beers = await Beer.find({})

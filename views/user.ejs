@@ -11,9 +11,9 @@
      <div class="col s12 m3">
             <div class="card flex-center flex-column ta-center">
               <div id="profile-img" class="card-image">
-                  <% if (!user.profileImg) { %>
-                    <img src="/images/user-placeholder.png" />
-                  <% } %>
+                <% if (user.profileImg.data === null) { %>
+                  <img src="/images/user-placeholder.png" class="responsive-img card-image profile" />
+                <% } %>
                 </div>
                 <div class="card-content">
                 <% if (user.status) { %>
