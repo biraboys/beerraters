@@ -134,8 +134,7 @@ async function getInputValues (beerName, filter) {
       clearContent(pageNavigation)
       beers.forEach(async (beer, index) => {
         if (index <= 50) {
-          const beerObj = await getBeerInfo(beer)
-          const beerCard = generateBeerCard(beerObj)
+          const beerCard = await generateBeerCard(beer)
           await displayBeer(beerCard)
         }
       })
@@ -202,33 +201,35 @@ async function searchUser (userName) {
   loadingContainer.classList.remove('active')
 }
 
-function generateBeerCard (beerObj) {
+async function generateBeerCard (beerObj) {
   let categoryName, styleName, styleLink, breweryName, countryFlag, countryCode, countryLink, rating, beerImage
-  if (beerObj.beer.images.length !== 0) {
-    beerImage = `/uploads/beers/${beerObj.beer._id}/${beerObj.beer.images[0].name}`
-  } else {
-    beerImage = `/images/bottle.png`
-  }
-  if (beerObj.category) {
-    categoryName = beerObj.category.name
-    styleName = beerObj.style.name
-    styleLink = `/styles/${beerObj.style._id}`
+  // if (beerObj.images.length !=) {
+    const blobResponse = await fetch(`/beers/${beerObj._id}/getImage`)
+    const beerBlob = await blobResponse.blob()
+    beerImage = URL.createObjectURL(beerBlob)
+  // } else {
+  //   beerImage.src = `/images/bottle.png`
+  // }
+  if (beerObj.category_id) {
+    categoryName = beerObj.category_id.name
+    styleName = beerObj.style_id.name
+    styleLink = `/styles/${beerObj.style_id._id}`
   } else {
     categoryName = ''
     styleName = ''
     styleLink = '#'
   }
-  if (beerObj.brewery) {
-    breweryName = beerObj.brewery.name
+  if (beerObj.brewery_id) {
+    breweryName = beerObj.brewery_id.name
   } else {
     breweryName = ''
   }
-  if (beerObj.country) {
+  if (beerObj.country_id) {
     const img = document.createElement('img')
-    img.src = `/images/flags/${beerObj.country.flag}`
+    img.src = `/images/flags/${beerObj.country_id.flag}`
     countryFlag = img.outerHTML
-    countryCode = beerObj.country.code
-    countryLink = `/countries/${beerObj.country._id}`
+    countryCode = beerObj.country_id.code
+    countryLink = `/countries/${beerObj.country_id._id}`
   } else {
     [countryFlag, countryCode] = ['', '']
     countryLink = '#'
@@ -322,12 +323,12 @@ function generateBeerCard (beerObj) {
     <div class="row">
       <div class="card horizontal">
             <div class="card-image">
-              <img class="h-200" src="${beerImage}">
+              <img class="responsive-img h-200" src="${beerImage}" /> 
             </div>
             <div class="card-stacked">
             <div class="card-content">
               <div class="card-title">
-                <a class="card-link" href="/beers/${beerObj.beer._id}">${beerObj.beer.name}</a>
+                <a class="card-link" href="/beers/${beerObj._id}">${beerObj.name}</a>
               </div> 
               <div class="card-title">                  
                 ${rating}

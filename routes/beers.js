@@ -41,7 +41,8 @@ router.route('/:beerId/addImage')
   .post(upload.single('img'), BeersController.addBeerImage)
 
 router.route('/:beerId/getImage')
-  .post(BeersController.getBeerImage)
+  .get(BeersController.getBeerImage)
+  .post(BeersController.getBeerImages)
 
 router.route('/fetch/:beerId')
   .get(BeersController.getBeer)

@@ -9,6 +9,7 @@ const User = require('../models/user')
 const Jimp = require('jimp')
 const sizeOf = require('image-size')
 const fs = require('fs')
+const JSONStream = require('JSONStream')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -138,9 +139,13 @@ module.exports = {
   },
   findBeerByName: async (req, res, next) => {
     const beerName = req.query.q
-    const allBeers = await Beer.find({})
-    const beers = await Beer.findByName(allBeers, beerName)
-    res.status(200).json(beers)
+    await Beer.find({
+      'name': { '$regex': beerName, '$options': 'i' }
+    }, '-v -images')
+    .populate('style_id category_id brewery_id country_id', 'name flag code')
+    .cursor()
+    .pipe(JSONStream.stringify())
+    .pipe(res)
   },
   findBeerByStyle: async (req, res, next) => {
     const beerName = req.query.q
@@ -256,6 +261,12 @@ module.exports = {
     }
   },
   getBeerImage: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId, 'images')
+    res.contentType(beer.images[0].contentType)
+    res.send(beer.images[0].data)
+  },
+  getBeerImages: async (req, res, next) => {
     const { beerId } = req.params
     Beer.findById(beerId, function (err, doc) {
       if (err) return next(err)
