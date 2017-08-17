@@ -142,7 +142,8 @@ module.exports = {
     await Beer.find({
       'name': { '$regex': beerName, '$options': 'i' }
     }, '-v -images')
-    .populate('style_id category_id brewery_id country_id', 'name flag code')
+    // .populate('style_id category_id brewery_id country_id', 'name flag code')
+    .lean()
     .cursor()
     .pipe(JSONStream.stringify())
     .pipe(res)
@@ -263,8 +264,12 @@ module.exports = {
   getBeerImage: async (req, res, next) => {
     const { beerId } = req.params
     const beer = await Beer.findById(beerId, 'images')
-    res.contentType(beer.images[0].contentType)
-    res.send(beer.images[0].data)
+    if (beer.images.length > 0) {
+      res.contentType(beer.images[0].contentType)
+      res.send(beer.images[0].data)
+    } else {
+      res.send('Hej')
+    }
   },
   getBeerImages: async (req, res, next) => {
     const { beerId } = req.params

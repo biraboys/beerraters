@@ -202,38 +202,15 @@ async function searchUser (userName) {
 }
 
 async function generateBeerCard (beerObj) {
-  let categoryName, styleName, styleLink, breweryName, countryFlag, countryCode, countryLink, rating, beerImage
-  // if (beerObj.images.length !=) {
-    const blobResponse = await fetch(`/beers/${beerObj._id}/getImage`)
-    const beerBlob = await blobResponse.blob()
+  let rating, beerImage
+  const blobResponse = await fetch(`/beers/${beerObj._id}/getImage`)
+  const beerBlob = await blobResponse.blob()
+  if (beerBlob.type === 'image/png') {
     beerImage = URL.createObjectURL(beerBlob)
-  // } else {
-  //   beerImage.src = `/images/bottle.png`
-  // }
-  if (beerObj.category_id) {
-    categoryName = beerObj.category_id.name
-    styleName = beerObj.style_id.name
-    styleLink = `/styles/${beerObj.style_id._id}`
   } else {
-    categoryName = ''
-    styleName = ''
-    styleLink = '#'
+    beerImage = `/images/bottle.png`
   }
-  if (beerObj.brewery_id) {
-    breweryName = beerObj.brewery_id.name
-  } else {
-    breweryName = ''
-  }
-  if (beerObj.country_id) {
-    const img = document.createElement('img')
-    img.src = `/images/flags/${beerObj.country_id.flag}`
-    countryFlag = img.outerHTML
-    countryCode = beerObj.country_id.code
-    countryLink = `/countries/${beerObj.country_id._id}`
-  } else {
-    [countryFlag, countryCode] = ['', '']
-    countryLink = '#'
-  } if (beerObj.rating) {
+  if (beerObj.rating) {
     let numberType, blackStars, greyStars
     rating = ''
     beerObj.rating % 1 === 0 ? numberType = 'int' : numberType = 'float'
@@ -328,19 +305,16 @@ async function generateBeerCard (beerObj) {
             <div class="card-stacked">
             <div class="card-content">
               <div class="card-title">
-                <a class="card-link" href="/beers/${beerObj._id}">${beerObj.name}</a>
+                <a href="/beers/${beerObj._id}">${beerObj.name}</a>
               </div> 
               <div class="card-title">                  
                 ${rating}
               </div>
               <div>
-                  <span class="card-subtitle">${categoryName}</span>
-                  <a class="card-link" href="${styleLink}">${styleName}</a>
+              <span>Consumes: ${beerObj.consumes.length}</span> <span>Ratings: ${beerObj.ratings.length}</span> <span>Reviews: ${beerObj.reviews.length}</span>
               </div>
               <div>
-                 <span class="card-subtitle">${breweryName}</span>
-                 <a class="card-link" href="${countryLink}">${countryCode}</a>   
-                  ${countryFlag}
+                 
               </div>
           </div>
         </div>
@@ -535,8 +509,7 @@ async function newBeerCards (beersAmount, beers, startValue, endValue) {
   displayResultCount(searchForm.q.value, beersAmount, startValue, endValue)
   clearContent(beerContainer)
   await currentBeers.forEach(async beer => {
-    const beerObj = await getBeerInfo(beer)
-    const beerCard = generateBeerCard(beerObj)
+    const beerCard = await generateBeerCard(beer)
     await displayBeer(beerCard)
   })
   window.scrollTo(0, 50)

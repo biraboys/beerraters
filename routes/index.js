@@ -1,10 +1,11 @@
 const router = require('express-promise-router')()
+const mongoose = require('mongoose')
 // const fetch = require('node-fetch')
 // const Category = require('../models/category')
 // const Country = require('../models/country')
 // const Style = require('../models/style')
 // const Brewery = require('../models/brewery')
-// const Beer = require('../models/beer')
+const Beer = require('../models/beer')
 // const State = require('../models/state')
 // const User = require('../models/user')
 
