@@ -9,16 +9,12 @@ const User = require('../models/user')
 const Jimp = require('jimp')
 const sizeOf = require('image-size')
 const fs = require('fs')
+const JSONStream = require('JSONStream')
 
 module.exports = {
   index: async (req, res, next) => {
     const beers = await Beer.find({})
     res.status(200).json(beers)
-  },
-  getTopRatedBeers: async (req, res, next) => {
-    const beers = await Beer.find({}).populate('style_id country_id', 'name code flag')
-    const rated = await Beer.findTopRated(beers)
-    res.status(200).json(rated)
   },
   addBeer: async (req, res, next) => {
     if (!req.session.user) {
@@ -138,9 +134,14 @@ module.exports = {
   },
   findBeerByName: async (req, res, next) => {
     const beerName = req.query.q
-    const allBeers = await Beer.find({})
-    const beers = await Beer.findByName(allBeers, beerName)
-    res.status(200).json(beers)
+    await Beer.find({
+      'name': { '$regex': beerName, '$options': 'i' }
+    }, '-v -images')
+    // .populate('style_id category_id brewery_id country_id', 'name flag code')
+    .lean()
+    .cursor()
+    .pipe(JSONStream.stringify())
+    .pipe(res)
   },
   findBeerByStyle: async (req, res, next) => {
     const beerName = req.query.q
@@ -256,6 +257,16 @@ module.exports = {
     }
   },
   getBeerImage: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId, 'images')
+    if (beer.images.length > 0) {
+      res.contentType(beer.images[0].contentType)
+      res.send(beer.images[0].data)
+    } else {
+      res.send('Hej')
+    }
+  },
+  getBeerImages: async (req, res, next) => {
     const { beerId } = req.params
     Beer.findById(beerId, function (err, doc) {
       if (err) return next(err)

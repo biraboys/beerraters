@@ -8,7 +8,6 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
-const pid = process.pid
 require('dotenv').config()
 
 const app = express()
@@ -55,7 +54,6 @@ const styles = require('./routes/styles')
 const forgot = require('./routes/forgot')
 const reset = require('./routes/reset')
 const reviews = require('./routes/reviews')
-const toplist = require('./routes/toplist')
 const activation = require('./routes/activation')
 
 app.use('/', index)
@@ -72,7 +70,6 @@ app.use('/styles', styles)
 app.use('/forgot', forgot)
 app.use('/reset', reset)
 app.use('/reviews', reviews)
-app.use('/toplist', toplist)
 app.use('/activation', activation)
 
 // View engine setup

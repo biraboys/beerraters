@@ -1,8 +1,10 @@
 const ctx = document.getElementById('myChart').getContext('2d')
 const countryIdElement = location.href
 const countryId = countryIdElement.split('/')[4]
+const loadingContainer = document.getElementById('loading-container')
 
 async function getCountries () {
+  loadingContainer.classList.add('active')
   try {
     const response = await fetch('/countries')
     const countries = await response.json()
@@ -74,6 +76,7 @@ function createChart (topFive) {
       }
     }
   })
+  loadingContainer.classList.remove('active')
 }
 
 getCountries()

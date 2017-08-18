@@ -171,7 +171,7 @@ function displayUserConsumes (user) {
   if (user.consumes.length > 0) {
     user.consumes.forEach(beer => {
       userConsumesList.innerHTML += `
-        <a href="/beers/${beer._id}" class="collection-item">${beer.name}</a>
+      <a href="/beers/${beer._id}" class="collection-item">${beer.name}</a>
       `
     })
   } else {
@@ -192,7 +192,7 @@ function displayUserRatings (user) {
         }
       })
       userRatingsList.innerHTML += `
-        <a href="/beers/${beer._id}" class="collection-item">${beer.name} <span class="badge right">${rating}</span></a>
+      <a href="/beers/${beer._id}" class="collection-item">${beer.name} <span class="badge right">${rating}</span></a>
       `
     })
   } else {

@@ -59,13 +59,6 @@ const beerSchema = new Schema({
   ]
 })
 
-beerSchema.static('findByName', function (beerArr, beerName) {
-  beerArr = beerArr.filter(beer => {
-    if (beer.name.toLowerCase().includes(beerName.toLowerCase())) return beer
-  })
-  return beerArr
-})
-
 beerSchema.static('findByStyle', function (beerArr, beerName) {
   beerArr = beerArr.filter(beer => {
     if (beer.style_id) {
