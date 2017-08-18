@@ -203,7 +203,9 @@ async function searchUser (userName) {
 
 async function generateBeerCard (beerObj) {
   let rating, beerImage
-  const blobResponse = await fetch(`/beers/${beerObj._id}/getImage`)
+  const blobResponse = await fetch(`/beers/${beerObj._id}/getImage`, {
+    credentials: 'same-origin'
+  })
   const beerBlob = await blobResponse.blob()
   if (beerBlob.type === 'image/png') {
     beerImage = URL.createObjectURL(beerBlob)

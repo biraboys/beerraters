@@ -6,6 +6,7 @@ const ctx = document.getElementById('myChart').getContext('2d')
 const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'))
 const editReviewForm = document.forms.editReviewForm
 const editModalTitle = document.getElementById('edit-modal-title')
+const imageContainer = document.getElementById('profile-img')
 
 if (follow) {
   follow.addEventListener('click', function (e) {
@@ -115,9 +116,6 @@ async function getUser () {
     console.log(err)
   }
 }
-const imageContainer = document.getElementById('profile-img')
-
-if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
 
 async function getUserProfileImg () {
   try {
@@ -171,7 +169,7 @@ function displayUserConsumes (user) {
   if (user.consumes.length > 0) {
     user.consumes.forEach(beer => {
       userConsumesList.innerHTML += `
-        <a href="/beers/${beer._id}" class="collection-item">${beer.name}</a>
+      <a href="/beers/${beer._id}" class="collection-item">${beer.name}</a>
       `
     })
   } else {
@@ -192,7 +190,7 @@ function displayUserRatings (user) {
         }
       })
       userRatingsList.innerHTML += `
-        <a href="/beers/${beer._id}" class="collection-item">${beer.name} <span class="badge right">${rating}</span></a>
+      <a href="/beers/${beer._id}" class="collection-item">${beer.name} <span class="badge right">${rating}</span></a>
       `
     })
   } else {
@@ -202,6 +200,6 @@ function displayUserRatings (user) {
   }
 }
 
-// getUserRanking()
-// getUser()
-// getUserProfileImg()
+if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
+getUserRanking()
+getUser()

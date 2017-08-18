@@ -6,6 +6,17 @@
             <h2>Sorry, could not found country</h2>
             <% } else { %>
              <h2><%= country.name %> <img class="responsive-img" src="/images/flags/<%= country.flag %>"></h2>
+             <div id="loading-container" class="preloader-wrapper big">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
+                    </div>
+                  </div>
+             </div>
             
 <canvas id="myChart"></canvas>
       <% } %>  
@@ -14,7 +25,8 @@
 </section>
 
 <%- include footer.ejs %>
-<script src="/js/libs/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+<script>window.Chart || document.write('<script src="/js/libs/chart.min.js"><\/script>')</script>
 <script src="/js/countries.js"></script>
 </body>
 </html>
