@@ -232,24 +232,6 @@ module.exports = {
       await User.findByIdAndUpdate(req.session.user, { $push: { images: { data: data, contentType: 'image/png', beer_id: beerId } } })
     })
     res.redirect(`/beers/${beerId}`)
-    // const {beerId} = req.params
-    // const path = `public/uploads/beers`
-    // const name = `${req.files[0].filename}`
-    // const dimensions = sizeOf(`${path}/${name}`)
-    // const image = await Jimp.read(`${path}/${name}`)
-    // if (dimensions.width > dimensions.height) {
-    //   image.resize(Jimp.AUTO, 250)
-    // } else {
-    //   image.resize(250, Jimp.AUTO)
-    // }
-    // image.quality(60)
-    // image.write(`${path}/${beerId}/${name}.png`)
-    // // await Beer.findByIdAndUpdate(beerId, { $push: { images: { name: `${name}.png`, user_id: req.session.user } } })
-    // // await User.findByIdAndUpdate(req.session.user, { $push: { images: { name: `${name}.png`, beer_id: beerId } } })
-    // const filePath = `${path}/${name}`
-
-    // fs.unlinkSync(filePath)
-    // res.redirect(`/beers/${beerId}`)
   },
   addBeerReview: async (req, res, next) => {
     const userId = req.session.user._id

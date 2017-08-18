@@ -534,8 +534,8 @@ async function getBeerImage () {
 }
 
 // Init calls
+getBeerImage()
 checkContributions()
 avgRatingSymbols()
 checkReviews()
-getBeerImage()
 // getImages()

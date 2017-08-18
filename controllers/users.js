@@ -7,7 +7,6 @@ const async = require('async')
 const bcrypt = require('bcryptjs')
 const Jimp = require('jimp')
 const fs = require('fs')
-const sizeOf = require('image-size')
 
 const controller = module.exports = {
   index: async (req, res, next) => {
@@ -153,16 +152,12 @@ const controller = module.exports = {
     const { userId } = req.params
 
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
-
     if (req.file !== undefined) {
       const image = await Jimp.read(req.file.buffer)
-
       // console.log(image.bitmap)
       // const width = image.bitmap.width
       // const height = image.bitmap.height
-
       // if (width > height) { image.rotate(90) }
-
       image.cover(150, 150)
       image.quality(60)
       image.getBuffer('image/png', async function (err, data) {

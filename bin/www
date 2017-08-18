@@ -21,6 +21,8 @@ app.set('port', port)
 
 const server = require('../app').server
 
+// process.on('SIGUSR2', () => { })
+
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -88,4 +90,5 @@ function onListening () {
     : 'port ' + addr.port
   debug('Listening on ' + bind)
   console.log(`Server running on port ${addr.port}`)
+  console.log(`Started process ${process.pid}`)
 }

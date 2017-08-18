@@ -202,6 +202,5 @@ function displayUserRatings (user) {
   }
 }
 
-// getUserRanking()
-// getUser()
-// getUserProfileImg()
+getUserRanking()
+getUser()
