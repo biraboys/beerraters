@@ -92,12 +92,14 @@
 
 <% if (session) { %>
   <script src="/js/feed.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
 <script>
-  const socket = io.connect('/')
-  socket.on('socketToMe', function (data) {
+  const socket = io.connect('/', {transports: ['websocket']})
+  socket.on('consumed', function (data) {
+    console.log(data.user)
+    console.log(data.beer)
     const list = document.getElementById('activity-list')
-    list.innerHTML += `<li class="collection-item"><a href="/users/${data.user._id}">${data.user.username}</a> rated <a href="/beers/${data.beer._id}">${data.beer.name}</a> ${data.rating}</li>`
+    list.innerHTML += `<li class="collection-item"><a href="/users/${data.user._id}">${data.user.username}</a> consumed <a href="/beers/${data.beer._id}">${data.beer.name}</a></li>`
     localStorage.setItem('activity', list.innerHTML)
   })
 </script>    

@@ -46,7 +46,11 @@
                       </svg>
                     </a>
                   </div>
-                  <% } %>
+                  <% } else { %>
+                  <div class="right">
+                    <p>Log in <a href="/login">here</a> to view more content</p>
+                  </div>                    
+                    <% } %>
                   <span class="card-title" id="beer-name"><%= beer.name %></span>
                   <div class="card-title" id="rating-container">
                   <% if (!beer.avg_rating) { %>

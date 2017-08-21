@@ -11,7 +11,10 @@ const router = require('express-promise-router')()
 router.get('/', function (req, res, next) {
   res.render('index', { session: req.session.user })
 })
-
+// router.get('/change', async function (req, res, next) {
+//   res.io.emit('socketToMe', 'hej')
+//   res.end()
+// })
 // router.get('/change', async function (req, res, next) {
 //   const beers = await Beer.find({})
 //   beers.forEach(async (beer, index) => {

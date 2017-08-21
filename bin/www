@@ -6,7 +6,6 @@
 
 const app = require('../app').app
 const debug = require('debug')('beerarino:server')
-const http = require('http')
 
 /**
  * Get port from environment and store in Express.
