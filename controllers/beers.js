@@ -7,8 +7,8 @@ const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
 const Jimp = require('jimp')
-const sizeOf = require('image-size')
-const fs = require('fs')
+// const sizeOf = require('image-size')
+// const fs = require('fs')
 const JSONStream = require('JSONStream')
 
 module.exports = {
@@ -170,11 +170,13 @@ module.exports = {
     const userId = req.session.user._id
 
     const { beerId } = req.params
-    const beer = await Beer.findOne({_id: beerId}, 'consumes')
+    const beer = await Beer.findById(beerId, 'consumes name')
 
     if (beer.consumes.indexOf(userId) === -1) {
       await Beer.findOneAndUpdate({ _id: beerId }, { $push: { consumes: userId } })
       await User.findOneAndUpdate({ _id: userId }, { $push: { consumes: beerId } })
+      const user = await User.findById(userId, 'username')
+      res.io.emit('consumed', { user: user.toObject(), beer: beer.toObject() })
       res.redirect(`/beers/${beerId}`)
     } else {
       res.send('Already consumed, you thirsty bastard!')
@@ -201,7 +203,7 @@ module.exports = {
       avgRating.toFixed(1)
 
       await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
-      res.io.emit('socketToMe', { user: user, beer: beer, rating: rating })
+      // res.io.emit('socketToMe', { user: user, beer: beer, rating: rating })
       res.redirect(`/beers/${beerId}`)
     } else {
       res.send('Already Rated')
