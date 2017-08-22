@@ -132,7 +132,11 @@ async function getUser () {
       credentials: 'same-origin'
     })
     const userJson = await response.json()
-    createChart(userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length)
+    const contributions = [userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length]
+    contributions.sort(function (a, b) {
+      return a - b
+    })
+    createChart(contributions[0], contributions[1], contributions[2], contributions[3])
     if (userJson.images.length > 0) getGalleryImages(userJson.images)
     displayUserConsumes(userJson)
     displayUserRatings(userJson)
@@ -170,13 +174,13 @@ function createBeerImage (imageBlob) {
   return image
 }
 
-function createChart (reviews, rankings, images, consumes) {
+function createChart (first, second, third, fourth) {
   const myDoughnutChart = new Chart(ctx, {
     type: 'pie',
     data: {
       labels: ['Reviews', 'Rankings', 'Images', 'Consumes'],
       datasets: [{
-        data: [reviews, rankings, images, consumes],
+        data: [first, second, third, fourth],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
