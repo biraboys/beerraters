@@ -1,12 +1,32 @@
+// Global DOM elements
 const follow = document.getElementById('follow')
 const followers = document.getElementById('followers')
-const userIdElement = location.href
-const userId = userIdElement.split('/')[4]
+const userId = location.href.split('/')[4]
 const ctx = document.getElementById('myChart').getContext('2d')
 const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'))
 const editReviewForm = document.forms.editReviewForm
 const editModalTitle = document.getElementById('edit-modal-title')
 const imageContainer = document.getElementById('profile-img')
+const followerList = Array.from(document.getElementsByClassName('follower-list'))
+const followingList = Array.from(document.getElementsByClassName('following-list'))
+
+followerList.forEach(async follower => {
+  if (follower.childNodes[1].src.split('/')[4] !== 'user-placeholder.png') {
+    const userId = follower.childNodes[3].firstChild.href.split('/')[4]
+    const imageBlob = await getUserProfileImg(userId)
+    const userImage = createUserImage(imageBlob)
+    follower.childNodes[1].src = userImage.src
+  }
+})
+
+followingList.forEach(async following => {
+  if (following.childNodes[1].src.split('/')[4] !== 'user-placeholder.png') {
+    const userId = following.childNodes[3].firstChild.href.split('/')[4]
+    const imageBlob = await getUserProfileImg(userId)
+    const userImage = createUserImage(imageBlob)
+    following.childNodes[1].src = userImage.src
+  }
+})
 
 if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
 
@@ -20,8 +40,8 @@ if (follow) {
 if (modalTriggers.length > 0) {
   modalTriggers.forEach(trigger => {
     trigger.addEventListener('click', function () {
-      const title = this.parentNode.childNodes[3].innerHTML
-      const body = this.parentNode.childNodes[7].innerText
+      const title = this.parentNode.childNodes[1].innerHTML
+      const body = this.parentNode.childNodes[5].innerText
       editModalTitle.innerHTML = title
       editReviewForm.body.value = body
       $('#body').trigger('autoresize')
@@ -50,10 +70,13 @@ async function editReview (reviewId, text) {
       })
     })
     if (response.status === 200) {
-      Materialize.toast(`Review sucessfully updated! Reloading...`, 2000)
+      Materialize.toast(`Review sucessfully updated!`, 2000)
+      $('#edit-modal').modal('close')
       setTimeout(() => {
         location.reload(true)
       }, 2000)
+    } else {
+      Materialize.toast(`Sorry could not edit review`, 2000)
     }
   } catch (err) {
     console.log(err)
@@ -111,7 +134,12 @@ async function getUser () {
       credentials: 'same-origin'
     })
     const userJson = await response.json()
-    createChart(userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length)
+    const contributions = [userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length]
+    contributions.sort(function (a, b) {
+      return a - b
+    })
+    createChart(contributions[0], contributions[1], contributions[2], contributions[3])
+    if (userJson.images.length > 0) getGalleryImages(userJson.images)
     displayUserConsumes(userJson)
     displayUserRatings(userJson)
   } catch (err) {
@@ -119,30 +147,42 @@ async function getUser () {
   }
 }
 
-async function getUserProfileImg () {
+async function getUserProfileImg (userId) {
   try {
     const response = await fetch(`/users/${userId}/get-profileimage`, {
       method: 'get',
       credentials: 'same-origin'
     })
     const img = await response.blob()
-    const image = document.createElement('img')
-    const objectURL = URL.createObjectURL(img)
-    image.src = objectURL
-    image.setAttribute('class', 'responsive-img card-image profile')
-    imageContainer.appendChild(image)
+    return img
   } catch (err) {
     console.log(err)
   }
 }
 
-function createChart (reviews, rankings, images, consumes) {
+function createUserImage (imageBlob) {
+  const image = document.createElement('img')
+  const objectURL = URL.createObjectURL(imageBlob)
+  image.src = objectURL
+  image.setAttribute('class', 'responsive-img card-image profile')
+  return image
+}
+
+function createBeerImage (imageBlob) {
+  const image = document.createElement('img')
+  const objectURL = URL.createObjectURL(imageBlob)
+  image.src = objectURL
+  image.setAttribute('class', 'responsive-img')
+  return image
+}
+
+function createChart (first, second, third, fourth) {
   const myDoughnutChart = new Chart(ctx, {
     type: 'pie',
     data: {
       labels: ['Reviews', 'Rankings', 'Images', 'Consumes'],
       datasets: [{
-        data: [reviews, rankings, images, consumes],
+        data: [first, second, third, fourth],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -200,6 +240,43 @@ function displayUserRatings (user) {
     <span class="card-title">No user ratings</span>
     `
   }
+}
+
+function displayGalleryImages (imageBlob, index) {
+  const imageColumns = document.getElementsByClassName('image-column')
+  const beerImage = createBeerImage(imageBlob)
+  imageColumns[index].appendChild(beerImage)
+}
+
+async function getGalleryImages (images) {
+  try {
+    let i = 0
+    while (i < images.length) {
+      const response = await fetch(`/users/${userId}/userImages`, {
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        method: 'post',
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          index: i
+        })
+      })
+      const img = await response.blob()
+      displayGalleryImages(img, i)
+      i++
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+if (imageContainer.childNodes.length === 1) {
+  (async () => {
+    const imageBlob = await getUserProfileImg(userId)
+    const userImage = createUserImage(imageBlob)
+    imageContainer.appendChild(userImage)
+  })()
 }
 
 getUserRanking()

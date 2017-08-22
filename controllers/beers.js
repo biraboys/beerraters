@@ -137,7 +137,6 @@ module.exports = {
     await Beer.find({
       'name': { '$regex': beerName, '$options': 'i' }
     }, '-v -images')
-    // .populate('style_id category_id brewery_id country_id', 'name flag code')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -265,7 +264,7 @@ module.exports = {
       res.contentType(beer.images[0].contentType)
       res.send(beer.images[0].data)
     } else {
-      res.send('Hej')
+      res.end()
     }
   },
   getBeerImages: async (req, res, next) => {

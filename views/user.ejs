@@ -74,7 +74,7 @@
         <ul class="collection">
           <% user.followers.forEach(function(follower) { %>
     <li class="collection-item avatar follower-list">
-    <% if (follower.profileImg.length > 0) { %>
+    <% if (follower.profileImg.data !== null) { %>
       <img src="" class="circle responsive-img" />
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
@@ -90,8 +90,8 @@
       <div class="collapsible-body p-0">
         <ul class="collection">
           <% user.following.forEach(function(following) { %>
-    <li class="collection-item avatar follower-list">
-    <% if (following.profileImg.length > 0) { %>
+    <li class="collection-item avatar following-list">
+    <% if (following.profileImg.data !== null) { %>
       <img src="" class="circle responsive-img" />
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
@@ -107,7 +107,7 @@
 
  <div class="col s12 m6 card">
     <div class="card-tabs">
-      <ul class="tabs tabs-fixed-width">
+      <ul class="tabs tabs-fixed-width" style="overflow: hidden;">
         <li class="tab"><a class="active" href="#reviews">Reviews</a></li>
         <li class="tab"><a href="#ratings">Ratings</a></li>
         <li class="tab"><a href="#consumes">Consumes</a></li>        
@@ -120,11 +120,6 @@
        <ul class="collection no-border" id="reviews-container">
        <% user.reviews.forEach(function(review) { %>
               <li class="collection-item avatar">
-                <% if (review.beer_id.images.length > 0) { %>
-                  <img src="" alt="" class="circle">  
-                  <% } else { %>
-                    <img src="/images/bottle.png" alt="" class="circle">
-                  <% } %>
             <span class="title">
               <a href="/beers/<%= review.beer_id._id %>" data-target="<%= review._id %>"><%= review.beer_id.name %></a>
             </span>
@@ -151,18 +146,16 @@
         </div>
       </div>
       <div id="gallery" class="col s12">
-        <% if (user.images.length > 0) { %>
+        <% if (user.images.length === 0) { %>
+          <div class="row">
+            <span class="card-title">No user images</span>
+          </div>
+        <% } else { %>
           <div class="row">
             <% user.images.forEach(function(image) { %>
-              <div class="col s12 m3 image-column">
-                <img class="materialboxed responsive-img" data-caption="<%= image.beer_id.name %>" src="" />
-              </div>
-                <% }); %>
+              <div class="col s12 m3 image-column"></div>
+            <% }); %>
           </div>
-       <% } else { %>
-        <div class="row">
-          <span class="card-title">No user images</span>
-        </div>
         <% } %>
    </div>
       <div id="consumes" class="col s12">

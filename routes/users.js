@@ -54,4 +54,7 @@ router.get('/:userId/edit', function (req, res) {
 router.route('/:userId/following')
   .get(UsersController.getUserFollowing)
 
+router.route('/:userId/userImages')
+  .post(UsersController.getUserImages)
+
 module.exports = router
