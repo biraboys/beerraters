@@ -89,7 +89,8 @@ const controller = module.exports = {
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
-    const userReviews = await User.findOne({_id: userId}, 'reviews').populate('reviews')
+    const userReviews = await User.findById({userId}, 'reviews').populate('reviews')
+    console.log(userReviews)
 
     // res.status(200).render('reviews', userReviews)
     res.status(200).json(userReviews)

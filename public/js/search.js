@@ -313,12 +313,6 @@ async function generateBeerCard (beerObj) {
               <div class="card-title">                  
                 ${rating}
               </div>
-              <div>
-              <span>Consumes: ${beerObj.consumes.length}</span> <span>Ratings: ${beerObj.ratings.length}</span> <span>Reviews: ${beerObj.reviews.length}</span>
-              </div>
-              <div>
-                 
-              </div>
           </div>
         </div>
       </div>

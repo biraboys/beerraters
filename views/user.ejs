@@ -61,7 +61,7 @@
         <ul class="collection">
           <% user.followers.forEach(function(follower) { %>
     <li class="collection-item avatar follower-list">
-    <% if (follower.profileImg.length > 0) { %>
+    <% if (follower.profileImg.data !== null) { %>
       <img src="" class="circle responsive-img" />
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
@@ -77,8 +77,8 @@
       <div class="collapsible-body p-0">
         <ul class="collection">
           <% user.following.forEach(function(following) { %>
-    <li class="collection-item avatar follower-list">
-    <% if (following.profileImg.length > 0) { %>
+    <li class="collection-item avatar following-list">
+    <% if (following.profileImg.data !== null) { %>
       <img src="" class="circle responsive-img" />
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />

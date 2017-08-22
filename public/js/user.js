@@ -7,6 +7,26 @@ const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'
 const editReviewForm = document.forms.editReviewForm
 const editModalTitle = document.getElementById('edit-modal-title')
 const imageContainer = document.getElementById('profile-img')
+const followerList = Array.from(document.getElementsByClassName('follower-list'))
+const followingList = Array.from(document.getElementsByClassName('following-list'))
+
+followerList.forEach(async follower => {
+  if (follower.childNodes[1].src.split('/')[4] !== 'user-placeholder.png') {
+    const userId = follower.childNodes[3].firstChild.href.split('/')[4]
+    const imageBlob = await getUserProfileImg(userId)
+    const userImage = createUserImage(imageBlob)
+    follower.childNodes[1].src = userImage.src
+  }
+})
+
+followingList.forEach(async following => {
+  if (following.childNodes[1].src.split('/')[4] !== 'user-placeholder.png') {
+    const userId = following.childNodes[3].firstChild.href.split('/')[4]
+    const imageBlob = await getUserProfileImg(userId)
+    const userImage = createUserImage(imageBlob)
+    following.childNodes[1].src = userImage.src
+  }
+})
 
 if (follow) {
   follow.addEventListener('click', function (e) {
@@ -117,21 +137,25 @@ async function getUser () {
   }
 }
 
-async function getUserProfileImg () {
+async function getUserProfileImg (userId) {
   try {
     const response = await fetch(`/users/${userId}/get-profileimage`, {
       method: 'get',
       credentials: 'same-origin'
     })
     const img = await response.blob()
-    const image = document.createElement('img')
-    const objectURL = URL.createObjectURL(img)
-    image.src = objectURL
-    image.setAttribute('class', 'responsive-img card-image profile')
-    imageContainer.appendChild(image)
+    return img
   } catch (err) {
     console.log(err)
   }
+}
+
+function createUserImage (imageBlob) {
+  const image = document.createElement('img')
+  const objectURL = URL.createObjectURL(imageBlob)
+  image.src = objectURL
+  image.setAttribute('class', 'responsive-img card-image profile')
+  return image
 }
 
 function createChart (reviews, rankings, images, consumes) {
@@ -200,6 +224,9 @@ function displayUserRatings (user) {
   }
 }
 
-if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
+// if (imageContainer.childNodes.length === 1) {
+//   const userImage = await getUserProfileImg(userId)
+//   imageContainer.appendChild(userImage)
+// }
 getUserRanking()
 getUser()
