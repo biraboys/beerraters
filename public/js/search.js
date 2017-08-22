@@ -9,6 +9,7 @@ const loadingContainer = document.getElementById('loading-container')
 const pageNavigation = document.getElementById('page-navigation')
 const filterOptions = Array.from(document.getElementsByClassName('filter-option'))
 const filterOptionsContainer = document.getElementById('filter-options')
+const scrollButton = document.getElementById('scroll-button')
 
 // Storage check
 if (sessionStorage.getItem('searchVal') !== null) {
@@ -525,4 +526,21 @@ function generateButton (direction) {
     button = `<a class="waves-effect waves-light btn right" id="next-btn">Next</button>`
   }
   return button
+}
+
+window.onscroll = function () { scrollFunction() }
+scrollButton.onclick = topFunction
+
+function scrollFunction () {
+  if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
+    scrollButton.style.display = 'block'
+  } else {
+    scrollButton.style.display = 'none'
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction () {
+  document.body.scrollTop = 0 // For Chrome, Safari and Opera
+  document.documentElement.scrollTop = 0 // For IE and Firefox
 }
