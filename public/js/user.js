@@ -38,8 +38,8 @@ if (follow) {
 if (modalTriggers.length > 0) {
   modalTriggers.forEach(trigger => {
     trigger.addEventListener('click', function () {
-      const title = this.parentNode.childNodes[3].innerHTML
-      const body = this.parentNode.childNodes[7].innerText
+      const title = this.parentNode.childNodes[1].innerHTML
+      const body = this.parentNode.childNodes[5].innerText
       editModalTitle.innerHTML = title
       editReviewForm.body.value = body
       $('#body').trigger('autoresize')
@@ -68,10 +68,13 @@ async function editReview (reviewId, text) {
       })
     })
     if (response.status === 200) {
-      Materialize.toast(`Review sucessfully updated! Reloading...`, 2000)
+      Materialize.toast(`Review sucessfully updated!`, 2000)
+      $('#edit-modal').modal('close')
       setTimeout(() => {
         location.reload(true)
       }, 2000)
+    } else {
+      Materialize.toast(`Sorry could not edit review`, 2000)
     }
   } catch (err) {
     console.log(err)

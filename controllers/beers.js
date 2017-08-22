@@ -137,7 +137,6 @@ module.exports = {
     await Beer.find({
       'name': { '$regex': beerName, '$options': 'i' }
     }, '-v -images')
-    // .populate('style_id category_id brewery_id country_id', 'name flag code')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())

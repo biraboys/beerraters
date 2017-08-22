@@ -521,15 +521,12 @@ async function getBeerImage () {
       })
       const image = document.createElement('img')
       const img = await response.blob()
-      console.log(img)
       const objectURL = URL.createObjectURL(img)
       image.src = objectURL
       image.setAttribute('class', 'responsive-img materialboxed caption-images')
       image.setAttribute('data-caption', 'Posted by <%= image.user_id.displayName %>')
       image.setAttribute('data-target', 'image.user_id._id')
       imageContainer.appendChild(image)
-      console.log(document.getElementById('test'))
-      console.log(image)
       i++
     }
   } catch (err) {
