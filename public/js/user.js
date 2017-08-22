@@ -1,7 +1,7 @@
+// Global DOM elements
 const follow = document.getElementById('follow')
 const followers = document.getElementById('followers')
-const userIdElement = location.href
-const userId = userIdElement.split('/')[4]
+const userId = location.href.split('/')[4]
 const ctx = document.getElementById('myChart').getContext('2d')
 const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'))
 const editReviewForm = document.forms.editReviewForm
@@ -130,6 +130,7 @@ async function getUser () {
     })
     const userJson = await response.json()
     createChart(userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length)
+    if (userJson.images.length > 0) getGalleryImages(userJson.images)
     displayUserConsumes(userJson)
     displayUserRatings(userJson)
   } catch (err) {
@@ -155,6 +156,14 @@ function createUserImage (imageBlob) {
   const objectURL = URL.createObjectURL(imageBlob)
   image.src = objectURL
   image.setAttribute('class', 'responsive-img card-image profile')
+  return image
+}
+
+function createBeerImage (imageBlob) {
+  const image = document.createElement('img')
+  const objectURL = URL.createObjectURL(imageBlob)
+  image.src = objectURL
+  image.setAttribute('class', 'responsive-img')
   return image
 }
 
@@ -224,9 +233,42 @@ function displayUserRatings (user) {
   }
 }
 
-// if (imageContainer.childNodes.length === 1) {
-//   const userImage = await getUserProfileImg(userId)
-//   imageContainer.appendChild(userImage)
-// }
+function displayGalleryImages (imageBlob, index) {
+  const imageColumns = document.getElementsByClassName('image-column')
+  const beerImage = createBeerImage(imageBlob)
+  imageColumns[index].appendChild(beerImage)
+}
+
+async function getGalleryImages (images) {
+  try {
+    let i = 0
+    while (i < images.length) {
+      const response = await fetch(`/users/${userId}/userImages`, {
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        method: 'post',
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          index: i
+        })
+      })
+      const img = await response.blob()
+      displayGalleryImages(img, i)
+      i++
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+if (imageContainer.childNodes.length === 1) {
+  (async () => {
+    const imageBlob = await getUserProfileImg(userId)
+    const userImage = createUserImage(imageBlob)
+    imageContainer.appendChild(userImage)
+  })()
+}
+
 getUserRanking()
 getUser()

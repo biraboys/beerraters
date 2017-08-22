@@ -265,7 +265,7 @@ module.exports = {
       res.contentType(beer.images[0].contentType)
       res.send(beer.images[0].data)
     } else {
-      res.send('Hej')
+      res.end()
     }
   },
   getBeerImages: async (req, res, next) => {

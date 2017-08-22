@@ -1,12 +1,12 @@
 const User = require('../models/user')
-const Beer = require('../models/beer')
+// const Beer = require('../models/beer')
 const Review = require('../models/review')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const async = require('async')
 const bcrypt = require('bcryptjs')
 const Jimp = require('jimp')
-const fs = require('fs')
+// const fs = require('fs')
 
 const controller = module.exports = {
   index: async (req, res, next) => {
@@ -401,5 +401,13 @@ const controller = module.exports = {
         })
       }
     ])
+  },
+  getUserImages: async (req, res, next) => {
+    const { userId } = req.params
+    User.findById(userId, function (err, doc) {
+      if (err) return next(err)
+      res.contentType(doc.images[req.body.index].contentType)
+      res.send(doc.images[req.body.index].data)
+    })
   }
 }
