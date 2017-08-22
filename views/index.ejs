@@ -96,6 +96,7 @@
 <script>
   const socket = io.connect('/', {transports: ['websocket']})
   socket.on('consumed', function (data) {
+    // console.log(JSON.parse(data.user))
     console.log(data.user)
     console.log(data.beer)
     const list = document.getElementById('activity-list')

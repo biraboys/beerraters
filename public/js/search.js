@@ -312,12 +312,6 @@ async function generateBeerCard (beerObj) {
               <div class="card-title">                  
                 ${rating}
               </div>
-              <div>
-              <span>Consumes: ${beerObj.consumes.length}</span> <span>Ratings: ${beerObj.ratings.length}</span> <span>Reviews: ${beerObj.reviews.length}</span>
-              </div>
-              <div>
-                 
-              </div>
           </div>
         </div>
       </div>
@@ -352,11 +346,6 @@ function generateUserCard (user) {
               <div>
                   <span class="card-subtitle">Followers: ${user.followers.length}</span>
                   <span class="card-subtitle">Following: ${user.following.length}</span>
-              </div>
-              <div>
-                 <span class="card-subtitle">Consumes: ${user.consumes.length}</span>
-                 <span class="card-subtitle">Ratings: ${user.ratings.length}</span>
-                 <span class="card-subtitle">Reviews: ${user.reviews.length}</span>                 
               </div>
           </div>
         </div>

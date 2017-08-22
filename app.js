@@ -57,6 +57,7 @@ const forgot = require('./routes/forgot')
 const reset = require('./routes/reset')
 const reviews = require('./routes/reviews')
 const activation = require('./routes/activation')
+const error = require('./routes/404')
 
 app.use('/', index)
 app.use('/users', users)
@@ -73,6 +74,7 @@ app.use('/forgot', forgot)
 app.use('/reset', reset)
 app.use('/reviews', reviews)
 app.use('/activation', activation)
+app.use('/404', error)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -91,11 +93,12 @@ app.use((err, req, res, next) => {
   const status = err.status || 500
 
   // Respond to client
-  res.status(status).json({
-    error: {
-      message: error.message
-    }
-  })
+  res.redirect('/404')
+  // res.status(status).json({
+  //   error: {
+  //     message: error.message
+  //   }
+  // })
 
 // Respond to self
   console.log(error)
