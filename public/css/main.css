@@ -155,6 +155,15 @@ a {
   padding-top: 9px;
 }
 
+.collection .collection-item.avatar.following-list {
+  min-height: 62px;
+}
+
+.collection .collection-item.avatar .title.following-span {
+  display: block;
+  padding-top: 9px;
+}
+
 .card .card-image.profile {
   margin-top: 20px;
   border-radius: 50%;
@@ -174,4 +183,8 @@ a {
   bottom:0;
   right:0;
   cursor: pointer;
+}
+
+.ml-10 {
+  margin-left: 10px;
 }

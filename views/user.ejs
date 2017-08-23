@@ -79,7 +79,11 @@
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
     <% } %>
-      <span class="title follower-span"><a href="/users/<%= follower._id %>"><%= follower.username %></a></span>
+      <% if (follower.status === true) { %>
+        <span class="title follower-span"><a href="/users/<%= follower._id %>"><%= follower.username %></a><span class="user-status light-green accent-3 ml-10"></span></span>
+      <% } else { %>
+        <span class="title follower-span"><a href="/users/<%= follower._id %>"><%= follower.username %></a><span class="user-status grey lighten-2 ml-10"></span></span>
+      <% } %>
     </li>
           <% }); %>
         </ul>
@@ -96,7 +100,11 @@
     <% } else { %>
       <img src="/images/user-placeholder.png" class="circle responsive-img" />
     <% } %>
-      <span class="title follower-span"><a href="/users/<%= following._id %>"><%= following.username %></a></span>
+      <% if (following.status === true) { %>
+        <span class="title follower-span"><a href="/users/<%= following._id %>"><%= following.username %></a><span class="user-status light-green accent-3 ml-10"></span></span>
+      <% } else { %>
+        <span class="title follower-span"><a href="/users/<%= following._id %>"><%= following.username %></a><span class="user-status grey lighten-2 ml-10"></span></span>
+      <% } %>
     </li>
           <% }); %>
         </ul>
