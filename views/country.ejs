@@ -6,6 +6,8 @@
             <h2>Sorry, could not found country</h2>
             <% } else { %>
              <h2><%= country.name %> <img class="responsive-img" src="/images/flags/<%= country.flag %>"></h2>
+             <p>Below is a how <%= country.name %> compares to the top countries on BeerRaters.</p>
+             <p>Grow <%= country.name %> by <a href="/beers/add">adding</a> a new beer.</p>
              <div id="loading-container" class="preloader-wrapper big">
                 <div class="spinner-layer spinner-blue-only">
                     <div class="circle-clipper left">

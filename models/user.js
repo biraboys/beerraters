@@ -66,6 +66,12 @@ const userSchema = new Schema({
   country_id: { type: Schema.Types.ObjectId, ref: 'country' },
   following: [],
   followers: [],
+  feed: [
+    {
+      item: String,
+      date: Date
+    }
+  ],
   images: [
     {
       data: Buffer,

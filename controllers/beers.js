@@ -174,6 +174,7 @@ module.exports = {
     if (beer.consumes.indexOf(userId) === -1) {
       await Beer.findOneAndUpdate({ _id: beerId }, { $push: { consumes: userId } })
       await User.findOneAndUpdate({ _id: userId }, { $push: { consumes: beerId } })
+      await User.findOneAndUpdate({ _id: userId }, { $push: { feed: { item: 'test', date: Date.now() } } })
       const user = await User.findById(userId, 'username')
       res.io.emit('consumed', { user: user.toObject(), beer: beer.toObject() })
       res.redirect(`/beers/${beerId}`)
@@ -252,9 +253,9 @@ module.exports = {
       const review = await Review.findOne({beer_id: beerId, user_id: userId}, '_id')
       await Beer.findOneAndUpdate({ _id: beerId }, { $push: { reviews: { review_id: review._id, user_id: userId } } })
       await User.findOneAndUpdate({ _id: userId }, { $push: { reviews: review._id } })
-      res.redirect(`/beers/${beerId}`)
+      res.end()
     } else {
-      res.send('Already reviwed')
+      res.send('Already reviewed')
     }
   },
   getBeerImage: async (req, res, next) => {
