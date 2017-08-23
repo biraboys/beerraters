@@ -172,9 +172,9 @@ module.exports = {
     const beer = await Beer.findById(beerId, 'consumes name')
     const user = await User.findById(userId, 'username')
 
-    if (beer.consumes.indexOf(userId) === -1) {
-      await Beer.findByIdAndUpdate(beerId, { $push: { consumes: userId } })
-      await User.findByIdAndUpdate(userId, { $push: { consumes: beerId } })
+    if (beer.consumes.indexOf(user._id) === -1) {
+      await Beer.findByIdAndUpdate(beerId, { $push: { consumes: user._id } })
+      await User.findByIdAndUpdate(user._id, { $push: { consumes: beerId } })
       const users = await User.find({ 'following': user._id }, 'username')
       const message = `<a href="/users/${user._id}">${user.username}</a> consumed <a href="/beers/${beer._id}">${beer.name}</a>`
       for (const following of users) {

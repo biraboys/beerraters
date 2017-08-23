@@ -5,10 +5,6 @@ const offlineList = document.getElementById('offline')
 const offlineFollowers = document.getElementById('offline-followers')
 const onlineFollowers = document.getElementById('online-followers')
 
-if (localStorage.getItem('activity') !== null) {
-  const activity = localStorage.getItem('activity')
-  activityList.innerHTML = activity
-}
 async function getUserFollowing () {
   try {
     const response = await fetch(`/users/${userId}/following`, {
@@ -102,5 +98,5 @@ async function getUsersOnline () {
   }
 }
 
-getUsersOnline()
+// getUsersOnline()
 getUserFollowing()
