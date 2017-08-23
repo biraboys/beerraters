@@ -289,12 +289,7 @@ const controller = module.exports = {
   },
   getUserFollowing: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findById(userId, '_id following').populate('following', '_id')
-    .populate({
-      path: 'following',
-      populate: {path: '_id'},
-      select: 'ratings images reviews consumes username status profileImg'
-    })
+    const user = await User.findById(userId, 'feed status username')
     res.json(user)
   },
   forgotPassword: async(req, res, next) => {

@@ -8,13 +8,10 @@ const router = require('express-promise-router')()
 // const State = require('../models/state')
 // const User = require('../models/user')
 
-router.get('/', function (req, res, next) {
+router.get('/', async function (req, res, next) {
   res.render('index', { session: req.session.user })
 })
-router.get('/change', async function (req, res, next) {
-  res.io.emit('test', { feed: 'hej hej hej', feedinfo: 'hefniafea' })
-  res.end()
-})
+
 // router.get('/change', async function (req, res, next) {
 //   const beers = await Beer.find({})
 //   beers.forEach(async (beer, index) => {
