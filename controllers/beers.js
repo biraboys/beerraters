@@ -167,17 +167,22 @@ module.exports = {
   },
   consumeBeer: async (req, res, next) => {
     const userId = req.session.user._id
-
     const { beerId } = req.params
+
     const beer = await Beer.findById(beerId, 'consumes name')
+    const user = await User.findById(userId, 'username')
 
     if (beer.consumes.indexOf(userId) === -1) {
-      await Beer.findOneAndUpdate({ _id: beerId }, { $push: { consumes: userId } })
-      await User.findOneAndUpdate({ _id: userId }, { $push: { consumes: beerId } })
-      await User.findOneAndUpdate({ _id: userId }, { $push: { feed: { item: 'test', date: Date.now() } } })
-      const user = await User.findById(userId, 'username')
-      res.io.emit('consumed', { user: user.toObject(), beer: beer.toObject() })
-      res.redirect(`/beers/${beerId}`)
+      await Beer.findByIdAndUpdate(beerId, { $push: { consumes: userId } })
+      await User.findByIdAndUpdate(userId, { $push: { consumes: beerId } })
+      const users = await User.find({ 'following': user._id }, 'username')
+      const message = `<a href="/users/${user._id}">${user.username}</a> consumed <a href="/beers/${beer._id}">${beer.name}</a>`
+      for (const following of users) {
+        await User.findByIdAndUpdate(following._id, { $push: { feed: { item: message, date: Date.now() } } })
+      }
+      // res.io.emit('consumed', { user: user.toObject(), beer: beer.toObject() })
+      // res.redirect(`/beers/${beerId}`)
+      res.end()
     } else {
       res.send('Already consumed, you thirsty bastard!')
     }

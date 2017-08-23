@@ -9,26 +9,24 @@ if (localStorage.getItem('activity') !== null) {
   const activity = localStorage.getItem('activity')
   activityList.innerHTML = activity
 }
-// async function getUserFollowing () {
-//   try {
-//     const response = await fetch(`/users/${userId}/following`, {
-//       method: 'get',
-//       credentials: 'same-origin'
-//     })
-//     const user = await response.json()
-//     user.following.forEach(following =>{
-//       activityList.innerHTML += `
-//       <li class="collection-item">${following.username} amount of images: ${following.images.length}</li>
-//       <li class="collection-item">${following.username} amount of ratings: ${following.ratings.length}</li>
-//       <li class="collection-item">${following.username} amount of reviews: ${following.reviews.length}</li>
-//       <li class="collection-item">${following.username} amount of consumes: ${following.consumes.length}</li>
-//       `
-//     })
-//     console.log(user)
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
+async function getUserFollowing () {
+  try {
+    const response = await fetch(`/users/${userId}/following`, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    const user = await response.json()
+    await user.feed.forEach(feedItem => {
+      const feedListEl = document.createElement('li')
+      feedListEl.setAttribute('class', 'collection-item')
+      feedListEl.innerHTML = feedItem.item
+      $(activityList).append(feedListEl)
+    })
+    console.log(user)
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 // async function getUserContributions () {
 //   try {
@@ -105,4 +103,4 @@ async function getUsersOnline () {
 }
 
 getUsersOnline()
-// getUserFollowing()
+getUserFollowing()
