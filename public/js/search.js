@@ -301,7 +301,7 @@ async function generateBeerCard (beerObj) {
   }
   const beerCard = `
     <div class="row">
-      <div class="card horizontal">
+      <div class="card horizontal search-card">
             <div class="card-image">
               <img class="responsive-img h-200" src="${beerImage}" /> 
             </div>

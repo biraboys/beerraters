@@ -188,3 +188,15 @@ a {
 .ml-10 {
   margin-left: 10px;
 }
+
+.search-card {
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  position: relative;
+  left: 0;
+}
+
+.search-card:hover {
+  left: 10px;
+  border-left: green 4px solid;
+}
