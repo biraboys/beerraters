@@ -245,7 +245,9 @@ function displayUserRatings (user) {
 function displayGalleryImages (imageBlob, index) {
   const imageColumns = document.getElementsByClassName('image-column')
   const beerImage = createBeerImage(imageBlob)
+  beerImage.setAttribute('class', 'materialboxed responsive-img')
   imageColumns[index].appendChild(beerImage)
+  $('.materialboxed').materialbox()
 }
 
 async function getGalleryImages (images) {

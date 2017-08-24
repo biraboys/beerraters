@@ -529,6 +529,7 @@ async function getBeerImage () {
       imageContainer.appendChild(image)
       i++
     }
+    $('.materialboxed').materialbox()
   } catch (err) {
     console.log(err)
   }

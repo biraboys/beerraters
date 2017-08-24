@@ -432,7 +432,5 @@ const controller = module.exports = {
         res.json({ success: false, message: 'This user is already active.' })
       }
     }
-    // console.log(user)
-    // console.log(req.body.email)
   }
 }
