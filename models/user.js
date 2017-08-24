@@ -32,7 +32,7 @@ const emailValidator = [
 const usernameValidator = [
   validate({
     validator: 'isLength',
-    arguments: [3, 25],
+    arguments: [3, 15],
     message: 'Username should be between {ARGS[0]} and {ARGS[1]} characters'
   }),
   validate({
@@ -64,8 +64,8 @@ const userSchema = new Schema({
   ratings: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
   consumes: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
   country_id: { type: Schema.Types.ObjectId, ref: 'country' },
-  following: [],
-  followers: [],
+  following: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+  followers: [{ type: Schema.Types.ObjectId, ref: 'user' }],
   feed: [
     {
       item: String,
