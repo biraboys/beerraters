@@ -95,7 +95,6 @@
     // console.log(JSON.parse(data.user))
     const list = document.getElementById('activity-list')
     list.innerHTML += `<li class="collection-item"><a href="/users/${data.user._id}">${data.user.username}</a> consumed <a href="/beers/${data.beer._id}">${data.beer.name}</a></li>`
-    localStorage.setItem('activity', list.innerHTML)
   })
 </script>    
   <% } %>
