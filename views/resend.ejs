@@ -1,0 +1,44 @@
+<%- include header.ejs %>
+
+<section class="main-section">
+  <div class="container">
+    <div class="card">
+      <div class="card-content">
+        <form id="form-forgot">
+          <h5>Resend activation mail</h5>
+          <div class="row">
+            <div class="col s6">
+              <div class="row">
+                <div class="input-field col s12">
+                  <input type="email" name="currentpass" class="validate" id="email" required autofocus>
+                  <label for="currentpass" data-error="Wrong" data-success id="forgot">Enter your email</label>
+                </div>
+              </div>
+              <button id="submit-btn" class="btn waves-effect waves-light" type="submit">Submit</button>
+            </div>
+            <div class="col s6">
+              <div id="loading-container" class="preloader-wrapper small">
+                <div class="spinner-layer spinner-green-only">
+                  <div class="circle-clipper left">
+                    <div class="circle"></div>
+                  </div><div class="gap-patch">
+                    <div class="circle"></div>
+                  </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include footer.ejs %>
+
+<script src="/js/resend.js"></script>
+
+</body>
+</html>

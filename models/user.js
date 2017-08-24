@@ -32,7 +32,7 @@ const emailValidator = [
 const usernameValidator = [
   validate({
     validator: 'isLength',
-    arguments: [3, 25],
+    arguments: [3, 15],
     message: 'Username should be between {ARGS[0]} and {ARGS[1]} characters'
   }),
   validate({

@@ -401,5 +401,38 @@ const controller = module.exports = {
       res.contentType(doc.images[req.body.index].contentType)
       res.send(doc.images[req.body.index].data)
     })
+  },
+  resendActivationMail: async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email })
+    if (!user) {
+      res.json({ success: false, message: 'No user found with that email adress.' })
+    } else {
+      if (user.registrationToken) {
+        const stmpTransport = nodemailer.createTransport({
+          service: 'Gmail',
+          auth: {
+            user: process.env.GMAIL_U,
+            pass: process.env.GMAIL_PASS
+          }
+        })
+        const mailOptions = {
+          to: req.body.email,
+          from: 'noreply@beerraters.com',
+          subject: 'Please confirm your account - Beerraters.com',
+          text: `Hi ${user.username},\n\n Thanks for your registration!\n Please confirm your account by clicking the following link:\n http://${req.headers.host}/activation/${user.registrationToken}\n\n If you havent done this before ${user.registrationTokenExpires.toLocaleString('en-US')}, the activation link will expire and you'll have to register again.`
+        }
+        await stmpTransport.sendMail(mailOptions, err => {
+          if (err) {
+            console.log(err)
+          } else {
+            res.json({ success: true, message: `An email has been sent to ${user.email}, follow the instructions to complete the registration.` })
+          }
+        })
+      } else {
+        res.json({ success: false, message: 'This user is already active.' })
+      }
+    }
+    // console.log(user)
+    // console.log(req.body.email)
   }
 }
