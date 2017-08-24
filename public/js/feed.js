@@ -14,11 +14,10 @@ async function getUserFollowing () {
     const user = await response.json()
     await user.feed.forEach(feedItem => {
       const feedListEl = document.createElement('li')
-      feedListEl.setAttribute('class', 'collection-item')
+      feedListEl.setAttribute('class', 'collection-item feed-item')
       feedListEl.innerHTML = feedItem.item
       $(activityList).append(feedListEl)
     })
-    console.log(user)
   } catch (err) {
     console.log(err)
   }
@@ -57,38 +56,22 @@ async function getUsersOnline () {
     const user = await response.json()
     let usersOnline = 0
     let usersOffline = 0
-
-    user.following.forEach(following => {
+    console.log(user)
+    user.following.forEach(async following => {
       if (following.status === true) {
         usersOnline += 1
-        if (following.profileImg.length > 0) {
-          onlineList.innerHTML +=
-          `<li class="collection-item avatar follower-list">
-            <img src="/uploads/users/${following._id}/${following.profileImg}" class="circle responsive-img">
-            <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
-          </li>`
-        } else {
-          onlineList.innerHTML +=
+        onlineList.innerHTML +=
           `<li class="collection-item avatar follower-list">
             <img src="/images/user-placeholder.png" class="circle responsive-img">
             <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
           </li>`
-        }
       } else {
         usersOffline += 1
-        if (following.profileImg.length > 0) {
-          offlineList.innerHTML +=
-          `<li class="collection-item avatar follower-list">
-            <img src="/uploads/users/${following._id}/${following.profileImg}" class="circle responsive-img">
-            <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
-          </li>`
-        } else {
-          offlineList.innerHTML +=
+        offlineList.innerHTML +=
           `<li class="collection-item avatar follower-list">
             <img src="/images/user-placeholder.png" class="circle responsive-img">
             <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
           </li>`
-        }
       }
     })
     onlineFollowers.innerHTML = usersOnline
@@ -98,5 +81,26 @@ async function getUsersOnline () {
   }
 }
 
-// getUsersOnline()
+// async function getUserProfileImg (userId) {
+//   try {
+//     const response = await fetch(`/users/${userId}/get-profileimage`, {
+//       method: 'get',
+//       credentials: 'same-origin'
+//     })
+//     const img = await response.blob()
+//     return img
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
+
+// function createUserImage (imageBlob) {
+//   const image = document.createElement('img')
+//   const objectURL = URL.createObjectURL(imageBlob)
+//   image.src = objectURL
+//   image.setAttribute('class', 'responsive-img card-image profile')
+//   return image
+// }
+
+getUsersOnline()
 getUserFollowing()

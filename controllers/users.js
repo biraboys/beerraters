@@ -182,7 +182,6 @@ const controller = module.exports = {
     const { userId } = req.params
     User.findById(userId, (err, doc) => {
       if (err) return next(err)
-
       res.contentType(doc.profileImg.contentType)
       res.send(doc.profileImg.data)
     })
@@ -289,7 +288,7 @@ const controller = module.exports = {
   },
   getUserFollowing: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findById(userId, 'feed status username')
+    const user = await User.findById(userId, 'feed status username following').populate('following', 'username status')
     res.json(user)
   },
   forgotPassword: async(req, res, next) => {

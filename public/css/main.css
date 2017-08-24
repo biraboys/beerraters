@@ -200,3 +200,7 @@ a {
   left: 10px;
   border-left: green 4px solid;
 }
+
+.feed-item {
+  margin: 10px;
+}
