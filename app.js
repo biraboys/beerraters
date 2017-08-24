@@ -58,6 +58,7 @@ const reset = require('./routes/reset')
 const reviews = require('./routes/reviews')
 const activation = require('./routes/activation')
 const error = require('./routes/404')
+const resend = require('./routes/resend')
 
 app.use('/', index)
 app.use('/users', users)
@@ -75,6 +76,7 @@ app.use('/reset', reset)
 app.use('/reviews', reviews)
 app.use('/activation', activation)
 app.use('/404', error)
+app.use('/resend', resend)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))
