@@ -192,13 +192,11 @@ a {
 .search-card {
   -webkit-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
-  position: relative;
-  left: 0;
 }
 
 .search-card:hover {
-  left: 10px;
-  border-left: green 4px solid;
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px 0 rgba(232,237,250,.5);
 }
 
 .feed-item {

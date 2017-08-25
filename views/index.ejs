@@ -87,7 +87,7 @@
 <%- include footer.ejs %>
 
 <% if (session) { %>
-  <script src="/js/feed.js"></script>
+  <script src="/js/feed.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io.connect('/', {transports: ['websocket']})

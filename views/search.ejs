@@ -1,23 +1,20 @@
 <%- include header.ejs %>
 <section class="main-section">
 	<div class="container">
-		<div class="row flex-center flex-column">
-	   <div class="two-thirds column">
+		<div class="row">
+	   <div class="col s12 m6" style="position: sticky; top: 150px;">
 			<form role="search" name="searchForm">
-				<div class="row">
+				<div class="col s12 m6">
 					<h5>What are you after?</h5>
-					<input required class="u-full-width" type="text" placeholder="Search..." name="q" pattern=".{2,}" title="Search must contain at least 3 characters">
+					<input required class="u-full-width" type="text" name="q" pattern=".{2,}" title="Search must contain at least 3 characters">
 				</div>
-				  <div id="error-container"></div>
-				<div class="row">
-					<h5>Find</h5>
-					<div class="input-field">
+				<div class="col s12" id="error-container"></div>
+					<div class="input-field col s12">
+				<h5>Find</h5>
 					  <a class="waves-effect waves-light btn search-btn active" name="beer" id="beer-search-btn">Beer</a>
-					  <a class="waves-effect waves-light btn search-btn white black-text" name="user" id="user-search-btn">User</a>
-					</div>			
-				</div>
-				<div class="row">
-				<div class="input-field" id="filter-options">
+						<a class="waves-effect waves-light btn search-btn white black-text" name="user" id="user-search-btn">User</a>
+					</div>		
+				<div class="input-field col s12" id="filter-options">
 					<h5>Filter by</h5>
 					<input class="filter-option" type="radio" name="name" id="name-option" value="name" checked />
 					<label for="name-option">Name</label>
@@ -28,59 +25,60 @@
 					<input class="filter-option" type="radio" name="country" id="country-option" value="country">
 					<label for="country-option">Country</label>
 				</div>
-				</div>			
 			</form>
-			<div id="loading-container" class="preloader-wrapper big">
-    <div class="spinner-layer spinner-blue">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-
-      <div class="spinner-layer spinner-red">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-
-      <div class="spinner-layer spinner-yellow">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-
-      <div class="spinner-layer spinner-green">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-			</div>
+				</div>
+				<div class="col s12 m6">
+				<div id="loading-container" class="preloader-wrapper big">
+					<div class="spinner-layer spinner-blue">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div><div class="gap-patch">
+							<div class="circle"></div>
+						</div><div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+					
+					<div class="spinner-layer spinner-red">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div><div class="gap-patch">
+							<div class="circle"></div>
+						</div><div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+					
+					<div class="spinner-layer spinner-yellow">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div><div class="gap-patch">
+							<div class="circle"></div>
+						</div><div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+					
+					<div class="spinner-layer spinner-green">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div><div class="gap-patch">
+							<div class="circle"></div>
+						</div><div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+				</div>
 			  <div id="results-container"></div>
 			  <div id="beer-container"></div>
 			  <div id="page-navigation"></div>		
-		</div>
+			</div>
+		</div>			
 
 	</div>
 	<div id="scroll-button" class="scroll-button flex-center flex-column">
 		<i class="material-icons" style="font-size:48px;">arrow_upward</i>
 		<span style="display:block;">TO TOP</span>
-	</div>
 	</div>
 </section>
 
