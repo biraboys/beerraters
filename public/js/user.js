@@ -242,10 +242,11 @@ function displayUserRatings (user) {
   }
 }
 
-function displayGalleryImages (imageBlob, index) {
+function displayGalleryImages (imageBlob, index, beerName) {
   const imageColumns = document.getElementsByClassName('image-column')
   const beerImage = createBeerImage(imageBlob)
-  beerImage.setAttribute('class', 'materialboxed responsive-img')
+  beerImage.setAttribute('class', 'materialboxed responsive-img caption-images')
+  beerImage.setAttribute('data-caption', `${beerName}`)
   imageColumns[index].appendChild(beerImage)
   $('.materialboxed').materialbox()
 }
@@ -265,7 +266,8 @@ async function getGalleryImages (images) {
         })
       })
       const img = await response.blob()
-      displayGalleryImages(img, i)
+      const beerName = response.headers.get('Beer-Name')
+      displayGalleryImages(img, i, beerName)
       i++
     }
   } catch (err) {

@@ -1,5 +1,5 @@
 const User = require('../models/user')
-// const Beer = require('../models/beer')
+const Beer = require('../models/beer')
 const Review = require('../models/review')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
@@ -396,9 +396,13 @@ const controller = module.exports = {
   },
   getUserImages: async (req, res, next) => {
     const { userId } = req.params
-    User.findById(userId, function (err, doc) {
+    User.findById(userId, async function (err, doc) {
       if (err) return next(err)
-      res.contentType(doc.images[req.body.index].contentType)
+      const beer = await Beer.findById(doc.images[req.body.index].beer_id, 'name')
+      res.set({
+        'Beer-Name': beer.name,
+        'Content-Type': doc.images[req.body.index].contentType
+      })
       res.send(doc.images[req.body.index].data)
     })
   },
