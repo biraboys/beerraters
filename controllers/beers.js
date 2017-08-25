@@ -3,6 +3,7 @@ const Category = require('../models/category')
 const Brewery = require('../models/brewery')
 const Country = require('../models/country')
 const Review = require('../models/review')
+const Feed = require('../models/feed')
 const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
@@ -179,7 +180,15 @@ module.exports = {
       const message = `<a href="/users/${user._id}">${user.username}</a> consumed <a href="/beers/${beer._id}">${beer.name}</a>`
       const title = "Someone's thirsty!"
       for (const following of users) {
-        await User.findByIdAndUpdate(following._id, { $push: { feed: { item: message, date: Date.now() } } }) 
+        const newFeed = new Feed({
+          user_id: following._id,
+          body: {
+            item: message,
+            date: Date.now()
+          }
+        })
+        await newFeed.save()
+        // await User.findByIdAndUpdate(following._id, { $push: { feed: newFeed._id } })
         res.io.emit('news', {title: title, message: message})
       }
       res.end()
