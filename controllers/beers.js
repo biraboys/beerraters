@@ -183,8 +183,8 @@ module.exports = {
         const newFeed = new Feed({
           user_id: following._id,
           item: message,
-          expireDate: Date.now() + 604800000,
-          createdDate: Date.now()
+          expiration: Date.now() + 604800000,
+          created: Date.now()
         })
         await newFeed.save()
         // await User.findByIdAndUpdate(following._id, { $push: { feed: newFeed._id } })

@@ -8,8 +8,8 @@ const feedSchema = new Schema({
     required: true
   },
   item: String,
-  expireDate: { type: Date, expires: '60s' },
-  createdDate: { type: Date }
+  expiration: { type: Date, expires: '60s' },
+  created: { type: Date }
 })
 
 const Feed = mongoose.model('feed', feedSchema)
