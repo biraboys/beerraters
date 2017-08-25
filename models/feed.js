@@ -7,10 +7,9 @@ const feedSchema = new Schema({
     ref: 'user',
     required: true
   },
-  body: {
-    item: String,
-    date: { type: Date, expires: '7d' }
-  }
+  item: String,
+  expireDate: { type: Date, expires: '60s' },
+  createdDate: { type: Date }
 })
 
 const Feed = mongoose.model('feed', feedSchema)
