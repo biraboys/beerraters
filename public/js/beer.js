@@ -507,29 +507,36 @@ async function getBeerImage () {
   try {
     const response = await fetch(`/beers/${beerId}/images`)
     const imageAmount = await response.text()
-    let i = 0
-    while (i < imageAmount) {
-      const response = await fetch(`/beers/${beerId}/getImage`, {
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }),
-        method: 'post',
-        credentials: 'same-origin',
-        body: JSON.stringify({
-          index: i
+    console.log(imageAmount)
+    if (imageAmount === '0') {
+      imageContainer.innerHTML += `
+        <img class="responsive-img" src="/images/bottle.png">
+      `
+    } else {
+      let i = 0
+      while (i < imageAmount) {
+        const response = await fetch(`/beers/${beerId}/getImage`, {
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          method: 'post',
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            index: i
+          })
         })
-      })
-      const image = document.createElement('img')
-      const img = await response.blob()
-      const userName = response.headers.get('User-Name')
-      const objectURL = URL.createObjectURL(img)
-      image.src = objectURL
-      image.setAttribute('class', 'responsive-img materialboxed caption-images')
-      image.setAttribute('data-caption', `Posted by ${userName}`)
-      imageContainer.appendChild(image)
-      i++
+        const image = document.createElement('img')
+        const img = await response.blob()
+        const userName = response.headers.get('User-Name')
+        const objectURL = URL.createObjectURL(img)
+        image.src = objectURL
+        image.setAttribute('class', 'responsive-img materialboxed caption-images')
+        image.setAttribute('data-caption', `Posted by ${userName}`)
+        imageContainer.appendChild(image)
+        i++
+      }
+      $('.materialboxed').materialbox()
     }
-    $('.materialboxed').materialbox()
   } catch (err) {
     console.log(err)
   }
@@ -543,14 +550,14 @@ reviewForm.addEventListener('submit', async function () {
       credentials: 'same-origin'
     })
     if (response.status === 500) {
-      Materialize.toast(`Sorry could not review ${beerName}`, 2000)     
+      Materialize.toast(`Sorry could not review ${beerName}`, 2000)
     } else {
       Materialize.toast(`You reviewed ${beerName}, thanks!`, 2000)
       reviewIcon.setAttribute('fill', '#000000')
       reviewLink.setAttribute('data-tooltip', 'Reviewed')
       $(reviewLink).tooltip()
-    } 
-  } catch(err) {
+    }
+  } catch (err) {
     console.log(err)
   }
 })
@@ -559,4 +566,4 @@ reviewForm.addEventListener('submit', async function () {
 getBeerImage()
 checkContributions()
 avgRatingSymbols()
-checkReviews()
+// checkReviews()
