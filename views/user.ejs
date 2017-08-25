@@ -12,8 +12,8 @@
     <!-- Tap Target Structure -->
     <div class="tap-target" data-activates="menu">
       <div class="tap-target-content">
-        <h5>Title</h5>
-        <p>A bunch of text</p>
+        <h5 id="feed"></h5>
+        <p id="feed-info"></p>
       </div>
     </div>
 
@@ -229,11 +229,11 @@
   <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io.connect('/', {transports: ['websocket']})
-    socket.on('test', function (data) {
+    socket.on('news', function (data) {
       $('#menu').addClass('pulse')
       $('#menu').click(() => {
-        $('#feed').html(data.feed)
-        $('#feed-info').html(data.feedinfo)
+        $('#feed').html(data.title)
+        $('#feed-info').append(data.message)
         $('.tap-target').tapTarget('open')
         $('#menu').removeClass('pulse')
       })

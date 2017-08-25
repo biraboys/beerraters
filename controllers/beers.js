@@ -177,11 +177,11 @@ module.exports = {
       await User.findByIdAndUpdate(user._id, { $push: { consumes: beerId } })
       const users = await User.find({ 'following': user._id }, 'username')
       const message = `<a href="/users/${user._id}">${user.username}</a> consumed <a href="/beers/${beer._id}">${beer.name}</a>`
+      const title = "Someone's thirsty!"
       for (const following of users) {
-        await User.findByIdAndUpdate(following._id, { $push: { feed: { item: message, date: Date.now() } } })
+        await User.findByIdAndUpdate(following._id, { $push: { feed: { item: message, date: Date.now() } } }) 
+        res.io.emit('news', {title: title, message: message})
       }
-      // res.io.emit('consumed', { user: user.toObject(), beer: beer.toObject() })
-      // res.redirect(`/beers/${beerId}`)
       res.end()
     } else {
       res.send('Already consumed, you thirsty bastard!')
