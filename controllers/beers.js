@@ -275,9 +275,13 @@ module.exports = {
   },
   getBeerImages: async (req, res, next) => {
     const { beerId } = req.params
-    Beer.findById(beerId, function (err, doc) {
+    Beer.findById(beerId, async function (err, doc) {
       if (err) return next(err)
-      res.contentType(doc.images[req.body.index].contentType)
+      const user = await User.findById(doc.images[req.body.index].user_id, 'username')
+      res.set({
+        'User-Name': user.username,
+        'Content-Type': doc.images[req.body.index].contentType
+      })
       res.send(doc.images[req.body.index].data)
     })
   }
