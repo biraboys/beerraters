@@ -174,21 +174,19 @@ module.exports = {
     const user = await User.findById(userId, 'username')
 
     if (beer.consumes.indexOf(user._id) === -1) {
-      // await Beer.findByIdAndUpdate(beerId, { $push: { consumes: user._id } })
-      // await User.findByIdAndUpdate(user._id, { $push: { consumes: beerId } })
+      await Beer.findByIdAndUpdate(beerId, { $push: { consumes: user._id } })
+      await User.findByIdAndUpdate(user._id, { $push: { consumes: beerId } })
       const users = await User.find({ 'following': user._id }, 'username')
       const message = `<a href="/users/${user._id}">${user.username}</a> consumed <a href="/beers/${beer._id}">${beer.name}</a>`
       const title = "Someone's thirsty!"
       for (const following of users) {
-        // const newFeed = new Feed({
-        //   user_id: following._id,
-        //   body: {
-        //     item: message,
-        //     date: Date.now()
-        //   }
-        // })
-        // await newFeed.save()
-        // await User.findByIdAndUpdate(following._id, { $push: { feed: newFeed._id } })
+        const newFeed = new Feed({
+          user_id: following._id,
+          item: message,
+          expiration: Date.now() + 604800000,
+          created: Date.now()
+        })
+        await newFeed.save()
         res.io.emit('news', {user: req.session.user._id, title: title, message: message})
       }
       res.end()
