@@ -96,12 +96,10 @@ async function followUser () {
       const value = parseInt(followers.innerHTML) + 1
       followers.innerHTML = value
       follow.innerHTML = 'Unfollow'
-      location.href = `/users/${id}`
     } else {
       const value = parseInt(followers.innerHTML) - 1
       followers.innerHTML = value
       follow.innerHTML = 'Follow'
-      location.href = `/users/${id}`
     }
   }
 }

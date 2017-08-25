@@ -229,7 +229,17 @@
   <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io.connect('/', {transports: ['websocket']})
-    socket.on('news', function (data) {
+    socket.on('news', async function (data) {
+      const userId = document.getElementById('user-session-id').href.split('/')[4]
+      const response = await fetch(`/users/${userId}/following`, {
+        method: 'get',
+        credentials: 'same-origin'
+      })
+      const users = await response.json()
+      const userIds = users.following.map(user => {
+      return user._id
+    })
+      if (userIds.includes(data.user)) {
       $('#menu').addClass('pulse')
       $('#menu').click(() => {
         $('#feed').html(data.title)
@@ -237,7 +247,8 @@
         $('.tap-target').tapTarget('open')
         $('#menu').removeClass('pulse')
       })
-    })
+  }
+})
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
 <script>window.Chart || document.write('<script src="/js/libs/chart.min.js"><\/script>')</script>

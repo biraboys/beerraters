@@ -566,4 +566,4 @@ reviewForm.addEventListener('submit', async function () {
 getBeerImage()
 checkContributions()
 avgRatingSymbols()
-// checkReviews()
+checkReviews()
