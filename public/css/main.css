@@ -202,3 +202,9 @@ a {
 .feed-item {
   margin: 10px;
 }
+
+#report-bug {
+  position: fixed;
+  bottom: 45px;
+  left: 24px;
+}

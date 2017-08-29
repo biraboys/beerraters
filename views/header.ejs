@@ -27,6 +27,35 @@
 
 </head>
 <body>
+
+  <!-- Modal Trigger -->
+  <!-- <a id="report-bug" class="waves-effect waves-light btn modal-trigger">Modal</a> -->
+  <% if (session) { %>
+    <a id="report-bug" class="btn-floating btn-large waves-effect waves-light red tooltipped" data-position="top" data-delay="50" data-tooltip="Report a bug"><i class="material-icons">bug_report</i></a>
+  <% } %>
+  
+
+  <!-- Modal Structure -->
+  <div id="report-bug-form" class="modal">
+    <form class="col s12" name="bugreport">
+      <div class="modal-content">
+        <div class="row">
+          <div class="input-field col s12">
+            <textarea name="report-text" id="report-text" class="materialize-textarea validate" data-length="120" required></textarea>
+            <label id="report-label" data-error for="report-text">Report a bug...</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col s12">
+            <button id="report-bug-btn" class="modal-action waves-effect waves-green btn-flat" type="submit">Send</button>        
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
   <div class="navbar-fixed">
     <nav class="light-blue lighten-1" role="navigation">
     <div class="nav-wrapper container">
