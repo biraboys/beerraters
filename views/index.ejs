@@ -60,7 +60,7 @@
         <ul class="collection no-border" id="activity-list">
           <% if (feed.length > 0) { %>
             <% feed.forEach(function(feedItem) { %>
-              <li class="collection-item dismissable" data-target="<%= feedItem._id %>"><%- feedItem.item %></li>
+              <li class="collection-item dismissable feed-item" data-target="<%= feedItem._id %>" style="opacity: 0"><%- feedItem.item %><i class="material-icons right pointer feed-closer">close</i></li>
             <% }); %>
           <% } %>
         </ul>
@@ -102,6 +102,9 @@
     const list = document.getElementById('activity-list')
     list.innerHTML += `<li class="collection-item"><a href="/users/${data.user._id}">${data.user.username}</a> consumed <a href="/beers/${data.beer._id}">${data.beer.name}</a></li>`
   })
+</script>
+<script>
+  Materialize.showStaggeredList('#activity-list')
 </script>    
   <% } %>
 </body>
