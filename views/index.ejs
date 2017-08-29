@@ -57,7 +57,13 @@
   <div class="container">
     <div class="row">
       <div class="col s12 m8">
-        <ul class="collection no-border" id="activity-list"></ul>
+        <ul class="collection no-border" id="activity-list">
+          <% if (feed.length > 0) { %>
+            <% feed.forEach(function(feedItem) { %>
+              <li class="collection-item dismissable" data-target="<%= feedItem._id %>"><%- feedItem.item %></li>
+            <% }); %>
+          <% } %>
+        </ul>
       </div>
         <div class="col s12 m4">
           <div class="card">
@@ -87,7 +93,7 @@
 <%- include footer.ejs %>
 
 <% if (session) { %>
-  <script src="/js/feed.min.js"></script>
+  <script src="/js/feed.js"></script>
   <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io.connect('/', {transports: ['websocket']})

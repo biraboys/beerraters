@@ -462,16 +462,12 @@ async function checkReviews () {
       reviewsObj.reviews.forEach(async obj => {
         const reviewResponse = await fetch(`/reviews/${obj.review_id}`)
         const review = await reviewResponse.json()
-        let profileImg
-        if (review.user_id.profileImg.length > 0) {
-          profileImg = `/uploads/users/${review.user_id._id}/${review.user_id.profileImg}`
-        } else {
-          profileImg = '/images/user-placeholder.png'
-        }
+        const user = review.user_id
+        console.log(user)
         reviewsContainer.innerHTML += `
             <div class="card-panel">
              <li class="collection-item avatar">
-      <img src="${profileImg}" alt="" class="circle">
+      <img src="$" alt="" class="circle">
       <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.username}</strong></a></span>
       <p>
          <span class="card-subtitle">${review.place} in </span><a class="card-link" href="/countries/${review.country_id._id}">${review.country_id.name}</a> <br>

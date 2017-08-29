@@ -51,6 +51,9 @@ router.get('/:userId/edit', function (req, res) {
   }
 })
 
+router.route('/feed/:feedId')
+  .post(UsersController.removeFeedItem)
+
 router.route('/:userId/following')
   .get(UsersController.getUserFollowing)
 

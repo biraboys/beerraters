@@ -3,7 +3,7 @@ const Review = require('../models/review')
 module.exports = {
   getReview: async (req, res, next) => {
     const { reviewId } = req.params
-    const review = await Review.findById(reviewId).populate('country_id user_id')
+    const review = await Review.findById(reviewId).populate('country_id user_id', 'name username')
     res.json(review)
   },
   editReview: async (req, res, next) => {
