@@ -97,12 +97,12 @@ app.use((err, req, res, next) => {
   const status = err.status || 500
 
   // Respond to client
-  res.redirect('/404')
-  // res.status(status).json({
-  //   error: {
-  //     message: error.message
-  //   }
-  // })
+  // res.redirect('/404')
+  res.status(status).json({
+    error: {
+      message: error.message
+    }
+  })
 
 // Respond to self
   console.log(error)

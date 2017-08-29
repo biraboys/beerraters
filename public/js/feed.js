@@ -15,6 +15,7 @@ async function getUserFollowing () {
     await user.feed.forEach(feedItem => {
       const feedListEl = document.createElement('li')
       feedListEl.setAttribute('class', 'collection-item feed-item')
+      feedListEl.setAttribute('blah', feedItem._id)
       feedListEl.innerHTML = feedItem.item
       $(activityList).append(feedListEl)
     })
@@ -23,6 +24,29 @@ async function getUserFollowing () {
   }
 }
 
+$('.feed-closer').each(function () {
+}).click(function () {
+  const feedId = this.parentNode.getAttribute('data-target')
+  removeFeedItem(feedId)
+  activityList.removeChild(this.parentNode)
+})
+
+$('.dismissable').each(function () {
+})
+.on('panend', function () {
+  const transFormValue = this.style.transform.substr(11)
+  if (transFormValue.substr(0, 1) === '-') {
+    if (Number(transFormValue.substr(1, 2)) >= 42) {
+      const feedId = this.getAttribute('data-target')
+      removeFeedItem(feedId)
+    }
+  } else {
+    if (Number(transFormValue.substr(0, 2)) >= 42) {
+      const feedId = this.getAttribute('data-target')
+      removeFeedItem(feedId)
+    }
+  }
+})
 // async function getUserContributions () {
 //   try {
 //     const response = await fetch(`/users/${userId}/following`, {
@@ -56,7 +80,6 @@ async function getUsersOnline () {
     const user = await response.json()
     let usersOnline = 0
     let usersOffline = 0
-    console.log(user)
     user.following.forEach(async following => {
       if (following.status === true) {
         usersOnline += 1
@@ -101,6 +124,20 @@ async function getUsersOnline () {
 //   image.setAttribute('class', 'responsive-img card-image profile')
 //   return image
 // }
+
+async function removeFeedItem (feedId) {
+  try {
+    const response = await fetch(`/users/feed/${feedId}`, {
+      method: 'post',
+      credentials: 'same-origin'
+    })
+    response.status === 500
+    ? Materialize.toast(`Could not remove feed item`, 2000)
+    : Materialize.toast(`Feed item removed!`, 2000)
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 getUsersOnline()
 getUserFollowing()

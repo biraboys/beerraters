@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer')
 const async = require('async')
 const bcrypt = require('bcryptjs')
 const Jimp = require('jimp')
-// const fs = require('fs')
+const Feed = require('../models/feed')
 
 const controller = module.exports = {
   index: async (req, res, next) => {
@@ -44,7 +44,6 @@ const controller = module.exports = {
     await newUser.save(err => {
       if (err) {
         if (err.errors) {
-          console.log(err)
           res.json({ message: err.errors })
         } else if (err.code === 11000) {
           res.json({ message: err.message })
@@ -90,7 +89,6 @@ const controller = module.exports = {
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
     const userReviews = await User.findById({userId}, 'reviews').populate('reviews')
-    console.log(userReviews)
 
     // res.status(200).render('reviews', userReviews)
     res.status(200).json(userReviews)
@@ -455,5 +453,10 @@ const controller = module.exports = {
       if (err) { console.log(err) }
       res.end()
     })
+  },
+  removeFeedItem: async (req, res, next) => {
+    const { feedId } = req.params
+    await Feed.findByIdAndRemove(feedId)
+    res.send('Done')
   }
 }
