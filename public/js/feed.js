@@ -24,6 +24,13 @@ async function getUserFollowing () {
   }
 }
 
+$('.feed-closer').each(function () {
+}).click(function () {
+  const feedId = this.parentNode.getAttribute('data-target')
+  removeFeedItem(feedId)
+  activityList.removeChild(this.parentNode)
+})
+
 $('.dismissable').each(function () {
 })
 .on('panend', function () {
@@ -125,7 +132,7 @@ async function removeFeedItem (feedId) {
       credentials: 'same-origin'
     })
     response.status === 500
-    ? Materialize.toast(`Could not remove feed`, 2000)
+    ? Materialize.toast(`Could not remove feed item`, 2000)
     : Materialize.toast(`Feed item removed!`, 2000)
   } catch (err) {
     console.log(err)

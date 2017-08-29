@@ -60,7 +60,7 @@
         <ul class="collection no-border" id="activity-list">
           <% if (feed.length > 0) { %>
             <% feed.forEach(function(feedItem) { %>
-              <li class="collection-item dismissable" data-target="<%= feedItem._id %>"><%- feedItem.item %></li>
+              <li class="collection-item dismissable feed-item" data-target="<%= feedItem._id %>"><%- feedItem.item %><i class="material-icons right pointer feed-closer">close</i></li>
             <% }); %>
           <% } %>
         </ul>
