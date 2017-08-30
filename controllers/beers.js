@@ -90,7 +90,7 @@ module.exports = {
   },
   getReviews: async (req, res, next) => {
     const { beerId } = req.params
-    const beerReviews = await Beer.findOne({ _id: beerId }, 'reviews')
+    const beerReviews = await Beer.findById(beerId, 'reviews')
     res.status(200).json(beerReviews)
   },
   updateBeer: async (req, res, next) => {
@@ -264,7 +264,7 @@ module.exports = {
   addBeerReview: async (req, res, next) => {
     const userId = req.session.user._id
     const { beerId } = req.params
-    const beer = await Beer.findOne({_id: beerId}, 'reviews')
+    const beer = await Beer.findById(beerId, 'reviews')
 
     if (beer.reviews.indexOf(userId) === -1) {
       const newReview = new Review({
@@ -276,8 +276,8 @@ module.exports = {
       })
       await newReview.save()
       const review = await Review.findOne({beer_id: beerId, user_id: userId}, '_id')
-      await Beer.findOneAndUpdate({ _id: beerId }, { $push: { reviews: { review_id: review._id, user_id: userId } } })
-      await User.findOneAndUpdate({ _id: userId }, { $push: { reviews: review._id } })
+      await Beer.findByIdAndUpdate(beerId, { $push: { reviews: { review_id: review._id, user_id: userId } } })
+      await User.findByIdAndUpdate(userId, { $push: { reviews: review._id } })
       res.end()
     } else {
       res.send('Already reviewed')

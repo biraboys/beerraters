@@ -438,7 +438,7 @@ async function getCountries () {
     sortByName(countries)
     await countries.forEach(country => {
       reviewForm.location.innerHTML += `
-      <option value="${country._id}" class="flag-img left valign-wrapper">${country.name}</option>
+      <option value="${country._id}">${country.name}</option>
       `
     })
   } catch (err) {
@@ -465,8 +465,6 @@ async function checkReviews () {
       reviewsObj.reviews.forEach(async obj => {
         const reviewResponse = await fetch(`/reviews/${obj.review_id}`)
         const review = await reviewResponse.json()
-        const user = review.user_id
-        console.log(user)
         reviewsContainer.innerHTML += `
             <div class="card-panel">
              <li class="collection-item avatar">
@@ -506,7 +504,6 @@ async function getBeerImage () {
   try {
     const response = await fetch(`/beers/${beerId}/images`)
     const imageAmount = await response.text()
-    console.log(imageAmount)
     if (imageAmount === '0') {
       imageContainer.innerHTML += `
         <img class="responsive-img" src="/images/bottle.png">
@@ -554,23 +551,22 @@ reviewForm.addEventListener('submit', async function (e) {
       review.classList.add('valid')
       reviewLabel.style.color = '#4CAF50'
       reviewBtn.classList.add('disabled')
-      console.log('hej')
-      // try {
-      //   const response = await fetch(`/beers/${beerId}/review`, {
-      //     method: 'post',
-      //     credentials: 'same-origin'
-      //   })
-      //   if (response.status === 500) {
-      //     Materialize.toast(`Sorry could not review ${beerName}`, 2000)
-      //   } else {
-      //     Materialize.toast(`You reviewed ${beerName}, thanks!`, 2000)
-      //     reviewIcon.setAttribute('fill', '#000000')
-      //     reviewLink.setAttribute('data-tooltip', 'Reviewed')
-      //     $(reviewLink).tooltip()
-      //   }
-      // } catch (err) {
-      //   console.log(err)
-      // }
+      try {
+        const response = await fetch(`/beers/${beerId}/review`, {
+          method: 'post',
+          credentials: 'same-origin'
+        })
+        if (response.status === 500) {
+          Materialize.toast(`Sorry could not review ${beerName}`, 2000)
+        } else {
+          Materialize.toast(`You reviewed ${beerName}, thanks!`, 2000)
+          reviewIcon.setAttribute('fill', '#000000')
+          reviewLink.setAttribute('data-tooltip', 'Reviewed')
+          $(reviewLink).tooltip()
+        }
+      } catch (err) {
+        console.log(err)
+      }
     }
   } else if (review.value.length > 120) {
     review.classList.add('invalid')
