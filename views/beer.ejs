@@ -157,8 +157,8 @@
               </div>
         <div class="col s6">
           <div class="input-field">
-          <textarea class="materialize-textarea" placeholder="Fire away!" id="review" name="review"></textarea>
-          <label for="review">Review</label>
+          <textarea class="materialize-textarea validate" placeholder="Fire away!" id="review" name="review" data-length="120"></textarea>
+          <label id="review-label" for="review">Review</label>
           </div>
           <div class="input-field">
           <input placeholder="On a balcony, at a beach, in a restaurant..." type="text" class="validate" name="place" id="place" required>
@@ -170,7 +170,7 @@
             </select>
             <label for="location">Location</label>
           </div>
-        <button class="btn waves-effect waves-light" type="submit" name="submit">Submit</button>
+        <button id="review-btn" class="btn waves-effect waves-light" type="submit" name="submit">Submit</button>
         </div>
         </div>
       </div>                       

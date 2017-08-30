@@ -22,6 +22,9 @@ const ratingModalBody = document.getElementById('rating-modal-body')
 const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
 const stateGroup = document.getElementById('state-group')
 const submitImgBtn = document.getElementById('submit-img-btn')
+const review = document.getElementById('review')
+const reviewLabel = document.getElementById('review-label')
+const reviewBtn = document.getElementById('review-btn')
 
 // Click bindings
 consumeLink.onclick = () => {
@@ -538,23 +541,45 @@ async function getBeerImage () {
   }
 }
 
-reviewForm.addEventListener('submit', async function () {
+reviewForm.addEventListener('submit', async function (e) {
+  e.preventDefault()
   const beerName = document.getElementById('beer-name').innerHTML
-  try {
-    const response = await fetch(`/beers/${beerId}/review`, {
-      method: 'post',
-      credentials: 'same-origin'
-    })
-    if (response.status === 500) {
-      Materialize.toast(`Sorry could not review ${beerName}`, 2000)
+  if (review.value.length > 0 && review.value.length < 121) {
+    if (!review.value.replace(/\s/g, '').length) {
+      reviewLabel.classList.add('invalid')
+      reviewLabel.innerHTML = `This seems like a funny review... eh?`
+      reviewLabel.style.color = '#F44336'
     } else {
-      Materialize.toast(`You reviewed ${beerName}, thanks!`, 2000)
-      reviewIcon.setAttribute('fill', '#000000')
-      reviewLink.setAttribute('data-tooltip', 'Reviewed')
-      $(reviewLink).tooltip()
+      reviewLabel.innerHTML = 'Thanks for your contribution!'
+      review.classList.add('valid')
+      reviewLabel.style.color = '#4CAF50'
+      reviewBtn.classList.add('disabled')
+      console.log('hej')
+      // try {
+      //   const response = await fetch(`/beers/${beerId}/review`, {
+      //     method: 'post',
+      //     credentials: 'same-origin'
+      //   })
+      //   if (response.status === 500) {
+      //     Materialize.toast(`Sorry could not review ${beerName}`, 2000)
+      //   } else {
+      //     Materialize.toast(`You reviewed ${beerName}, thanks!`, 2000)
+      //     reviewIcon.setAttribute('fill', '#000000')
+      //     reviewLink.setAttribute('data-tooltip', 'Reviewed')
+      //     $(reviewLink).tooltip()
+      //   }
+      // } catch (err) {
+      //   console.log(err)
+      // }
     }
-  } catch (err) {
-    console.log(err)
+  } else if (review.value.length > 120) {
+    review.classList.add('invalid')
+    reviewLabel.innerHTML = 'Too many characters.'
+    reviewLabel.style.color = '#F44336'
+  } else {
+    review.classList.add('invalid')
+    reviewLabel.innerHTML = 'Please enter some text here...'
+    reviewLabel.style.color = '#F44336'
   }
 })
 
