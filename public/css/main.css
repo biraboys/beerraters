@@ -199,6 +199,16 @@ a {
   box-shadow: 0 6px 18px 0 rgba(232,237,250,.5);
 }
 
+.feed-item {
+  margin: 10px;
+}
+
+#report-bug {
+  position: fixed;
+  bottom: 45px;
+  left: 24px;
+}
+
 .collection .collection-item.feed-item {
   margin-bottom: 20px;
 }

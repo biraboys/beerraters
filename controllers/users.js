@@ -435,6 +435,25 @@ const controller = module.exports = {
       }
     }
   },
+  reportBug: async (req, res, next) => {
+    const stmpTransport = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.GMAIL_U,
+        pass: process.env.GMAIL_PASS
+      }
+    })
+    const mailOptions = {
+      to: process.env.GMAIL_U,
+      from: process.env.GMAIL_U,
+      subject: 'Bug report - Beerraters.com',
+      text: `${req.body.message}\n\n This bug report was sent from user: http://localhost:6889/users/${req.session.user._id}`
+    }
+    await stmpTransport.sendMail(mailOptions, err => {
+      if (err) { console.log(err) }
+      res.end()
+    })
+  },
   removeFeedItem: async (req, res, next) => {
     const { feedId } = req.params
     await Feed.findByIdAndRemove(feedId)
