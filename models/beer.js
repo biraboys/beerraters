@@ -13,6 +13,7 @@ const beerSchema = new Schema({
     ref: 'style',
     required: true
   },
+  style_name: String,
   category_id:
   {
     type: Schema.Types.ObjectId,
@@ -25,12 +26,14 @@ const beerSchema = new Schema({
     ref: 'brewery',
     required: true
   },
+  brewery_name: String,
   country_id:
   {
     type: Schema.Types.ObjectId,
     ref: 'country',
     required: true
   },
+  country_name: String,
   ratings: [
     {
       rating: Number,

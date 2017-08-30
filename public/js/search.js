@@ -203,7 +203,7 @@ async function searchUser (userName) {
 }
 
 async function generateBeerCard (beerObj) {
-  let rating, beerImage
+  let rating, beerImage, style, brewery, country
   const blobResponse = await fetch(`/beers/${beerObj._id}/getImage`, {
     credentials: 'same-origin'
   })
@@ -213,6 +213,9 @@ async function generateBeerCard (beerObj) {
   } else {
     beerImage = `/images/bottle.png`
   }
+  beerObj.style_id ? style = beerObj.style_name : style = ''
+  beerObj.brewery_id ? brewery = beerObj.brewery_name : brewery = ''
+  beerObj.country_id ? country = beerObj.country_name : country = ''
   if (beerObj.rating) {
     let numberType, blackStars, greyStars
     rating = ''
@@ -313,6 +316,15 @@ async function generateBeerCard (beerObj) {
               <div class="card-title">                  
                 ${rating}
               </div>
+              <div class="card-subtitle">                  
+                ${style}
+              </div>
+              <div class="card-subtitle">                  
+              ${brewery}
+            </div>
+            <div class="card-subtitle">                  
+            ${country}
+          </div>
           </div>
         </div>
       </div>

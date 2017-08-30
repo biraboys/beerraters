@@ -145,21 +145,33 @@ module.exports = {
   },
   findBeerByStyle: async (req, res, next) => {
     const beerName = req.query.q
-    const allBeers = await Beer.find({}).populate('style_id')
-    const beers = await Beer.findByStyle(allBeers, beerName)
-    res.status(200).json(beers)
+    await Beer.find({
+      'style_name': { '$regex': beerName, '$options': 'i' }
+    }, '-v -images')
+    .lean()
+    .cursor()
+    .pipe(JSONStream.stringify())
+    .pipe(res)
   },
   findBeerByBrewery: async (req, res, next) => {
     const beerName = req.query.q
-    const allBeers = await Beer.find({}).populate('brewery_id')
-    const beers = await Beer.findByBrewery(allBeers, beerName)
-    res.status(200).json(beers)
+    await Beer.find({
+      'brewery_name': { '$regex': beerName, '$options': 'i' }
+    }, '-v -images')
+    .lean()
+    .cursor()
+    .pipe(JSONStream.stringify())
+    .pipe(res)
   },
   findBeerByCountry: async (req, res, next) => {
     const beerName = req.query.q
-    const allBeers = await Beer.find({}).populate('country_id')
-    const beers = await Beer.findByCountry(allBeers, beerName)
-    res.status(200).json(beers)
+    await Beer.find({
+      'country_name': { '$regex': beerName, '$options': 'i' }
+    }, '-v -images')
+    .lean()
+    .cursor()
+    .pipe(JSONStream.stringify())
+    .pipe(res)
   },
   renderBeer: async (req, res, next) => {
     const { beerId } = req.params
