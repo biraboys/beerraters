@@ -24,7 +24,6 @@ const controller = module.exports = {
     const token = buff.toString('hex')
     // 1 Hour from Date.now()
     const expires = Date.now() + 3600000
-
     const newUser = new User({
       username: username,
       name: name,
@@ -34,11 +33,14 @@ const controller = module.exports = {
       followers: [],
       registrationToken: token,
       registrationTokenExpires: expires,
-      country_id: country,
-      profileImg: {
-        data: null,
-        contentType: ''
-      }
+      country_id: country
+    })
+    Jimp.read('./public/images/user-placeholder.png', function (err, image) {
+      image.quality(60)
+      image.getBuffer('image/png', async function (err, data) {
+        if (err) throw err
+        await User.findByIdAndUpdate(newUser._id, { $set: { profileImg: { data: data, contentType: 'image/png' } } })
+      })
     })
 
     await newUser.save(err => {
