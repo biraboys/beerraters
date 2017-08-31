@@ -8,11 +8,11 @@ const ratingIcon = document.getElementById('rating-icon')
 const imageIcon = document.getElementById('image-icon')
 const reviewIcon = document.getElementById('review-icon')
 // const editLink = document.getElementById('edit-link')
+const beerDescriptionForm = document.forms.beerDescription
 const ratingLink = document.getElementById('rating-link')
 const reviewLink = document.getElementById('review-link')
 const ratingModal = document.getElementById('rating-modal')
 const reviewModal = document.getElementById('review-modal')
-const beerDescriptionForm = document.forms.beerDescription
 const reviewForm = document.forms.reviewForm
 const cancelButton = document.getElementById('cancel-description-btn')
 const closeModal = document.getElementById('close-modal-btn')
@@ -74,7 +74,6 @@ function checkIconColor (icon) {
     case 'review':
       if (reviewIcon.getAttribute('fill') === '#E8EDFA') {
         $('#review-modal').modal('open')
-        getCountries()
       }
       break
   }
@@ -547,14 +546,18 @@ reviewForm.addEventListener('submit', async function (e) {
       reviewLabel.innerHTML = `This seems like a funny review... eh?`
       reviewLabel.style.color = '#F44336'
     } else {
-      reviewLabel.innerHTML = 'Thanks for your contribution!'
-      review.classList.add('valid')
-      reviewLabel.style.color = '#4CAF50'
-      reviewBtn.classList.add('disabled')
       try {
         const response = await fetch(`/beers/${beerId}/review`, {
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
           method: 'post',
-          credentials: 'same-origin'
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            place: reviewForm.place.value,
+            location: reviewForm.location.value,
+            review: reviewForm.review.value
+          })
         })
         if (response.status === 500) {
           Materialize.toast(`Sorry could not review ${beerName}`, 2000)
@@ -563,6 +566,7 @@ reviewForm.addEventListener('submit', async function (e) {
           reviewIcon.setAttribute('fill', '#000000')
           reviewLink.setAttribute('data-tooltip', 'Reviewed')
           $(reviewLink).tooltip()
+          $('#review-modal').modal('close')
         }
       } catch (err) {
         console.log(err)
@@ -584,3 +588,4 @@ getBeerImage()
 checkContributions()
 avgRatingSymbols()
 checkReviews()
+getCountries()

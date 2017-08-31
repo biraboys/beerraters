@@ -270,17 +270,15 @@ module.exports = {
     const userId = req.session.user._id
     const { beerId } = req.params
     const beer = await Beer.findById(beerId, 'reviews')
-
     if (beer.reviews.indexOf(userId) === -1) {
-      const newReview = new Review({
+      const review = new Review({
         user_id: userId,
         place: req.body.place,
         country_id: req.body.location,
         body: req.body.review,
         beer_id: beerId
       })
-      await newReview.save()
-      const review = await Review.findOne({beer_id: beerId, user_id: userId}, '_id')
+      await review.save()
       await Beer.findByIdAndUpdate(beerId, { $push: { reviews: { review_id: review._id, user_id: userId } } })
       await User.findByIdAndUpdate(userId, { $push: { reviews: review._id } })
       res.end()
