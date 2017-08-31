@@ -464,10 +464,16 @@ async function checkReviews () {
       reviewsObj.reviews.forEach(async obj => {
         const reviewResponse = await fetch(`/reviews/${obj.review_id}`)
         const review = await reviewResponse.json()
+        const userImage = await fetch(`/users/${review.user_id._id}/get-profileimage`, {
+          method: 'get',
+          credentials: 'same-origin'
+        })
+        const img = await userImage.blob()
+        const image = createUserImage(img)
         reviewsContainer.innerHTML += `
             <div class="card-panel">
              <li class="collection-item avatar">
-      <img src="$" alt="" class="circle">
+      ${image.outerHTML}
       <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.username}</strong></a></span>
       <p>
          <span class="card-subtitle">${review.place} in </span><a class="card-link" href="/countries/${review.country_id._id}">${review.country_id.name}</a> <br>
@@ -582,6 +588,14 @@ reviewForm.addEventListener('submit', async function (e) {
     reviewLabel.style.color = '#F44336'
   }
 })
+
+function createUserImage (imageBlob) {
+  const image = document.createElement('img')
+  const objectURL = URL.createObjectURL(imageBlob)
+  image.src = objectURL
+  image.setAttribute('class', 'circle')
+  return image
+}
 
 // Init calls
 getBeerImage()
