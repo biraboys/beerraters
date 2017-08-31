@@ -1,49 +1,76 @@
 <%- include header.ejs %>
+<section class="main-section">
+<div class="container">
+  <div class="row">
+    <div class="col s12 m6">
+      <h4>Add beer</h4>
+      <p>Thank you for contributing to BeerRaters!</p>
+      <p>Please fill in all the fields to add your beer to the database.</p>
+    </div>
+    <div class="col s12 m6">
+      <div class="card">
+        <div class="card-content">
+          <form method="post" name="addBeer" action="/beers/add">
+            <div class="input-field col s12">
+              <input type="text" name="name" id="name" required>
+              <label for="name">Name</label>
+            </div>
+            <div class="input-field col s12">
+              <select id="style" name="style" required>
+                <option value="" disabled selected>Select style</option>
+                <% styles.forEach(function(style, index) { %>
+                  <% if (style.name !== 'Other style') { %> 
+                    <option value="<%= style._id %>"><%= style.name %></option>
+                    <% } %>
+                    <% }); %>
+                    <option value="Other style">Other style</option>
+              </select>
+              <label for="style">Style</label>
+            </div>
+            <div class="input-field col s12 hide" id="category-input-field">
+              <select id="category" name="category">
+              </select>
+              <label for="category">Category</label>
+            </div>
+            <div class="input-field col s12">
+              <input type="text" placeholder="New category" name="otherCategory" id="other-category" hidden>
+            </div>
+            <div class="input-field col s12">
+              <select id="country" name="country" required>
+                <option value="" disabled selected>Select country</option>
+                <% countries.forEach(function(country, index) { %>
+                  <option value="<%= country._id %>"><%= country.name %></option>
+                  <% }); %>
+              </select>
+              <label for="country">Country</label>
+            </div>
+            <div class="input-field col s12 hide" id="brewery-input-field">
+              <select id="brewery" name="brewery">
+              </select>
+              <label for="brewery">Brewery</label>
+            </div>
+            <div class="input-field col s12">
+              <input type="text" placeholder="New brewery" name="otherBrewery" id="other-brewery" hidden>
+            </div>
+            <div class="input-field col s12">
+              <textarea class="materialize-textarea" id="description" name="description" required></textarea>
+              <label for="description">Description</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit" id="add-beer-btn">Add</button>
+            </form>
+          </div>
+         </div>
+        </div>
+      </div>
+    </div>
+  </section> 
 
-<div class="container register-form">
-  <div class="six columns">
-    <h4>Add beer</h4>
-    <form method="post" name="addBeer" action="/beers/add">
-      <label for="name">Name*</label>
-      <input class="u-full-width" type="text" name="name" id="name" required>
-      <label for="style">Style*</label>
-     <select class="u-full-width" id="style" name="style" required>
-       <option value="" disabled selected>Select style</option>
-        <% styles.forEach(function(style, index) { %>
-          <% if (style.name !== 'Other style') { %> 
-        <option value="<%= style._id %>"><%= style.name %></option>
-          <% } %>
-      <% }); %>
-      <option value="Other style">Other style</option>
-      </select>
-      <label for="category">Category</label>
-      <select class="u-full-width" id="category" name="category" disabled>
-      </select>
-      <input class="u-full-width" type="text" placeholder="New category" name="otherCategory" id="other-category" hidden>
-      <label for="country">Country*</label>
-      <select class="u-full-width" id="country" name="country" required>
-        <option value="" disabled selected>Select country</option>
-        <% countries.forEach(function(country, index) { %>
-        <option value="<%= country.name %>"><%= country.name %></option>
-      <% }); %>
-      </select>
-      <label for="brewery">Brewery</label>
-      <select class="u-full-width" id="brewery" name="brewery" disabled>
-      </select>
-      <input class="u-full-width" type="text" placeholder="New brewery" name="otherBrewery" id="other-brewery" hidden>
-      <label for="image">Image</label>
-      <input class="u-full-width" type="text" name="image" id="image">
-      <label for="description">Description</label>
-      <textarea class="u-full-width" id="description" name="description"></textarea>
-      <p>*Required</p>
-
-      <input class="button-primary" type="submit" value="Add" id="add-beer-btn">
-    </form>
-  </div>
-</div>
-
-<%- include footer.ejs %>
-
-<script src="/js/addbeer.js"></script>
+  <%- include footer.ejs %>
+  <script>
+  $(document).ready(function() {
+    $('select').material_select();
+  });         
+  </script>
+  <script src="/js/addbeer.js"></script>
 </body>
 </html>

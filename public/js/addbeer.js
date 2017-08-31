@@ -9,24 +9,23 @@ addBeerForm.country.onchange = function () {
 }
 
 async function showMatchingCategories (style) {
+  const categoryInputField = document.getElementById('category-input-field')
+  const categoryInput = addBeerForm.category
+  const otherCategoryInput = addBeerForm.otherCategory
   try {
     const response = await fetch(`/styles/${style}/categories`)
     const categories = await response.json()
     if (categories.length > 0) {
-      const categoryInput = addBeerForm.category
-      const otherCategoryInput = addBeerForm.otherCategory
-      categoryInput.removeAttribute('disabled')
+      otherCategoryInput.setAttribute('hidden', true)
+      otherCategoryInput.removeAttribute('required')
+      categoryInputField.classList.remove('hide')
       categoryInput.innerHTML = ''
       sortByName(categories)
       categories.forEach(category => {
         categoryInput.innerHTML +=
-          `
-          <option value="${category.name}">${category.name}</option>
-          `
+        `<option value="${category._id}">${category.name}</option>`
       })
-      categoryInput.innerHTML += `
-        <option value="Other">Other</option>
-        `
+      categoryInput.innerHTML += `<option value="Other">Other</option>`
       addBeerForm.category.onchange = function () {
         if (this.value === 'Other') {
           otherCategoryInput.removeAttribute('hidden')
@@ -36,31 +35,37 @@ async function showMatchingCategories (style) {
           otherCategoryInput.removeAttribute('required')
         }
       }
+    } else {
+      categoryInputField.classList.remove('hide')
+      categoryInput.innerHTML = `<option value="Other">Other</option>`
+      otherCategoryInput.removeAttribute('hidden')
+      otherCategoryInput.setAttribute('required', true)
     }
+    $('select').material_select()
   } catch (err) {
-
+    console.log(err)
+    Materialize.toast(`Sorry, could not fetch categories`, 2000)
   }
 }
 
 async function showMatchingBreweries (country) {
+  const breweryInputField = document.getElementById('brewery-input-field')
+  const breweryInput = addBeerForm.brewery
+  const otherBreweryInput = addBeerForm.otherBrewery
   try {
     const response = await fetch(`/countries/${country}/breweries`)
     const breweries = await response.json()
     if (breweries.length > 0) {
-      const breweriesInput = addBeerForm.brewery
-      const otherBreweryInput = addBeerForm.otherBrewery
-      breweriesInput.removeAttribute('disabled')
-      breweriesInput.innerHTML = ''
+      otherBreweryInput.setAttribute('hidden', true)
+      otherBreweryInput.removeAttribute('required')
+      breweryInputField.classList.remove('hide')
+      breweryInput.innerHTML = ''
       sortByName(breweries)
-      breweries.forEach(breweries => {
-        breweriesInput.innerHTML +=
-          `
-          <option value="${breweries.name}">${breweries.name}</option>
-          `
+      breweries.forEach(brewery => {
+        breweryInput.innerHTML +=
+          `<option value="${brewery._id}">${brewery.name}</option>`
       })
-      breweriesInput.innerHTML += `
-        <option value="Other">Other</option>
-        `
+      breweryInput.innerHTML += `<option value="Other">Other</option>`
       addBeerForm.brewery.onchange = function () {
         if (this.value === 'Other') {
           otherBreweryInput.removeAttribute('hidden')
@@ -70,9 +75,16 @@ async function showMatchingBreweries (country) {
           otherBreweryInput.removeAttribute('required')
         }
       }
+    } else {
+      breweryInputField.classList.remove('hide')
+      breweryInput.innerHTML = `<option value="Other">Other</option>`
+      otherBreweryInput.removeAttribute('hidden')
+      otherBreweryInput.setAttribute('required', true)
     }
+    $('select').material_select()
   } catch (err) {
-
+    console.log(err)
+    Materialize.toast(`Sorry, could not fetch breweries`, 2000)
   }
 }
 

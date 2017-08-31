@@ -20,6 +20,7 @@ const beerSchema = new Schema({
     ref: 'category',
     required: true
   },
+  category_name: String,
   brewery_id:
   {
     type: Schema.Types.ObjectId,
@@ -60,42 +61,6 @@ const beerSchema = new Schema({
       user_id: { type: Schema.Types.ObjectId, ref: 'user' }
     }
   ]
-})
-
-beerSchema.static('findByStyle', function (beerArr, beerName) {
-  beerArr = beerArr.filter(beer => {
-    if (beer.style_id) {
-      if (beer.style_id.name.toLowerCase().includes(beerName.toLowerCase())) return beer
-    }
-  })
-  return beerArr
-})
-
-beerSchema.static('findByBrewery', function (beerArr, beerName) {
-  beerArr = beerArr.filter(beer => {
-    if (beer.brewery_id) {
-      if (beer.brewery_id.name.toLowerCase().includes(beerName.toLowerCase())) return beer
-    }
-  })
-  return beerArr
-})
-
-beerSchema.static('findByCountry', function (beerArr, beerName) {
-  beerArr = beerArr.filter(beer => {
-    if (beer.country_id) {
-      if (beer.country_id.name.toLowerCase() === beerName.toLowerCase() || beer.country_id.code.toLowerCase() === beerName.toLowerCase()) return beer
-    }
-  })
-  return beerArr
-})
-
-beerSchema.static('findTopRated', function (beers) {
-  beers = beers.filter(beer => {
-    if (beer.avg_rating) {
-      return beer
-    }
-  })
-  return beers
 })
 
 const Beer = mongoose.model('beer', beerSchema)

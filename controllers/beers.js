@@ -11,6 +11,7 @@ const Jimp = require('jimp')
 // const sizeOf = require('image-size')
 // const fs = require('fs')
 const JSONStream = require('JSONStream')
+const {sortByName} = require('../helpers/sort')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -26,48 +27,52 @@ module.exports = {
         Style.find({}, 'name')
       ])
 
+      sortByName(countries)
+      sortByName(styles)
+
       res.render('addbeer', {session: req.session.user, countries: countries, styles: styles})
     }
   },
   newBeer: async (req, res, next) => {
-    const [name, style, country, image, description] = [req.body.name, req.body.style, req.body.country, req.body.image, req.body.description]
-    const [styleId, countryId] = await Promise.all([
-      Style.findOne({name: style}, '_id'),
-      Country.findOne({name: country}, '_id')
-    ])
-    let [category, brewery] = [req.body.category, req.body.brewery]
-    if (category === 'Other') {
-      category = req.body.otherCategory
+    const [name, styleId, countryId, description] = [req.body.name, req.body.style, req.body.country, req.body.description.trim()]
+    let [categoryId, breweryId] = [req.body.category, req.body.brewery]
+    if (categoryId === 'Other') {
+      categoryId = req.body.otherCategory
       const newCategory = new Category({
-        name: category,
+        name: categoryId,
         style_id: styleId
       })
+      categoryId = newCategory._id
       await newCategory.save()
     }
-    if (brewery === 'Other') {
-      brewery = req.body.otherBrewery
+    if (breweryId === 'Other') {
+      breweryId = req.body.otherBrewery
       const newBrewery = new Brewery({
-        name: brewery,
+        name: breweryId,
         country_id: countryId
       })
+      breweryId = newBrewery._id
       await newBrewery.save()
     }
-    const [categoryId, breweryId] = await Promise.all([
-      Category.findOne({name: category}, '_id'),
-      Brewery.findOne({name: brewery}, '_id')
-    ])
+    const category = await Category.findById(categoryId, 'name')
+    const style = await Style.findById(styleId, 'name')
+    const country = await Country.findById(countryId, 'name')
+    const brewery = await Brewery.findById(breweryId, 'name')
 
-    const newBeer = new Beer({
+    const beer = new Beer({
       name: name,
+      description: description,
       category_id: categoryId,
+      category_name: category.name,
       style_id: styleId,
+      style_name: style.name,
       brewery_id: breweryId,
+      brewery_name: brewery.name,
       country_id: countryId,
-      image: image,
-      description: description
+      country_name: country.name
     })
-    const beer = await newBeer.save()
-    res.status(201).redirect(`/beers/${beer._id}`)
+    await beer.save()
+    res.redirect(`/beers/${beer._id}`)
   },
   getBeer: async (req, res, next) => {
     const { beerId } = req.params
