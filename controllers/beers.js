@@ -204,7 +204,6 @@ module.exports = {
           created: Date.now()
         })
         await newFeed.save()
-        console.log(following._id)
         res.io.emit('news', {user: req.session.user._id, follower: String(following._id), id: String(newFeed._id), title: title, message: message})
       }
       res.end()

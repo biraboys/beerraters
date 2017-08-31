@@ -21,7 +21,7 @@
   <% if (user === undefined) { %>
     <h1>Sorry could not found user</h1>
      <% } else { %>
-     <div class="col s12 m3">
+     <div class="col s12 m3" style="position: sticky; top: 100px;">
             <div class="card flex-center flex-column ta-center">
               <div id="profile-img" class="card-image">
                 <% if (user.profileImg.data === null) { %>
@@ -53,7 +53,7 @@
                   <p><%= user.description %></p>
                 <% } else { %>
                   <p>User has no description yet.</p>
-                <% } %></br>
+                <% } %>
                 </div>
                 <div class="card-action flex-center flex-column">
                   <% if (session && session._id === user.id) { %>
@@ -192,7 +192,7 @@
   </div>
 
 
-  <div class="col s12 m3">
+  <div class="col s12 m3" style="position: sticky; top: 100px;">
               <div class="card">
                 <div class="card-content">
                   <span class="card-title ta-center">Contributions <span class="card-subtitle">(<%= user.reviews.length + user.ratings.length + user.consumes.length + user.images.length %>)</span></span>                   
@@ -239,17 +239,13 @@
       const userIds = users.following.map(user => {
       return user._id
     })
-      if (userIds.includes(data.user)) {
-        let counter = 0
+      if (userIds.includes(data.user) && data.follower === userId) {
         $('#menu').addClass('pulse')
+        $('#feed').html(data.title)
+        $('#feed-info').append(`<p>${data.message}</p>`)
           $('#menu').click(() => {
             $('.tap-target').tapTarget('open')
-            if (counter < 1) {
-        $('#feed').html(data.title)
-        $('#feed-info').append(data.message)
-        $('#menu').removeClass('pulse')
-        counter++
-            }
+            $('#menu').removeClass('pulse')
       })
     }
 })

@@ -107,7 +107,6 @@
       const userIds = users.following.map(user => {
       return user._id
     })
-    console.log(data.follower)
     if (userIds.includes(data.user) && data.follower === userId) {
     const list = document.getElementById('activity-list')
     list.innerHTML += `<li class="collection-item dismissable feed-item" data-target="${data.id}">${data.message}<i class="material-icons right pointer feed-closer">close</i></li>`
