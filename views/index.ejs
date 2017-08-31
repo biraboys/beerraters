@@ -97,11 +97,46 @@
   <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io.connect('/', {transports: ['websocket']})
-  socket.on('consumed', function (data) {
-    // console.log(JSON.parse(data.user))
+  socket.on('news', async function (data) {
+    const userId = document.getElementById('user-session-id').href.split('/')[4]
+      const response = await fetch(`/users/${userId}/following`, {
+        method: 'get',
+        credentials: 'same-origin'
+      })
+      const users = await response.json()
+      const userIds = users.following.map(user => {
+      return user._id
+    })
+    console.log(data.follower)
+    if (userIds.includes(data.user) && data.follower === userId) {
     const list = document.getElementById('activity-list')
-    list.innerHTML += `<li class="collection-item"><a href="/users/${data.user._id}">${data.user.username}</a> consumed <a href="/beers/${data.beer._id}">${data.beer.name}</a></li>`
-  })
+    list.innerHTML += `<li class="collection-item dismissable feed-item" data-target="${data.id}">${data.message}<i class="material-icons right pointer feed-closer">close</i></li>`
+
+$('.feed-closer').each(function () {
+}).click(function () {
+  const feedId = this.parentNode.getAttribute('data-target')
+  removeFeedItem(feedId)
+  activityList.removeChild(this.parentNode)
+})
+
+$('.dismissable').each(function () {
+})
+.on('panend', function () {
+  const transFormValue = this.style.transform.substr(11)
+  if (transFormValue.substr(0, 1) === '-') {
+    if (Number(transFormValue.substr(1, 2)) >= 42) {
+      const feedId = this.getAttribute('data-target')
+      removeFeedItem(feedId)
+    }
+  } else {
+    if (Number(transFormValue.substr(0, 2)) >= 42) {
+      const feedId = this.getAttribute('data-target')
+      removeFeedItem(feedId)
+    }
+  }
+})
+  }
+})
 </script>
 <script>
   Materialize.showStaggeredList('#activity-list')

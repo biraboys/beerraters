@@ -240,14 +240,18 @@
       return user._id
     })
       if (userIds.includes(data.user)) {
-      $('#menu').addClass('pulse')
-      $('#menu').click(() => {
+        let counter = 0
+        $('#menu').addClass('pulse')
+          $('#menu').click(() => {
+            $('.tap-target').tapTarget('open')
+            if (counter < 1) {
         $('#feed').html(data.title)
         $('#feed-info').append(data.message)
-        $('.tap-target').tapTarget('open')
         $('#menu').removeClass('pulse')
+        counter++
+            }
       })
-  }
+    }
 })
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
