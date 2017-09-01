@@ -12,6 +12,7 @@ const Jimp = require('jimp')
 // const fs = require('fs')
 const JSONStream = require('JSONStream')
 const {sortByName} = require('../helpers/sort')
+const nodemailer = require('nodemailer')
 
 module.exports = {
   index: async (req, res, next) => {
@@ -72,6 +73,23 @@ module.exports = {
       country_name: country.name
     })
     await beer.save()
+    const stmpTransport = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.GMAIL_U,
+        pass: process.env.GMAIL_PASS
+      }
+    })
+    const mailOptions = {
+      to: process.env.GMAIL_U,
+      from: process.env.GMAIL_U,
+      subject: 'Beer added - Beerraters.com',
+      text: `New beer added to database: http://localhost:6889/beers/${beer._id}\n\n by user: http://localhost:6889/users/${req.session.user._id}`
+    }
+    await stmpTransport.sendMail(mailOptions, err => {
+      if (err) { console.log(err) }
+      res.end()
+    })
     res.redirect(`/beers/${beer._id}`)
   },
   getBeer: async (req, res, next) => {
