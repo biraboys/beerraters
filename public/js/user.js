@@ -38,8 +38,9 @@ if (modalTriggers.length > 0) {
     trigger.addEventListener('click', function () {
       const body = document.getElementsByClassName('review-body')[index]
       const title = document.getElementsByClassName('review-title')[index]
+      const reviewId = title.getAttribute('data-target')
       editModalTitle.innerHTML = title.innerHTML
-      editModalTitle.setAttribute('data-target', title.href.split('/')[4])
+      editModalTitle.setAttribute('data-target', reviewId)
       editReviewForm.body.value = body.innerHTML
       $('#body').trigger('autoresize')
     })
