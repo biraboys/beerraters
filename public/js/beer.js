@@ -575,6 +575,9 @@ reviewForm.addEventListener('submit', async function (e) {
           reviewLink.setAttribute('data-tooltip', 'Reviewed')
           $(reviewLink).tooltip()
           $('#review-modal').modal('close')
+          setTimeout(() => {
+            location.href = location.pathname
+          }, 1000)
         }
       } catch (err) {
         console.log(err)
