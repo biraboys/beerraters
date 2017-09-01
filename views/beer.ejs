@@ -282,7 +282,13 @@
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
     </div>
   </div> -->
+<%- include feedButton.ejs %>
 <%- include footer.ejs %>
+
+<% if (session) { %>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/socket.js"></script>
+<% } %>
 
 <script src="/js/beer.js"></script>
 </body>

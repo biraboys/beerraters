@@ -11,21 +11,17 @@ const followerList = Array.from(document.getElementsByClassName('follower-list')
 const followingList = Array.from(document.getElementsByClassName('following-list'))
 
 followerList.forEach(async follower => {
-  if (follower.childNodes[1].src.split('/')[4] !== 'user-placeholder.png') {
-    const userId = follower.childNodes[3].firstChild.href.split('/')[4]
-    const imageBlob = await getUserProfileImg(userId)
-    const userImage = createUserImage(imageBlob)
-    follower.childNodes[1].src = userImage.src
-  }
+  const userId = follower.childNodes[3].firstChild.href.split('/')[4]
+  const imageBlob = await getUserProfileImg(userId)
+  const userImage = createUserImage(imageBlob)
+  follower.childNodes[1].src = userImage.src
 })
 
 followingList.forEach(async following => {
-  if (following.childNodes[1].src.split('/')[4] !== 'user-placeholder.png') {
-    const userId = following.childNodes[3].firstChild.href.split('/')[4]
-    const imageBlob = await getUserProfileImg(userId)
-    const userImage = createUserImage(imageBlob)
-    following.childNodes[1].src = userImage.src
-  }
+  const userId = following.childNodes[3].firstChild.href.split('/')[4]
+  const imageBlob = await getUserProfileImg(userId)
+  const userImage = createUserImage(imageBlob)
+  following.childNodes[1].src = userImage.src
 })
 
 if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
@@ -38,12 +34,13 @@ if (follow) {
 }
 
 if (modalTriggers.length > 0) {
-  modalTriggers.forEach(trigger => {
+  modalTriggers.forEach((trigger, index) => {
     trigger.addEventListener('click', function () {
-      const title = this.parentNode.childNodes[1].innerHTML
-      const body = this.parentNode.childNodes[5].innerText
-      editModalTitle.innerHTML = title
-      editReviewForm.body.value = body
+      const body = document.getElementsByClassName('review-body')[index]
+      const title = document.getElementsByClassName('review-title')[index]
+      editModalTitle.innerHTML = title.innerHTML
+      editModalTitle.setAttribute('data-target', title.href.split('/')[4])
+      editReviewForm.body.value = body.innerHTML
       $('#body').trigger('autoresize')
     })
   })
@@ -53,7 +50,7 @@ editReviewForm.addEventListener('submit', function (e) {
   e.preventDefault()
   const body = this.body.value
   const title = document.getElementById('edit-modal-title')
-  const reviewId = title.childNodes[1].getAttribute('data-target')
+  const reviewId = title.getAttribute('data-target')
   editReview(reviewId, body)
 })
 
@@ -66,15 +63,13 @@ async function editReview (reviewId, text) {
       method: 'post',
       credentials: 'same-origin',
       body: JSON.stringify({
-        review: text
+        review: text.trim()
       })
     })
     if (response.status === 200) {
       Materialize.toast(`Review sucessfully updated!`, 2000)
       $('#edit-modal').modal('close')
-      setTimeout(() => {
-        location.reload(true)
-      }, 2000)
+      location.reload(true)
     } else {
       Materialize.toast(`Sorry could not edit review`, 2000)
     }
@@ -96,10 +91,14 @@ async function followUser () {
       const value = parseInt(followers.innerHTML) + 1
       followers.innerHTML = value
       follow.innerHTML = 'Unfollow'
+      Materialize.toast(`Now following user`, 2000)
+      location.reload(true)
     } else {
       const value = parseInt(followers.innerHTML) - 1
       followers.innerHTML = value
       follow.innerHTML = 'Follow'
+      Materialize.toast(`Not following user anymore`, 2000)
+      location.reload(true)
     }
   }
 }

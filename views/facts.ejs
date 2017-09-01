@@ -42,7 +42,12 @@
  </div>
 </section>
 
+<%- include feedButton.ejs %>
 <%- include footer.ejs %>
 
+<% if (session) { %>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/socket.js"></script>
+  <% } %>
 </body>
 </html>

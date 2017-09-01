@@ -9,7 +9,7 @@ module.exports = {
   editReview: async (req, res, next) => {
     const { reviewId } = req.params
     const review = req.body.review
-    await Review.findByIdAndUpdate(reviewId, { $set: {body: review} })
-    res.send('Updated')
+    await Review.findByIdAndUpdate(reviewId, { $set: { body: review } })
+    res.end()
   }
 }
