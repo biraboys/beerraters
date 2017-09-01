@@ -135,6 +135,7 @@ async function postRating (index) {
       ratingIcon.setAttribute('fill', '#000000')
       ratingLink.setAttribute('data-tooltip', 'Already rated')
       $(ratingLink).tooltip()
+      location.reload(true)
     }
   } catch (err) {
     console.log(err)

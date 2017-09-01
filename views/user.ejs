@@ -5,19 +5,6 @@
 <section class="main-section">
  <div class="container">
    <div class="row">
-  <!-- Element Showed -->
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-      <a id="menu" class="btn btn-floating btn-large cyan"><i class="material-icons">menu</i></a>
-    </div>
-    <!-- Tap Target Structure -->
-    <div class="tap-target" data-activates="menu">
-      <div class="tap-target-content">
-        <h5 id="feed"></h5>
-        <p id="feed-info"></p>
-      </div>
-    </div>
-
-
   <% if (user === undefined) { %>
     <h1>Sorry could not found user</h1>
      <% } else { %>
@@ -74,11 +61,7 @@
         <ul class="collection">
           <% user.followers.forEach(function(follower) { %>
     <li class="collection-item avatar follower-list">
-    <% if (follower.profileImg.data !== null) { %>
       <img src="" class="circle responsive-img" />
-    <% } else { %>
-      <img src="/images/user-placeholder.png" class="circle responsive-img" />
-    <% } %>
       <% if (follower.status === true) { %>
         <span class="title follower-span"><a href="/users/<%= follower._id %>"><%= follower.username %></a><span class="user-status light-green accent-3 ml-10"></span></span>
       <% } else { %>
@@ -127,19 +110,19 @@
          <% if (user.reviews.length > 0) { %>   
        <ul class="collection no-border" id="reviews-container">
        <% user.reviews.forEach(function(review) { %>
-              <li class="collection-item avatar">
+              <li class="collection-item review-item">
             <span class="title">
-              <a href="/beers/<%= review.beer_id._id %>" data-target="<%= review._id %>"><%= review.beer_id.name %></a>
+              <a class="review-title" href="/beers/<%= review.beer_id._id %>" data-target="<%= review._id %>"><%= review.beer_id.name %></a>
             </span>
             <p>
              <%= review.place %>
+             <% if (session._id === id) { %>
+              <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
+            <% } %>
             </p>
             <p>
-              <span class="card-subtitle"><%= review.body %></span>
+              <span class="card-subtitle review-body"><%= review.body %></span>
             </p>
-             <% if (session._id === id) { %>
-            <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
-          <% } %>
        </li>
         <% }); %>
        </ul>
@@ -216,7 +199,7 @@
 </div>
  </section> 
 
-          
+<%- include feedButton.ejs %>          
 <%- include footer.ejs %>
 <% if (session) { %>
 <script>
@@ -224,32 +207,9 @@
     $('.collapsible').collapsible()
     $('.modal').modal()
 })
-
 </script>
-  <script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io.connect('/', {transports: ['websocket']})
-    socket.on('news', async function (data) {
-      const userId = document.getElementById('user-session-id').href.split('/')[4]
-      const response = await fetch(`/users/${userId}/following`, {
-        method: 'get',
-        credentials: 'same-origin'
-      })
-      const users = await response.json()
-      const userIds = users.following.map(user => {
-      return user._id
-    })
-      if (userIds.includes(data.user) && data.follower === userId) {
-        $('#menu').addClass('pulse')
-        $('#feed').html(data.title)
-        $('#feed-info').append(`<p>${data.message}</p>`)
-          $('#menu').click(() => {
-            $('.tap-target').tapTarget('open')
-            $('#menu').removeClass('pulse')
-      })
-    }
-})
-</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/socket.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
 <script>window.Chart || document.write('<script src="/js/libs/chart.min.js"><\/script>')</script>
 <script src="/js/user.js"></script>
