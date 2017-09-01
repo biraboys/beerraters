@@ -219,32 +219,35 @@ module.exports = {
     if (user.ratings.indexOf(beerId) === -1) {
       const rating = req.body.rating
 
-      await Beer.findByIdAndUpdate(beerId, { $push: { ratings: {rating: rating, user: userId} } })
-      await User.findByIdAndUpdate(userId, { $push: { ratings: beerId } })
+      if (typeof rating === 'number') {
+        await Beer.findByIdAndUpdate(beerId, { $push: { ratings: {rating: rating, user: userId} } })
+        await User.findByIdAndUpdate(userId, { $push: { ratings: beerId } })
 
-      const beer = await Beer.findById(beerId, 'name ratings')
+        const beer = await Beer.findById(beerId, 'name ratings')
 
-      const beerRatings = beer.ratings.map(obj => {
-        return obj.rating
-      })
-      const ratingSum = beerRatings.reduce((a, b) => a + b, 0)
-      const avgRating = ratingSum / beerRatings.length
-      avgRating.toFixed(1)
-
-      await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
-      const users = await User.find({ 'following': user._id }, 'username')
-      const message = `<span><a href="/users/${user._id}">${user.username}</a> rated <a href="/beers/${beer._id}">${beer.name}</a> ${rating}</span>`
-      const title = "Everyone's a critic!"
-      for (const following of users) {
-        const newFeed = new Feed({
-          user_id: following._id,
-          item: message,
-          expiration: Date.now() + 604800000,
-          created: Date.now()
+        const beerRatings = beer.ratings.map(obj => {
+          return obj.rating
         })
-        await newFeed.save()
-        res.io.emit('news', {user: req.session.user._id, follower: String(following._id), id: String(newFeed._id), title: title, message: message})
+        const ratingSum = beerRatings.reduce((a, b) => a + b, 0)
+        const avgRating = ratingSum / beerRatings.length
+        avgRating.toFixed(1)
+
+        await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
+        const users = await User.find({ 'following': user._id }, 'username')
+        const message = `<span><a href="/users/${user._id}">${user.username}</a> rated <a href="/beers/${beer._id}">${beer.name}</a> ${rating}</span>`
+        const title = "Everyone's a critic!"
+        for (const following of users) {
+          const newFeed = new Feed({
+            user_id: following._id,
+            item: message,
+            expiration: Date.now() + 604800000,
+            created: Date.now()
+          })
+          await newFeed.save()
+          res.io.emit('news', {user: req.session.user._id, follower: String(following._id), id: String(newFeed._id), title: title, message: message})
+        }
       }
+
       res.end()
     } else {
       res.send('Already Rated')

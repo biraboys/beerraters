@@ -5,6 +5,7 @@
          <% if (beer === undefined) { %>
             <h1>Sorry could not found beer</h1>
             <% } else { %>
+                      
       <div class="col s12 m3">
         <div class="card-panel flex-center flex-column" id="image-container"></div>                              
       </div>
@@ -177,9 +178,11 @@
 </div>
 </div>
         <div class="modal" id="rating-modal" style="width: 400px;">
+          <form name="ratingForm">
                 <div class="modal-content" id="rating-modal-body">
-                  <div class="container flex-center">
-                      <svg class="add-rating-symbol" style="margin: 5px; cursor: pointer;" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                  <div class="container">
+                    <div class="flex-center">
+                      <svg class="add-rating-symbol" style="margin: 5px; cursor: pointer;" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                         <path d="M0 0h24v24H0z" fill="none"/>
                       </svg>
@@ -199,10 +202,17 @@
                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                         <path d="M0 0h24v24H0z" fill="none"/>
                       </svg>
-                    </div>    
+                    </div>
+                        <p class="range-field">
+                          <input type="range" id="rating-slider" min="1" max="5" value="1" />
+                        </p>
+                        <div class="flex-center">
+                          <button class="btn waves-effect waves-light" for="ratingForm" type="submit" name="action">Rate</button>
+                        </div>
                   </div>
                 </div>
-
+          </form>
+              </div>
                               <div class="modal" id="image-modal">
                 <div class="modal-content" id="image-modal-body">
                           <form action="/beers/<%= beer._id %>/addImage" method="post" enctype="multipart/form-data">

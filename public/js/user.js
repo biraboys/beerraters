@@ -163,6 +163,7 @@ function createUserImage (imageBlob) {
   const objectURL = URL.createObjectURL(imageBlob)
   image.src = objectURL
   image.setAttribute('class', 'responsive-img card-image profile')
+  image.setAttribute('id', 'profile-img')
   return image
 }
 
@@ -278,6 +279,7 @@ if (imageContainer.childNodes.length === 1) {
     const imageBlob = await getUserProfileImg(userId)
     const userImage = createUserImage(imageBlob)
     imageContainer.appendChild(userImage)
+    Materialize.fadeInImage('#profile-img')
   })()
 }
 

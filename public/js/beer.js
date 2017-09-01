@@ -25,6 +25,7 @@ const submitImgBtn = document.getElementById('submit-img-btn')
 const review = document.getElementById('review')
 const reviewLabel = document.getElementById('review-label')
 const reviewBtn = document.getElementById('review-btn')
+const ratingSlider = document.getElementById('rating-slider')
 
 // Click bindings
 consumeLink.onclick = () => {
@@ -78,17 +79,17 @@ function checkIconColor (icon) {
       break
   }
 }
-
-ratingSymbols.forEach((symbol, index) => {
-  symbol.addEventListener('mouseover', () => {
-    changeSymbolColor(symbol, index)
-  })
-  symbol.addEventListener('click', () => {
-    postRating(index)
-  })
+ratingSlider.addEventListener('input', function () {
+  changeSymbolColor(this.value - 1)
 })
 
-function changeSymbolColor (symbol, position) {
+document.forms.ratingForm.addEventListener('submit', e => {
+  e.preventDefault()
+  postRating(ratingSlider.value)
+})
+
+function changeSymbolColor (position) {
+  const symbol = ratingSymbols[position]
   const color = symbol.getAttribute('fill')
   if (color === '#E8EDFA') {
     ratingSymbols.forEach((symbol, index) => {
@@ -98,7 +99,7 @@ function changeSymbolColor (symbol, position) {
     })
   } else {
     ratingSymbols.forEach((symbol, index) => {
-      if (index >= position) {
+      if (index > position) {
         symbol.setAttribute('fill', '#E8EDFA')
       }
     })
@@ -113,9 +114,9 @@ function sortByName (array) {
 }
 
 // DB functions
-async function postRating (index) {
-  const rating = index + 1
+async function postRating (rating) {
   const beerName = document.getElementById('beer-name').innerHTML
+  rating = Number(rating)
   try {
     const response = await fetch(`/beers/${beerId}/rating`, {
       method: 'post',
