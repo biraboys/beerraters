@@ -84,19 +84,6 @@ const userSchema = new Schema({
   registrationTokenExpires: { type: Date, expires: '10s' },
   status: { type: Boolean, default: false }
 })
-
-userSchema.static('findByName', function (userArr, userName) {
-  userName.toLowerCase()
-  userArr = userArr.filter(user => {
-    if (user.active === true) {
-      if (user.username.toLowerCase().includes(userName) || user.name.toLowerCase().includes(userName)) {
-        return user
-      }
-    }
-  })
-  return userArr
-})
-
 // Hash password
 userSchema.pre('save', function (next) {
   if (this.password) {
@@ -106,30 +93,6 @@ userSchema.pre('save', function (next) {
   next()
 })
 
-// // Remove user.id from all other docs
-// userSchema.pre('remove', function (next) {
-//   this.model('user').update({
-//     followers: this._id,
-//     following: this._id
-//   }, {
-//     $pull: {
-//       followers: this._id,
-//       following: this._id
-//     }}, {
-//       multi: true
-//     }, next)
-// })
-// Remove all the assignment docs that reference the removed person.
-// userSchema.pre('remove', function (next) {
-//   this.model('user').update({
-//     $pull: {
-//       followers: this._id,
-//       following: this._id
-//     }
-//   }, next)
-// })
-
-// Titlize name
 userSchema.plugin(titlize, {
   paths: [ 'name' ]
 })

@@ -30,30 +30,5 @@ module.exports = {
     const allBreweries = await Brewery.find({})
     const breweries = await Brewery.findByName(allBreweries, breweryName)
     res.status(200).render('breweries', { breweries: breweries, breweryName: breweryName, session: req.session.user })
-    // let beer
-    // if (beerArr[0] !== undefined) beer = beerArr[0].toObject()
-    // res.status(200).json(beer)
   }
-//   getUserReviews: async (req, res, next) => {
-//     const { userId } = req.params
-//     const userReviews = await User.findById(userId).populate('reviews')
-//     res.status(200).render('reviews', userReviews)
-//   },
-//   newUserReview: async (req, res, next) => {
-//     const { userId } = req.params
-//     // Create a new review
-//     const newReview = new Review(req.body)
-//     // Get user
-//     const user = await User.findById(userId)
-//     // Bind review and user
-//     newReview.user = user
-//     // Save review
-//     await newReview.save()
-//     // Add review to user
-//     user.reviews.push(newReview)
-//     // Save user
-//     await user.save()
-
-//     res.status(201).json(newReview)
-//   }
 }

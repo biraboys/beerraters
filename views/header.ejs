@@ -6,36 +6,18 @@
 
 <title>BeerRaters</title>
 
-<!-- CSS
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<!--<link rel="stylesheet" href="/css/normalize.css">-->
-<!--<link rel="stylesheet" href="/css/skeleton.css">
-<link rel="stylesheet" href="/css/spectre.css">
-<link rel="stylesheet" href="/css/custom.css">-->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 <link href="/css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
-<!--<link rel="stylesheet" href="/css/style.css">-->
-
-      
-
-
-<!-- Favicon
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <link rel="icon" type="image/png" href="/images/beer.png">
 
 </head>
 <body>
 
-  <!-- Modal Trigger -->
-  <!-- <a id="report-bug" class="waves-effect waves-light btn modal-trigger">Modal</a> -->
   <% if (session) { %>
     <a id="report-bug" class="btn-floating btn-large waves-effect waves-light red tooltipped" data-position="top" data-delay="50" data-tooltip="Report a bug"><i class="material-icons">bug_report</i></a>
   <% } %>
   
-
-  <!-- Modal Structure -->
   <div id="report-bug-form" class="modal">
     <form class="col s12" name="bugreport">
       <div class="modal-content">
@@ -56,7 +38,7 @@
     </form>
   </div>
 
-  <div class="navbar-fixed">
+  <div class="navbar-fixed hide-on-med-and-down">
     <nav class="light-blue lighten-1" role="navigation">
     <div class="nav-wrapper container">
       <div class="row">
@@ -90,8 +72,18 @@
         <li><a id="logout"><i class="material-icons left">power_settings_new</i>Logout</a></li>
         <% } %>
       </ul>
-
+    </div>
+  </div>
+</nav>
+</div>
+<nav class="light-blue lighten-1 hide-on-large-only" role="navigation">
+    <div class="nav-wrapper container">
       <ul id="nav-mobile" class="side-nav">
+        <li class="logo" style="margin-bottom: 100px;">
+          <a id="logo-container" class="brand-logo">
+            <img class="responsive-img" src="/images/logo_placeholder.png">
+          </a>
+        </li>
           <% if (!session) { %>
             <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
               <% } else { %>
@@ -108,8 +100,6 @@
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
-      </div>
-  </nav>
-  </div>
+</nav>
   
   <main class="content">

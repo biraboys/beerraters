@@ -184,7 +184,11 @@ async function searchUser (userName) {
       clearContent(pageNavigation)
       users.forEach(async (user, index) => {
         if (index <= 50) {
-          const userCard = generateUserCard(user)
+          console.log(user)
+          const imageBlob = await getUserProfileImg(user._id)
+          const imageObj = createUserImage(imageBlob)
+          console.log(imageObj.src)
+          const userCard = generateUserCard(user, imageObj.src)
           await displayBeer(userCard)
         }
       })
@@ -333,38 +337,25 @@ async function generateBeerCard (beerObj) {
   return beerCard
 }
 
-function generateUserCard (user) {
-  let profileImg
-  if (user.profileImg.length > 0) {
-    profileImg = `/uploads/users/${user._id}/${user.profileImg}`
-  } else {
-    profileImg = '/images/user-placeholder.png'
-  }
+function generateUserCard (user, profileImg) {
   if (user.active) {
     const userCard = `
     <div class="row">
       <div class="card horizontal">
             <div class="card-image">
-              <img class="h-200" src="${profileImg}">
+            <img src="${profileImg}" />
             </div>
             <div class="card-stacked">
             <div class="card-content">
               <div class="card-title">
                 <a class="card-link" href="/users/${user._id}">@${user.username}</a>
-                <img src="/images/flags/${user.country_id.flag}">
               </div> 
-              <div class="card-title">                  
-                <a class="card-link" href="/users/${user._id}">${user.name}</a>
-              </div>
-              <div>
-                  <span class="card-subtitle">Followers: ${user.followers.length}</span>
-                  <span class="card-subtitle">Following: ${user.following.length}</span>
-              </div>
           </div>
         </div>
       </div>
       </div>
         `
+    console.log(userCard)
     return userCard
   }
 }
@@ -517,6 +508,27 @@ async function newBeerCards (beersAmount, beers, startValue, endValue) {
     await displayBeer(beerCard)
   })
   window.scrollTo(0, 50)
+}
+
+async function getUserProfileImg (userId) {
+  try {
+    const response = await fetch(`/users/${userId}/get-profileimage`, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    const img = await response.blob()
+    return img
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function createUserImage (imageBlob) {
+  const image = document.createElement('img')
+  const objectURL = URL.createObjectURL(imageBlob)
+  image.src = objectURL
+  image.setAttribute('class', 'responsive-img card-image profile')
+  return image
 }
 
 function generateButton (direction) {

@@ -47,28 +47,6 @@ $('.dismissable').each(function () {
     }
   }
 })
-// async function getUserContributions () {
-//   try {
-//     const response = await fetch(`/users/${userId}/following`, {
-//       method: 'get',
-//       credentials: 'same-origin'
-//     })
-//     const user = await response.json()
-//     user.following.forEach(following =>{
-//       activityList.innerHTML += `
-//       <li class="collection-item">${following.username} amount of images: ${following.images.length}</li>
-//       <li class="collection-item">${following.username} amount of ratings: ${following.ratings.length}</li>
-//       <li class="collection-item">${following.username} amount of reviews: ${following.reviews.length}</li>
-//       <li class="collection-item">${following.username} amount of consumes: ${following.consumes.length}</li>
-//       `
-//     })
-//     console.log(user)
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
-
-// getUserFollowing()
 
 async function getUsersOnline () {
   const url = `/users/${userId}/following`
@@ -103,27 +81,6 @@ async function getUsersOnline () {
     console.log(err)
   }
 }
-
-// async function getUserProfileImg (userId) {
-//   try {
-//     const response = await fetch(`/users/${userId}/get-profileimage`, {
-//       method: 'get',
-//       credentials: 'same-origin'
-//     })
-//     const img = await response.blob()
-//     return img
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
-
-// function createUserImage (imageBlob) {
-//   const image = document.createElement('img')
-//   const objectURL = URL.createObjectURL(imageBlob)
-//   image.src = objectURL
-//   image.setAttribute('class', 'responsive-img card-image profile')
-//   return image
-// }
 
 async function removeFeedItem (feedId) {
   try {

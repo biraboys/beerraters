@@ -26,17 +26,17 @@ loginForm.addEventListener('submit', async function (e) {
 
     if (data) {
       if (data.active && data.message[0] === 'P') {
-				// Password does not match
+        // Password does not match
         password.className = 'validate invalid'
         passwordMsg.attributes[2].nodeValue = data.message
         loginBtn.classList.remove('disabled')
       } else if (data.active === false) {
-				// User account not activated
+        // User account not activated
         username.className = 'validate invalid'
         usernameMsg.attributes[2].nodeValue = data.message
         loginBtn.classList.remove('disabled')
       } else if (data.message[0] === 'C') {
-				// No user found
+        // No user found
         username.className = 'validate invalid'
         usernameMsg.attributes[2].nodeValue = `${data.message} '${username.value}'`
         loginBtn.classList.remove('disabled')

@@ -33,13 +33,11 @@ registerForm.addEventListener('submit', async function (e) {
 
     if (data) {
       if (data.message[51] === 'u') {
-        console.log(data)
         username.className = 'validate invalid'
         usernameMsg.attributes[2].nodeValue = 'Username already taken.'
         registerBtn.classList.remove('disabled')
       }
       if (data.message[51] === 'e') {
-        console.log(data)
         email.className = 'validate invalid'
         emailMsg.attributes[2].nodeValue = 'Email already taken.'
         registerBtn.classList.remove('disabled')

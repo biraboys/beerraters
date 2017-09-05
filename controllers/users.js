@@ -7,6 +7,7 @@ const async = require('async')
 const bcrypt = require('bcryptjs')
 const Jimp = require('jimp')
 const Feed = require('../models/feed')
+const JSONStream = require('JSONStream')
 
 const controller = module.exports = {
   index: async (req, res, next) => {
@@ -92,7 +93,6 @@ const controller = module.exports = {
     const { userId } = req.params
     const userReviews = await User.findById({userId}, 'reviews').populate('reviews')
 
-    // res.status(200).render('reviews', userReviews)
     res.status(200).json(userReviews)
   },
   newUserReview: async (req, res, next) => {
@@ -114,9 +114,13 @@ const controller = module.exports = {
   },
   findUser: async (req, res, next) => {
     const userName = req.query.q
-    const allusers = await User.find({}, '-password')
-    const users = await User.findByName(allusers, userName)
-    res.status(200).json(users)
+    await User.find({
+      'username': { '$regex': userName, '$options': 'i' }
+    }, 'username')
+    .lean()
+    .cursor()
+    .pipe(JSONStream.stringify())
+    .pipe(res)
   },
   loginUser: async (req, res, next) => {
     const [username, password] = [req.body.username, req.body.password]
@@ -155,10 +159,6 @@ const controller = module.exports = {
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
     if (req.file !== undefined) {
       const image = await Jimp.read(req.file.buffer)
-      // console.log(image.bitmap)
-      // const width = image.bitmap.width
-      // const height = image.bitmap.height
-      // if (width > height) { image.rotate(90) }
       image.cover(150, 150)
       image.quality(60)
       image.getBuffer('image/png', async function (err, data) {
@@ -348,12 +348,10 @@ const controller = module.exports = {
     await User.findOne({ registrationToken: req.params.token, registrationTokenExpires: { $gt: Date.now() } }, (err, user) => {
       if (!user) {
         res.status(200).render('activation', { success: false, message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.', session: req.session.user })
-        // res.json('activation', { success: false, message: 'Activation link expired or has already been used. If you didnt activate your account in time, please register again.' })
       } else {
         User.findOneAndUpdate({ _id: user._id }, { $set: { active: true }, $unset: { registrationToken: '', registrationTokenExpires: '' } }, err => {
           if (err) { console.log(err) }
           res.status(200).render('activation', { success: true, message: 'You have successfully activated your account! You may now login', session: req.session.user })
-          // res.json('activation', { success: true, message: 'You have successfully activated your account!' })
         })
       }
     })

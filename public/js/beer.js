@@ -40,12 +40,6 @@ reviewLink.onclick = () => {
   checkIconColor('review')
 }
 
-// editLink.onclick = () => {
-//   $('#edit-modal').modal('open')
-//   getBeerStyles()
-//   getBeerCountries()
-// }
-
 submitImgBtn.onclick = () => {
   imageModal.classList.remove('active')
 }
@@ -280,158 +274,6 @@ async function avgRatingSymbols () {
   }
 }
 
-// async function getBeerStyles () {
-//   try {
-//     const response = await fetch('/styles')
-//     const styles = await response.json()
-//     sortByName(styles)
-//     styles.forEach(style => {
-//       beerDescriptionForm.style.innerHTML += `
-//        <option value="${style._id}">${style.name}</option>
-//       `
-//     })
-//     beerDescriptionForm.style.onchange = function () {
-//       showMatchingCategories(this.value)
-//     }
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
-
-// async function showMatchingCategories (style) {
-//   try {
-//     const response = await fetch(`/styles/${style}/categories`)
-//     const categories = await response.json()
-//     if (categories.length > 0) {
-//       const categoryInput = beerDescriptionForm.category
-//       const otherCategoryInput = beerDescriptionForm.otherCategory
-//       sortByName(categories)
-//       categoryInput.removeAttribute('disabled')
-//       categoryInput.innerHTML = ''
-//       categories.forEach(category => {
-//         categoryInput.innerHTML +=
-//           `
-//           <option value="${category.name}">${category.name}</option>
-//           `
-//       })
-//       categoryInput.innerHTML += `
-//         <option value="Other">Other</option>
-//         `
-//       beerDescriptionForm.category.onchange = function () {
-//         if (this.value === 'Other') {
-//           otherCategoryInput.removeAttribute('hidden')
-//           otherCategoryInput.setAttribute('required', true)
-//         } else {
-//           otherCategoryInput.setAttribute('hidden', true)
-//           otherCategoryInput.removeAttribute('required')
-//         }
-//       }
-//     }
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
-// async function getBeerCountries () {
-//   try {
-//     const response = await fetch('/countries')
-//     const countries = await response.json()
-//     sortByName(countries)
-//     countries.forEach(country => {
-//       beerDescriptionForm.country.innerHTML += `
-//        <option value="${country._id}">${country.name}</option>
-//       `
-//     })
-//     beerDescriptionForm.country.onchange = function () {
-//       showMatchingBreweries(this.value)
-//     }
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
-
-// async function showMatchingBreweries (country) {
-//   const breweriesInput = beerDescriptionForm.brewery
-//   const otherBreweryInput = beerDescriptionForm.otherBrewery
-//   breweriesInput.removeAttribute('disabled')
-//   breweriesInput.innerHTML = ''
-//   otherBreweryInput.setAttribute('hidden', true)
-//   stateGroup.setAttribute('hidden', true)
-//   try {
-//     const response = await fetch(`/countries/${country}/breweries`)
-//     const breweries = await response.json()
-//     if (breweries.length > 0) {
-//       const loader = document.getElementById('loader')
-//       loader.classList.add('loading')
-//       sortByName(breweries)
-//       breweries.forEach(brewery => {
-//         breweriesInput.innerHTML +=
-//           `
-//           <option value="${brewery.name}">${brewery.name}</option>
-//           `
-//       })
-//       breweriesInput.innerHTML += `
-//         <option value="Other">Other</option>
-//         `
-//       beerDescriptionForm.brewery.onchange = function () {
-//         if (this.value === 'Other') {
-//           otherBreweryInput.removeAttribute('hidden')
-//           getCountryStates(country)
-//         } else {
-//           stateGroup.setAttribute('hidden', true)
-//           otherBreweryInput.setAttribute('hidden', true)
-//         }
-//       }
-//       loader.classList.remove('loading')
-//     } else {
-//       breweriesInput.innerHTML = `
-//         <option value="Other">Other</option>
-//         `
-//       otherBreweryInput.removeAttribute('hidden')
-//       getCountryStates(country)
-//     }
-//   } catch (err) {
-
-//   }
-// }
-
-// async function getCountryStates (country) {
-//   const statesInput = beerDescriptionForm.state
-//   const otherStateInput = beerDescriptionForm.otherState
-//   stateGroup.removeAttribute('hidden')
-//   statesInput.innerHTML = ''
-//   otherStateInput.setAttribute('hidden', true)
-//   try {
-//     const response = await fetch(`/countries/${country}/states`)
-//     const states = await response.json()
-//     if (states.length > 0) {
-//       sortByName(states)
-//       states.forEach(state => {
-//         statesInput.innerHTML +=
-//           `
-//           <option value="${state.name}">${state.name}</option>
-//           `
-//       })
-//       statesInput.innerHTML += `
-//         <option value="Other">Other</option>
-//         `
-//       beerDescriptionForm.brewery.onchange = function () {
-//         if (this.value === 'Other') {
-//           otherStateInput.removeAttribute('hidden')
-//         } else {
-//           otherStateInput.setAttribute('hidden', true)
-//         }
-//       }
-//     } else {
-//       statesInput.innerHTML = `
-//         <option value="Other">Other</option>
-//         `
-//       otherStateInput.removeAttribute('hidden')
-//     }
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
-
 async function getCountries () {
   try {
     const response = await fetch('/countries')
@@ -490,21 +332,6 @@ async function checkReviews () {
     console.log(err)
   }
 }
-
-// async function getImages () {
-//   try {
-//     const response = await fetch(`/beers/${beerId}/images`, {
-//       credentials: 'same-origin'
-//     })
-//     const json = await response.json()
-//     const img = document.createElement('img')
-//     const path = json[0].img_name
-//     img.src = `/images/uploads/beers/${path}`
-//     console.log(img)
-//   } catch (err) {
-
-//   }
-// }
 
 async function getBeerImage () {
   const imageContainer = document.getElementById('image-container')

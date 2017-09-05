@@ -8,8 +8,4 @@ router.route('/')
 router.route('/:breweryId')
   .get(BrewerysController.getBrewery)
 
-// router.route('/:userId/reviews')
-//   .get(BeersController.getUserReviews)
-//   .post(BeersController.newUserReview)
-
 module.exports = router
