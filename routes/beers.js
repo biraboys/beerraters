@@ -10,6 +10,7 @@ const upload = multer({
   }
 })
 const Beer = require('../models/beer')
+const { validateParams, schemas } = require('../helpers/routeHelpers')
 
 router.route('/')
   .get(BeersController.index)
@@ -20,7 +21,7 @@ router.route('/add')
   .post(BeersController.newBeer)
 
 router.route('/:beerId')
-  .get(BeersController.renderBeer)
+  .get(validateParams(schemas.idSchema, 'beerId'), BeersController.renderBeer)
   .post(BeersController.updateBeer)
 
 router.route('/:beerId/consume')

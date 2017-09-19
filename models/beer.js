@@ -1,38 +1,56 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const validate = require('mongoose-validator')
+
+const objectIdValidator = [
+  validate({
+    validator: 'isLength',
+    arguments: [10, 50],
+    message: 'ObjectId must be between {ARGS[0]} and {ARGS[1]} characters'
+  }),
+  validate({
+    validator: 'isAlphanumeric',
+    message: 'ObjectId must contain letters and numbers only.'
+  })
+]
 
 const beerSchema = new Schema({
   name:
   {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
-  description: '',
+  description: String,
   style_id: {
     type: Schema.Types.ObjectId,
     ref: 'style',
-    required: true
+    required: true,
+    validate: objectIdValidator
   },
   style_name: String,
   category_id:
   {
     type: Schema.Types.ObjectId,
     ref: 'category',
-    required: true
+    required: true,
+    validate: objectIdValidator
   },
   category_name: String,
   brewery_id:
   {
     type: Schema.Types.ObjectId,
     ref: 'brewery',
-    required: true
+    required: true,
+    validate: objectIdValidator
   },
   brewery_name: String,
   country_id:
   {
     type: Schema.Types.ObjectId,
     ref: 'country',
-    required: true
+    required: true,
+    validate: objectIdValidator
   },
   country_name: String,
   ratings: [

@@ -9,9 +9,8 @@ const Style = require('../models/style')
 const User = require('../models/user')
 const Jimp = require('jimp')
 const JSONStream = require('JSONStream')
-const {sortByName} = require('../helpers/sort')
+const { sortByName } = require('../helpers/sort')
 const nodemailer = require('nodemailer')
-
 module.exports = {
   index: async (req, res, next) => {
     const beers = await Beer.find({})
@@ -195,7 +194,7 @@ module.exports = {
     .pipe(res)
   },
   renderBeer: async (req, res, next) => {
-    const { beerId } = req.params
+    const { beerId } = req.value.params
     const beer = await Beer.findById(beerId).populate('country_id brewery_id style_id category_id images.user_id', '-password')
     res.status(200).render('beer', {beer: beer, session: req.session.user})
   },
@@ -358,14 +357,13 @@ module.exports = {
   },
   getBeerImages: async (req, res, next) => {
     const { beerId } = req.params
-    Beer.findById(beerId, async function (err, doc) {
-      if (err) return next(err)
-      const user = await User.findById(doc.images[req.body.index].user_id, 'username')
-      res.set({
-        'User-Name': user.username,
-        'Content-Type': doc.images[req.body.index].contentType
-      })
-      res.send(doc.images[req.body.index].data)
+    const imageIndex = req.body.index
+    const beer = await Beer.findById(beerId)
+    const user = await User.findById(beer.images[imageIndex].user_id, 'username')
+    res.set({
+      'User-Name': user.username,
+      'Content-Type': beer.images[imageIndex].contentType
     })
+    res.send(beer.images[imageIndex].data)
   }
 }

@@ -5,17 +5,20 @@ const countrySchema = new Schema({
   name:
   {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   code:
   {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   flag:
   {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   lat:
   {

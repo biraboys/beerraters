@@ -5,7 +5,8 @@ const brewerySchema = new Schema({
   name:
   {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   state_id:
   {

@@ -1,7 +1,7 @@
 // Requires for app
 const express = require('express')
 const path = require('path')
-// const favicon = require('serve-favicon')
+const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
@@ -40,6 +40,7 @@ app.use(session({
 }))
 
 app.use(cookieParser())
+app.use(favicon(path.join(__dirname, '/public/images/beer_placeholder.svg')))
 
 // Routes
 const index = require('./routes/index')
