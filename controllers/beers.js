@@ -7,9 +7,9 @@ const Feed = require('../models/feed')
 const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
+const { sortByName } = require('../helpers/sort')
 const Jimp = require('jimp')
 const JSONStream = require('JSONStream')
-const { sortByName } = require('../helpers/sort')
 const nodemailer = require('nodemailer')
 module.exports = {
   index: async (req, res, next) => {
@@ -32,10 +32,10 @@ module.exports = {
     }
   },
   newBeer: async (req, res, next) => {
-    const [name, styleId, countryId, description] = [req.body.name, req.body.style, req.body.country, req.body.description.trim()]
-    let [categoryId, breweryId] = [req.body.category, req.body.brewery]
+    const [name, styleId, countryId, description] = [req.value.body.name.trim(), req.value.body.style, req.value.body.country, req.value.body.description.trim()]
+    let [categoryId, breweryId] = [req.value.body.category, req.value.body.brewery]
     if (categoryId === 'Other') {
-      categoryId = req.body.otherCategory
+      categoryId = req.body.value.otherCategory
       const newCategory = new Category({
         name: categoryId,
         style_id: styleId
@@ -44,7 +44,7 @@ module.exports = {
       await newCategory.save()
     }
     if (breweryId === 'Other') {
-      breweryId = req.body.otherBrewery
+      breweryId = req.body.value.otherBrewery
       const newBrewery = new Brewery({
         name: breweryId,
         country_id: countryId
@@ -70,23 +70,23 @@ module.exports = {
       country_name: country.name
     })
     await beer.save()
-    const stmpTransport = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: process.env.GMAIL_U,
-        pass: process.env.GMAIL_PASS
-      }
-    })
-    const mailOptions = {
-      to: process.env.GMAIL_U,
-      from: process.env.GMAIL_U,
-      subject: 'Beer added - Beerraters.com',
-      text: `New beer added to database: http://localhost:6889/beers/${beer._id}\n\n by user: http://localhost:6889/users/${req.session.user._id}`
-    }
-    await stmpTransport.sendMail(mailOptions, err => {
-      if (err) { console.log(err) }
-      res.end()
-    })
+    // const stmpTransport = nodemailer.createTransport({
+    //   service: 'Gmail',
+    //   auth: {
+    //     user: process.env.GMAIL_U,
+    //     pass: process.env.GMAIL_PASS
+    //   }
+    // })
+    // const mailOptions = {
+    //   to: process.env.GMAIL_U,
+    //   from: process.env.GMAIL_U,
+    //   subject: 'Beer added - Beerraters.com',
+    //   text: `New beer added to database: http://localhost:6889/beers/${beer._id}\n\n by user: http://localhost:6889/users/${req.session.user._id}`
+    // }
+    // await stmpTransport.sendMail(mailOptions, err => {
+    //   if (err) { console.log(err) }
+    //   res.end()
+    // })
     res.redirect(`/beers/${beer._id}`)
   },
   getBeer: async (req, res, next) => {

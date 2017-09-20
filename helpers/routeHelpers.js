@@ -18,7 +18,34 @@ module.exports = {
       }
     }
   },
+  validateBody: schema => {
+    return (req, res, next) => {
+      const result = Joi.validate(req.body, schema)
+      if (result.error) {
+        return res.status(400).json(result.error)
+      } else {
+        if (!req.value) {
+          req.value = {}
+        }
+        if (!req.value['body']) {
+          req.value['body'] = {}
+        }
+        req.value['body'] = result.value
+        next()
+      }
+    }
+  },
   schemas: {
+    beerSchema: Joi.object().keys({
+      name: Joi.string().required(),
+      description: Joi.string().required(),
+      style: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+      category: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+      brewery: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+      country: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+      otherCategory: Joi.string(),
+      otherBrewery: Joi.string()
+    }),
     idSchema: Joi.object().keys({
       param: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
     })
