@@ -458,5 +458,12 @@ const controller = module.exports = {
     const { feedId } = req.params
     await Feed.findByIdAndRemove(feedId)
     res.send('Done')
+  },
+  checkUser: async (req, res, next) => {
+    if (req.session.user._id === req.params.userId) {
+      res.status(200).render('edit', { session: req.session.user })
+    } else {
+      res.redirect(`/users/${req.session.user._id}`)
+    }
   }
 }

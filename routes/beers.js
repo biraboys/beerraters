@@ -12,10 +12,6 @@ const upload = multer({
 const Beer = require('../models/beer')
 const { validateParams, validateBody, schemas } = require('../helpers/routeHelpers')
 
-router.route('/')
-  .get(BeersController.index)
-  .post(BeersController.newBeer)
-
 router.route('/add')
   .get(BeersController.addBeer)
   .post(validateBody(schemas.beerSchema), BeersController.newBeer)
@@ -25,24 +21,28 @@ router.route('/:beerId')
   .post(BeersController.updateBeer)
 
 router.route('/:beerId/consume')
-  .post(BeersController.consumeBeer)
+  .post(validateParams(schemas.idSchema, 'beerId'), BeersController.consumeBeer)
 
 router.route('/:beerId/review')
-  .get(BeersController.getReviews)
-  .post(BeersController.addBeerReview)
+  .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getReviews)
+  .post([validateParams(schemas.idSchema, 'beerId'),
+    validateBody(schemas.reviewSchema)],
+  BeersController.addBeerReview)
 
 router.route('/:beerId/rating')
-  .get(BeersController.getAverageRating)
-  .post(BeersController.addBeerRating)
+  .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getAverageRating)
+  .post([validateParams(schemas.idSchema, 'beerId'),
+    validateBody(schemas.ratingSchema)],
+  BeersController.addBeerRating)
 
 router.route('/:beerId/contributions')
-  .get(BeersController.getContributions)
+  .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getContributions)
 
 router.route('/:beerId/addImage')
   .post(upload.single('img'), BeersController.addBeerImage)
 
 router.route('/:beerId/getImage')
-  .get(BeersController.getBeerImage)
+  .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getBeerImage)
   .post(BeersController.getBeerImages)
 
 router.route('/fetch/:beerId')

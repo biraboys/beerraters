@@ -177,11 +177,10 @@ a {
 }
 
 .scroll-button {
-  padding: 16px;
   display: none;
   position: fixed;
   bottom:0;
-  right:0;
+  left: 50%;
   cursor: pointer;
 }
 
@@ -216,3 +215,16 @@ a {
 .pointer {
   cursor: pointer;
 }
+
+.desktop-sticky {
+  position: block;
+  top: 0
+}
+
+@media only screen and (min-width: 993px) {
+  .desktop-sticky {
+    position: sticky;
+    top: 100px;
+  }
+}
+

@@ -8,7 +8,7 @@
   <% if (user === undefined) { %>
     <h1>Sorry could not found user</h1>
      <% } else { %>
-     <div class="col s12 m3" style="position: sticky; top: 100px;">
+     <div class="col s12 m12 l3 desktop-sticky">
             <div class="card flex-center flex-column ta-center">
               <div id="profile-img" class="card-image">
                 <% if (user.profileImg.data === null) { %>
@@ -56,7 +56,7 @@
             </div>
               <ul class="collapsible" data-collapsible="accordion">
     <li>
-      <div class="collapsible-header">Followers <span class="card-subtitle">(<span id="followers"><%= followers %></span>)</span><i class="material-icons right">chevron_right</i></div>
+      <div class="collapsible-header active">Followers <span class="card-subtitle">(<span id="followers"><%= followers %></span>)</span><i class="material-icons right">chevron_right</i></div>
       <div class="collapsible-body p-0">
         <ul class="collection">
           <% user.followers.forEach(function(follower) { %>
@@ -96,7 +96,7 @@
     </ul>
           </div>
 
- <div class="col s12 m6 card">
+ <div class="col s12 m12 l6 card">
     <div class="card-tabs">
       <ul class="tabs tabs-fixed-width" style="overflow: hidden;">
         <li class="tab"><a class="active" href="#reviews">Reviews</a></li>
@@ -175,21 +175,18 @@
   </div>
 
 
-  <div class="col s12 m3" style="position: sticky; top: 100px;">
-              <div class="card">
-                <div class="card-content">
-                  <span class="card-title ta-center">Contributions <span class="card-subtitle">(<%= user.reviews.length + user.ratings.length + user.consumes.length + user.images.length %>)</span></span>                   
-                    <canvas id="myChart"></canvas>
-                        
-                </div>
+  <div class="col s12 m12 l3 desktop-sticky">
+        <div class="card">
+            <div class="card-content">
+              <span class="card-title ta-center">Contributions <span class="card-subtitle">(<%= user.reviews.length + user.ratings.length + user.consumes.length + user.images.length %>)</span></span>                   
+                <canvas id="myChart"></canvas>
               </div>
-              <div class="card">
-                <div class="card-content">
-                   <span class="card-title ta-center">Rank <span class="card-subtitle" id="ranking-field"></span></span>        
-                </div>
+            </div>
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title ta-center">Rank <span class="card-subtitle" id="ranking-field"></span></span>            
               </div>
-            
-   
+          </div>
   </div>
 <% } %> 
 <% } else { %>

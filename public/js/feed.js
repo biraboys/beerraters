@@ -1,9 +1,7 @@
 const userId = document.getElementById('user-session-id').href.split('/')[4]
 const activityList = document.getElementById('activity-list')
-const onlineList = document.getElementById('online')
-const offlineList = document.getElementById('offline')
-const offlineFollowers = document.getElementById('offline-followers')
-const onlineFollowers = document.getElementById('online-followers')
+const followingList = document.getElementById('following-list')
+const followingAmount = document.getElementById('following-amount')
 
 async function getUserFollowing () {
   try {
@@ -56,27 +54,22 @@ async function getUsersOnline () {
       credentials: 'same-origin'
     })
     const user = await response.json()
-    let usersOnline = 0
-    let usersOffline = 0
+    followingAmount.innerHTML = user.following.length
     user.following.forEach(async following => {
       if (following.status === true) {
-        usersOnline += 1
-        onlineList.innerHTML +=
+        followingList.innerHTML +=
           `<li class="collection-item avatar follower-list">
             <img src="/images/user-placeholder.png" class="circle responsive-img">
             <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
           </li>`
       } else {
-        usersOffline += 1
-        offlineList.innerHTML +=
+        followingList.innerHTML +=
           `<li class="collection-item avatar follower-list">
             <img src="/images/user-placeholder.png" class="circle responsive-img">
             <span class="title follower-span"><a href="/users/${following._id}">${following.username}</a></span>
           </li>`
       }
     })
-    onlineFollowers.innerHTML = usersOnline
-    offlineFollowers.innerHTML = usersOffline
   } catch (err) {
     console.log(err)
   }

@@ -7,7 +7,7 @@
 <title>BeerRaters</title>
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+<link href="/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 <link href="/css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 <link rel="icon" type="image/png" href="/images/beer.png">
 
@@ -68,7 +68,7 @@
         <li><a href="/register"><i class="material-icons left">explore</i>Sign Up</a></li>
         <li><a href="/login"><i class="material-icons left">input</i>Login</a></li>    
         <% } else { %>
-        <li><a id="user-session-id" href="/users/<%= session._id %>"><i class="material-icons left">person</i><span>My Profile</span></a></li>
+        <li><a id="user-session-id" href="/users/<%= session._id %>"><i class="material-icons left">person</i><span>Profile</span></a></li>
         <li><a id="logout"><i class="material-icons left">power_settings_new</i>Logout</a></li>
         <% } %>
       </ul>

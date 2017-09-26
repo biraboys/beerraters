@@ -3,22 +3,22 @@
  <div class="container pt-5">
    <div class="row">
          <% if (style === undefined) { %>
-          <div class="col s6">
+          <div class="col s12 m12">
             <h1>Sorry could not found style</h1>
           </div>
             <% } else { %>
-            <div class="col s8">
+            <div class="col s12 m12 l8">
               <div class="card">
                 <div class="card-content">
                   <h3><%= style.name %></h3>  
                   <h5>Description</h5>
-                  <p><%= style.description %><p>
+                  <p class="flow-text"><%= style.description %><p>
                   <h5>History</h5>
-                  <p><%= style.history %><p>
+                  <p class="flow-text"><%= style.history %><p>
               </div>
               </div>
             </div>
-            <div class="col s-4 ta-center">
+            <div class="col s12 m8 l4 ta-center">
               <div class="card">
                 <div class="card-content">
                   <span class="card-title">ABV</span>

@@ -10,53 +10,53 @@ const upload = multer({
   }
 })
 
+const { validateParams, schemas } = require('../helpers/routeHelpers')
+
 router.route('/')
   .get(UsersController.index)
   .post(UsersController.newUser)
 
 router.route('/:userId')
-  .get(UsersController.getUser)
+  .get(validateParams(schemas.idSchema, 'userId'), UsersController.getUser)
 
 router.route('/:userId/json')
-  .get(UsersController.getUserJson)
+  .get(validateParams(schemas.idSchema, 'userId'), UsersController.getUserJson)
 
 router.route('/:userId/follow')
-  .post(UsersController.followUser)
+  .post(validateParams(schemas.idSchema, 'userId'), UsersController.followUser)
 
 router.route('/:userId/reviews')
-  .get(UsersController.getUserReviews)
-  .post(UsersController.newUserReview)
+  .get(validateParams(schemas.idSchema, 'userId'), UsersController.getUserReviews)
+  .post(validateParams(schemas.idSchema, 'userId'), UsersController.newUserReview)
 
 router.route('/:userId/get-profileimage')
-  .get(UsersController.getProfileImage)
+  .get(validateParams(schemas.idSchema, 'userId'), UsersController.getProfileImage)
 
 router.route('/:userId/edit')
-  .post(upload.single('profileImg'), UsersController.editProfile)
+  .post([
+    validateParams(schemas.idSchema, 'userId'),
+    upload.single('profileImg')],
+    UsersController.editProfile)
 
 router.route('/:userId/changepassword')
-  .post(UsersController.changePassword)
+  .post(validateParams(schemas.idSchema, 'userId'), UsersController.changePassword)
 
 router.route('/:userId/check-pass')
-  .post(UsersController.checkUserPassword)
+  .post(validateParams(schemas.idSchema, 'userId'), UsersController.checkUserPassword)
 
 router.route('/:userId/remove-account')
-  .post(UsersController.removeUserAccount)
+  .post(validateParams(schemas.idSchema, 'userId'), UsersController.removeUserAccount)
 
-router.get('/:userId/edit', function (req, res) {
-  if (req.session.user._id === req.params.userId) {
-    res.status(200).render('edit', { session: req.session.user })
-  } else {
-    res.redirect(`/users/${req.session.user._id}`)
-  }
-})
+router.route('/:userId/edit')
+  .get(validateParams(schemas.idSchema, 'userId'), UsersController.checkUser)
 
 router.route('/feed/:feedId')
-  .post(UsersController.removeFeedItem)
+  .post(validateParams(schemas.idSchema, 'feedId'), UsersController.removeFeedItem)
 
 router.route('/:userId/following')
-  .get(UsersController.getUserFollowing)
+  .get(validateParams(schemas.idSchema, 'userId'), UsersController.getUserFollowing)
 
 router.route('/:userId/userImages')
-  .post(UsersController.getUserImages)
+  .post(validateParams(schemas.idSchema, 'userId'), UsersController.getUserImages)
 
 module.exports = router

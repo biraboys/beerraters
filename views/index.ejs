@@ -5,8 +5,9 @@
       <br><br>
       <h1 class="header center orange-text">BeerRaters</h1>
       <div class="row center">
-        <h5 class="header col s12 light">Your beer comunnity on the web</h5>
-        <h6 class="header col s12 light">Share, rate and review beers with other beerdrinkers</h6>
+        <h3 class="header col s12 light">Your beer comunnity on the web</h3>
+        <h4 class="header col s12 light">Share, rate and review beers with other beerdrinkers</h4>
+        <h5 class="header col s12 light"><strong>Note:</strong> BeerRaters is currently in a beta staged. We appreciate all your feedback to make it better.</h6>          
       </div>
       <div class="row center">
         <a href="/register" id="download-button" class="btn-large waves-effect waves-light orange">Sign Up</a>
@@ -66,7 +67,7 @@
 <section class="main-section">
   <div class="container">
     <div class="row">
-      <div class="col s12 m8 card">
+      <div class="col s12 m12 l8 card">
         <div class="card-content">
           <span class="card-title">
             Feed
@@ -82,20 +83,19 @@
             </ul>
         </div>
       </div>
-        <div class="col s12 m4">
+        <div class="col s12 m12 l4">
           <div class="card">
             <ul class="collapsible" data-collapsible="accordion">
               <li>
-                <div class="collapsible-header active">Online <span class="card-subtitle">(<span id="online-followers"></span>)</span><i class="material-icons right">chevron_right</i></div>
-                <div class="collapsible-body p-0">
-                  <ul class="collection" id="online">
-                  </ul>
+                <div class="collapsible-header active">
+                  Following
+                  <span class="card-subtitle">
+                     (<span id="following-amount"></span>)
+                  </span>
+                  <i class="material-icons right">chevron_right</i>
                 </div>
-              </li>
-              <li>
-                <div class="collapsible-header">Offline <span class="card-subtitle">(<span id="offline-followers"></span>)</span><i class="material-icons right">chevron_right</i></div>
                 <div class="collapsible-body p-0">
-                  <ul class="collection" id="offline">
+                  <ul class="collection" id="following-list">
                   </ul>
                 </div>
               </li>

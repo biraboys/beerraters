@@ -46,6 +46,14 @@ module.exports = {
       otherCategory: Joi.string(),
       otherBrewery: Joi.string()
     }),
+    reviewSchema: Joi.object().keys({
+      place: Joi.string().required(),
+      location: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+      review: Joi.string().required()
+    }),
+    ratingSchema: Joi.object().keys({
+      rating: Joi.number().required()
+    }),
     idSchema: Joi.object().keys({
       param: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
     })

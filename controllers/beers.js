@@ -12,10 +12,6 @@ const Jimp = require('jimp')
 const JSONStream = require('JSONStream')
 const nodemailer = require('nodemailer')
 module.exports = {
-  index: async (req, res, next) => {
-    const beers = await Beer.find({})
-    res.status(200).json(beers)
-  },
   addBeer: async (req, res, next) => {
     if (!req.session.user) {
       res.redirect('/login')
@@ -109,7 +105,7 @@ module.exports = {
     res.json({ beer: beer, brewery: brewery, country: country, style: style, category: category, rating: rating })
   },
   getReviews: async (req, res, next) => {
-    const { beerId } = req.params
+    const { beerId } = req.value.params
     const beerReviews = await Beer.findById(beerId, 'reviews')
     res.status(200).json(beerReviews)
   },
@@ -200,7 +196,7 @@ module.exports = {
   },
   consumeBeer: async (req, res, next) => {
     const userId = req.session.user._id
-    const { beerId } = req.params
+    const { beerId } = req.value.params
 
     const beer = await Beer.findById(beerId, 'consumes name')
     const user = await User.findById(userId, 'username')
@@ -227,12 +223,12 @@ module.exports = {
     }
   },
   addBeerRating: async (req, res, next) => {
-    const { beerId } = req.params
+    const { beerId } = req.value.params
     const userId = req.session.user._id
     const user = await User.findById(userId, 'username ratings')
 
     if (user.ratings.indexOf(beerId) === -1) {
-      const rating = req.body.rating
+      const rating = req.value.body.rating
 
       if (typeof rating === 'number') {
         await Beer.findByIdAndUpdate(beerId, { $push: { ratings: {rating: rating, user: userId} } })
@@ -269,7 +265,7 @@ module.exports = {
     }
   },
   getAverageRating: async (req, res, next) => {
-    const { beerId } = req.params
+    const { beerId } = req.value.params
     const beer = await Beer.findById(beerId)
     if (beer.avg_rating) {
       res.json(beer.avg_rating)
@@ -314,14 +310,14 @@ module.exports = {
   addBeerReview: async (req, res, next) => {
     const userId = req.session.user._id
     const user = await User.findById(userId, 'username')
-    const { beerId } = req.params
+    const { beerId } = req.value.params
     const beer = await Beer.findById(beerId, 'reviews name')
     if (beer.reviews.indexOf(userId) === -1) {
       const review = new Review({
         user_id: user._id,
-        place: req.body.place,
-        country_id: req.body.location,
-        body: req.body.review,
+        place: req.value.body.place.trim(),
+        country_id: req.value.body.location,
+        body: req.value.body.review.trim(),
         beer_id: beer._id
       })
       await review.save()
