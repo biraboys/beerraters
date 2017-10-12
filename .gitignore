@@ -4,5 +4,9 @@ package-lock.json
 .DS_Store
 npm-debug.log
 .env
+<<<<<<< HEAD
 yarn.lock
 yarn-error.log
+=======
+dump.rdb
+>>>>>>> small fix in user.ejs
