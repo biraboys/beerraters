@@ -8,6 +8,8 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
+const compression = require('compression')
+const helmet = require('helmet')
 require('dotenv').config()
 
 const app = express()
@@ -17,6 +19,7 @@ const redis = require('socket.io-redis')
 io.adapter(redis({ host: 'localhost', port: 6379 }))
 
 // Middleware
+app.use(helmet())
 app.use(function (req, res, next) {
   res.io = io
   next()
@@ -41,6 +44,7 @@ app.use(session({
 
 app.use(cookieParser())
 app.use(favicon(path.join(__dirname, '/public/images/beer_placeholder.svg')))
+app.use(compression())
 
 // Routes
 const index = require('./routes/index')
