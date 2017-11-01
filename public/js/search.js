@@ -184,10 +184,8 @@ async function searchUser (userName) {
       clearContent(pageNavigation)
       users.forEach(async (user, index) => {
         if (index <= 50) {
-          console.log(user)
           const imageBlob = await getUserProfileImg(user._id)
           const imageObj = createUserImage(imageBlob)
-          console.log(imageObj.src)
           const userCard = generateUserCard(user, imageObj.src)
           await displayBeer(userCard)
         }
@@ -379,7 +377,7 @@ function displayErrorMessage (beerName, filter) {
 function displayResultCount (beerName, resultAmount, startValue, endValue) {
   const resultMessage = `
     <div class="row">
-      <h4 class="hero-heading" id="search-results">Results for <strong>"${beerName}"</strong>, showing <span id="start-value">${startValue}</span> - <span id="end-value">${endValue}</span> out of ${resultAmount}</h4>       
+      <h4 id="search-results">Results for <strong>"${beerName}"</strong>, showing <span id="start-value">${startValue}</span> - <span id="end-value">${endValue}</span> out of ${resultAmount}</h4>       
     </div>
   `
   clearContent(resultsContainer)

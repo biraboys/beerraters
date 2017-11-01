@@ -130,6 +130,10 @@
   padding: 0;
 }
 
+.pb-1 {
+  padding-bottom: 1rem;
+}
+
 .chip-link {
   color: rgba(0,0,0,0.6);
 }
@@ -226,5 +230,9 @@ a {
     position: sticky;
     top: 100px;
   }
+}
+
+.bg-gold {
+  background-color: #BC6733;
 }
 
