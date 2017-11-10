@@ -1,9 +1,6 @@
-const userId = document.getElementById('user-session-id').href.split('/')[4]
-const activityList = document.getElementById('activity-list')
-const followingList = document.getElementById('following-list')
-const followingAmount = document.getElementById('following-amount')
-
 async function getUserFollowing () {
+  const userId = document.getElementById('user-session-id').href.split('/')[4]
+  const activityList = document.getElementById('activity-list')
   try {
     const response = await fetch(`/users/${userId}/following`, {
       method: 'get',
@@ -21,7 +18,7 @@ async function getUserFollowing () {
     console.log(err)
   }
 }
-
+const activityList = document.getElementById('activity-list')
 $('.feed-closer').each(function () {
 }).click(function () {
   const feedId = this.parentNode.getAttribute('data-target')
@@ -47,6 +44,9 @@ $('.dismissable').each(function () {
 })
 
 async function getUsersOnline () {
+  const followingList = document.getElementById('following-list')
+  const userId = document.getElementById('user-session-id').href.split('/')[4]
+  const followingAmount = document.getElementById('following-amount')
   const url = `/users/${userId}/following`
   try {
     const response = await fetch(url, {
