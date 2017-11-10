@@ -1,16 +1,3 @@
-// Globals
-const searchForm = document.forms.searchForm
-const beerSearch = document.getElementById('beer-search-btn')
-const userSearch = document.getElementById('user-search-btn')
-const searchButtonArr = Array.from(document.getElementsByClassName('search-btn'))
-const beerContainer = document.getElementById('beer-container')
-const resultsContainer = document.getElementById('results-container')
-const loadingContainer = document.getElementById('loading-container')
-const pageNavigation = document.getElementById('page-navigation')
-const filterOptions = Array.from(document.getElementsByClassName('filter-option'))
-const filterOptionsContainer = document.getElementById('filter-options')
-const scrollButton = document.getElementById('scroll-button')
-
 // Storage check
 function checkSessionStorage () {
   if (sessionStorage.getItem('searchVal') !== null) {
@@ -84,27 +71,31 @@ function setFilterButtonsListeners () {
   }
 }
 
-searchForm.q.addEventListener('keyup', function () {
-  const errorContainer = document.getElementById('error-container')
-  if (this.value.length < 3) {
-    errorContainer.innerHTML = 'Search needs to be at least three characters long'
-  } else {
-    errorContainer.innerHTML = ''
-  }
-})
-
-searchForm.addEventListener('submit', function (e) {
-  e.preventDefault()
-  searchButtonArr.forEach(button => {
-    if (button.classList.contains('active')) {
-      checkSubmitValue(button.name)
+function setSearchformListeners () {
+  const searchForm = document.forms.searchForm
+  const searchButtons = document.getElementsByClassName('search-btn')
+  searchForm.q.addEventListener('keyup', function () {
+    const errorContainer = document.getElementById('error-container')
+    if (this.value.length < 3) {
+      errorContainer.innerHTML = 'Search needs to be at least three characters long'
+    } else {
+      errorContainer.innerHTML = ''
     }
   })
-})
+  searchForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    for (const button of searchButtons) {
+      if (button.classList.contains('active')) {
+        checkSubmitValue(button.name)
+      }
+    }
+  })
+}
 
 function checkSubmitValue (searchItem) {
+  const searchForm = document.forms.searchForm
   const beerName = searchForm.q.value
-  const filterButtons = document.getElementsByClassName('filter-btn')  
+  const filterButtons = document.getElementsByClassName('filter-btn')
   if (beerName.length >= 3) {
     if (searchItem === 'beer') {
       let filter
@@ -122,6 +113,10 @@ function checkSubmitValue (searchItem) {
 
 // DB calls
 async function getInputValues (beerName, filter) {
+  const beerContainer = document.getElementById('beer-container')
+  const resultsContainer = document.getElementById('results-container')
+  const loadingContainer = document.getElementById('loading-container')
+  const pageNavigation = document.getElementById('page-navigation')
   loadingContainer.classList.add('active')
   try {
     const response = await fetch(`/search/beers/${filter}/?q=${beerName}`)
@@ -171,6 +166,10 @@ async function getBeerInfo (beer) {
 }
 
 async function searchUser (userName) {
+  const beerContainer = document.getElementById('beer-container')
+  const resultsContainer = document.getElementById('results-container')
+  const loadingContainer = document.getElementById('loading-container')
+  const pageNavigation = document.getElementById('page-navigation')
   loadingContainer.classList.add('active')
   try {
     const response = await fetch(`/search/users/?q=${userName}`)
@@ -366,11 +365,13 @@ function generateUserCard (user, profileImg) {
 }
 
 function displayBeer (beerCard) {
+  const beerContainer = document.getElementById('beer-container')
   addContent(beerContainer, beerCard)
   sessionStorage.setItem('beerCards', JSON.stringify(beerContainer.innerHTML))
 }
 
 function displayErrorMessage (beerName, filter) {
+  const resultsContainer = document.getElementById('results-container')
   const errorMessage = `
     <div class="row">
       <h4>Sorry, could not find ${filter} <strong>"${beerName}"</strong></h4>
@@ -382,6 +383,7 @@ function displayErrorMessage (beerName, filter) {
 }
 
 function displayResultCount (beerName, resultAmount, startValue, endValue) {
+  const resultsContainer = document.getElementById('results-container')
   const resultMessage = `
     <div class="row">
       <h4 id="search-results">Results for <strong>"${beerName}"</strong>, showing <span id="start-value">${startValue}</span> - <span id="end-value">${endValue}</span> out of ${resultAmount}</h4>       
@@ -401,6 +403,7 @@ function clearContent (element) {
 }
 
 function addNextButton (beersAmount, beers) {
+  const pageNavigation = document.getElementById('page-navigation')
   clearContent(pageNavigation)
   const button = generateButton('next')
   addContent(pageNavigation, button)
@@ -412,6 +415,7 @@ function addNextButton (beersAmount, beers) {
 }
 
 function generateButtons (beersAmount, beers) {
+  const pageNavigation = document.getElementById('page-navigation')
   let startValue = Number(document.getElementById('start-value').innerHTML)
   let endValue = Number(document.getElementById('end-value').innerHTML)
   endValue += 50
@@ -446,6 +450,7 @@ function generateButtons (beersAmount, beers) {
 }
 
 function generateOtherButtons (beersAmount, beers) {
+  const pageNavigation = document.getElementById('page-navigation')
   let startValue = Number(document.getElementById('start-value').innerHTML)
   let endValue = Number(document.getElementById('end-value').innerHTML)
   let button
@@ -505,6 +510,8 @@ function buttonCalculations (direction, startValue, endValue, beersAmount) {
 }
 
 async function newBeerCards (beersAmount, beers, startValue, endValue) {
+  const searchForm = document.forms.searchForm
+  const beerContainer = document.getElementById('beer-container')
   const currentBeers = beers.slice(startValue, endValue)
   displayResultCount(searchForm.q.value, beersAmount, startValue, endValue)
   clearContent(beerContainer)
@@ -546,10 +553,8 @@ function generateButton (direction) {
   return button
 }
 
-window.onscroll = function () { scrollFunction() }
-scrollButton.onclick = topFunction
-
 function scrollFunction () {
+  const scrollButton = document.getElementById('scroll-button')
   if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
     scrollButton.style.display = 'block'
   } else {
@@ -563,7 +568,15 @@ function topFunction () {
   document.documentElement.scrollTop = 0 // For IE and Firefox
 }
 
+function setWindowScroll () {
+  const scrollButton = document.getElementById('scroll-button')
+  window.onscroll = scrollFunction
+  scrollButton.onclick = topFunction
+}
+
 // Init calls
 checkSessionStorage()
 setSearchButtonsListeners()
 setFilterButtonsListeners()
+setSearchformListeners()
+setWindowScroll()
