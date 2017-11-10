@@ -12,71 +12,77 @@ const filterOptionsContainer = document.getElementById('filter-options')
 const scrollButton = document.getElementById('scroll-button')
 
 // Storage check
-if (sessionStorage.getItem('searchVal') !== null) {
-  const searchVal = sessionStorage.getItem('searchVal')
-  sessionStorage.removeItem('searchVal')
-  searchForm.q.value = searchVal
-  searchForm.q.focus()
-  getInputValues(searchVal, 'name')
-}
-
-if (sessionStorage.getItem('beerCards') !== null) {
-  const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
-  const resultMessage = JSON.parse(sessionStorage.getItem('resultMessage'))
-  const navigationButtons = JSON.parse(sessionStorage.getItem('navigationButtons'))
-  const beersJSON = JSON.parse(sessionStorage.getItem('beersJSON'))
-  resultsContainer.innerHTML = resultMessage
-  beerContainer.innerHTML = beerCards
-  pageNavigation.innerHTML = navigationButtons
-  if (beersJSON.length > 50) {
-    generateButtons(beersJSON.length, beersJSON)
+function checkSessionStorage () {
+  if (sessionStorage.getItem('searchVal') !== null) {
+    const searchForm = document.forms.searchForm
+    const searchVal = sessionStorage.getItem('searchVal')
+    sessionStorage.removeItem('searchVal')
+    searchForm.q.value = searchVal
+    searchForm.q.focus()
+    getInputValues(searchVal, 'name')
+  }
+  if (sessionStorage.getItem('beerCards') !== null) {
+    const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
+    const resultMessage = JSON.parse(sessionStorage.getItem('resultMessage'))
+    const navigationButtons = JSON.parse(sessionStorage.getItem('navigationButtons'))
+    const beersJSON = JSON.parse(sessionStorage.getItem('beersJSON'))
+    const beerContainer = document.getElementById('beer-container')
+    const resultsContainer = document.getElementById('results-container')
+    const pageNavigation = document.getElementById('page-navigation')
+    resultsContainer.innerHTML = resultMessage
+    beerContainer.innerHTML = beerCards
+    pageNavigation.innerHTML = navigationButtons
+    if (beersJSON.length > 50) {
+      generateButtons(beersJSON.length, beersJSON)
+    }
   }
 }
 
 // Search buttons and form
-function activeButtons (current) {
+function activeButtons (current, buttons) {
   current.classList.add('active')
   current.classList.remove('white')
   current.classList.remove('black-text')
-  searchButtonArr.forEach(button => {
+  for (const button of buttons) {
     if (button !== current) {
       button.classList.add('white')
       button.classList.add('black-text')
       button.classList.remove('active')
     }
-  })
+  }
 }
 
-function setChecked (active) {
-  active.checked = true
-  filterOptions.forEach(option => {
-    if (option !== active) {
-      option.checked = false
-    }
-  })
-}
-
-beerSearch.addEventListener('click', function () {
-  filterOptionsContainer.style.display = 'block'
-  searchForm.q.select()
-  searchForm.q.focus()
-  activeButtons(this)
-})
-
-userSearch.addEventListener('click', function () {
-  filterOptionsContainer.style.display = 'none'
-  searchForm.q.select()
-  searchForm.q.focus()
-  activeButtons(this)
-})
-
-filterOptions.forEach(option => {
-  option.addEventListener('click', function () {
+function setSearchButtonsListeners () {
+  const beerSearch = document.getElementById('beer-search-btn')
+  const userSearch = document.getElementById('user-search-btn')
+  const filterOptionsContainer = document.getElementById('filter-options')
+  const searchForm = document.forms.searchForm
+  const searchButtons = document.getElementsByClassName('search-btn')
+  beerSearch.addEventListener('click', function () {
+    filterOptionsContainer.style.display = 'block'
     searchForm.q.select()
     searchForm.q.focus()
-    setChecked(this)
+    activeButtons(this, searchButtons)
   })
-})
+  userSearch.addEventListener('click', function () {
+    filterOptionsContainer.style.display = 'none'
+    searchForm.q.select()
+    searchForm.q.focus()
+    activeButtons(this, searchButtons)
+  })
+}
+
+function setFilterButtonsListeners () {
+  const filterButtons = document.getElementsByClassName('filter-btn')
+  const searchForm = document.forms.searchForm
+  for (const button of filterButtons) {
+    button.addEventListener('click', function () {
+      searchForm.q.select()
+      searchForm.q.focus()
+      activeButtons(this, filterButtons)
+    })
+  }
+}
 
 searchForm.q.addEventListener('keyup', function () {
   const errorContainer = document.getElementById('error-container')
@@ -98,14 +104,15 @@ searchForm.addEventListener('submit', function (e) {
 
 function checkSubmitValue (searchItem) {
   const beerName = searchForm.q.value
+  const filterButtons = document.getElementsByClassName('filter-btn')  
   if (beerName.length >= 3) {
     if (searchItem === 'beer') {
       let filter
-      filterOptions.forEach(option => {
-        if (option.checked === true) {
-          filter = option.value
+      for (const button of filterButtons) {
+        if (button.classList.contains('active')) {
+          filter = button.name
         }
-      })
+      }
       getInputValues(beerName, filter)
     } else {
       searchUser(beerName)
@@ -555,3 +562,8 @@ function topFunction () {
   document.body.scrollTop = 0 // For Chrome, Safari and Opera
   document.documentElement.scrollTop = 0 // For IE and Firefox
 }
+
+// Init calls
+checkSessionStorage()
+setSearchButtonsListeners()
+setFilterButtonsListeners()
