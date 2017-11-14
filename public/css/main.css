@@ -12,6 +12,7 @@
     flex-direction: column;
     background-color: #f1f2f1;
     overflow-x: hidden;
+    font-family: 'Raleway', sans-serif;
   }
 
   main {
@@ -236,7 +237,19 @@ a {
   }
 }
 
-.bg-gold {
+.bgc-brown {
   background-color: #BC6733;
+}
+
+.intro-section {
+  padding: 6rem 0 6rem;
+}
+
+.bgc-white {
+  background-color: white;
+}
+
+.bgc-gold {
+  background-color: #BF923B;
 }
 

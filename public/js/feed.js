@@ -1,47 +1,51 @@
-async function getUserFollowing () {
-  const userId = document.getElementById('user-session-id').href.split('/')[4]
-  const activityList = document.getElementById('activity-list')
-  try {
-    const response = await fetch(`/users/${userId}/following`, {
-      method: 'get',
-      credentials: 'same-origin'
-    })
-    const user = await response.json()
-    await user.feed.forEach(feedItem => {
-      const feedListEl = document.createElement('li')
-      feedListEl.setAttribute('class', 'collection-item feed-item')
-      feedListEl.setAttribute('blah', feedItem._id)
-      feedListEl.innerHTML = feedItem.item
-      $(activityList).append(feedListEl)
-    })
-  } catch (err) {
-    console.log(err)
-  }
-}
-const activityList = document.getElementById('activity-list')
-$('.feed-closer').each(function () {
-}).click(function () {
-  const feedId = this.parentNode.getAttribute('data-target')
-  removeFeedItem(feedId)
-  activityList.removeChild(this.parentNode)
-})
+// async function getUserFollowing () {
+//   const userId = document.getElementById('user-session-id').href.split('/')[4]
+//   const activityList = document.getElementById('activity-list')
+//   try {
+//     const response = await fetch(`/users/${userId}/following`, {
+//       method: 'get',
+//       credentials: 'same-origin'
+//     })
+//     const user = await response.json()
+//     console.log(user)
+//     user.feed.forEach(feedItem => {
+//       const feedListEl = document.createElement('li')
+//       feedListEl.setAttribute('class', 'collection-item feed-item')
+//       feedListEl.setAttribute('blah', feedItem._id)
+//       feedListEl.innerHTML = feedItem.item
+//       $(activityList).append(feedListEl)
+//     })
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
 
-$('.dismissable').each(function () {
-})
-.on('panend', function () {
-  const transFormValue = this.style.transform.substr(11)
-  if (transFormValue.substr(0, 1) === '-') {
-    if (Number(transFormValue.substr(1, 2)) >= 42) {
-      const feedId = this.getAttribute('data-target')
-      removeFeedItem(feedId)
+function setRemoveFeedListener () {
+  const activityList = document.getElementById('activity-list')
+  $('.feed-closer').each().click(function () {
+    const feedId = this.parentNode.getAttribute('data-target')
+    removeFeedItem(feedId)
+    activityList.removeChild(this.parentNode)
+  })
+}
+
+function setRemoveFeedListenerOnToucb () {
+  $('.dismissable').each().on('panend', function () {
+    const transFormValue = this.style.transform.substr(11)
+    if (transFormValue.substr(0, 1) === '-') {
+      if (Number(transFormValue.substr(1, 2)) >= 42) {
+        const feedId = this.getAttribute('data-target')
+        removeFeedItem(feedId)
+      }
+    } else {
+      if (Number(transFormValue.substr(0, 2)) >= 42) {
+        const feedId = this.getAttribute('data-target')
+        removeFeedItem(feedId)
+      }
     }
-  } else {
-    if (Number(transFormValue.substr(0, 2)) >= 42) {
-      const feedId = this.getAttribute('data-target')
-      removeFeedItem(feedId)
-    }
-  }
-})
+  })
+
+}
 
 async function getUsersOnline () {
   const followingList = document.getElementById('following-list')
@@ -90,4 +94,6 @@ async function removeFeedItem (feedId) {
 }
 
 getUsersOnline()
-getUserFollowing()
+// getUserFollowing()
+setRemoveFeedListener()
+setRemoveFeedListenerOnToucb()

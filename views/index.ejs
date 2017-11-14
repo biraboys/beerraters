@@ -1,29 +1,22 @@
 <%- include header.ejs %>
 <% if (!session) { %>
-  <section class="main-section">
-    <div class="container flex-center flex-column">
-        <h3>BeerRaters</h3>
-        <h4>Your beer comunnity on the web</h4>
-        <h5>Share, rate and review beers with other beerdrinkers</h5>
-        <h6><strong>Note:</strong> BeerRaters is currently in a beta staged. We appreciate all your feedback to make it better.</h6>          
-        <a href="/register" id="download-button" class="btn-large waves-effect waves-light mt-1">Sign Up</a>
-      </div>
-<div class="intro-section" id="index-banner">
+  <section class="intro-section">
     <div class="container">
       <div class="row">
         <div class="col s12 m6">
-          
+          <img class="responsive-img" src="/images/logo_placeholder.png"/>
         </div>
+        <div class="col s12 m6">
+          <h2>BeerRaters</h2>
+          <h5>Your beer community on the web</h5>
+          <p>BeerRaters is currently in a beta staged. We appreciate all your feedback to make it better.</p>          
+          <a href="/register" id="download-button" class="btn-large waves-effect waves-light mt-1">Sign Up</a>
+        </div>  
       </div>
-
     </div>
-  </div>
-  </section>
-
-
-  <div class="container">
-    <div class="section">
-
+    </section>
+    <section class="intro-section bgc-white">
+      <div class="container">
       <div class="row">
         <div class="col s12 m4">
           <div class="card">
@@ -31,7 +24,6 @@
               <div class="icon-block">
                 <h2 class="center"><i class="material-icons">share</i></h2>
                 <h5 class="center">Share</h5>
-    
                 <p class="light">Share beers with your friends and other beerdrinkers at Beerraters.</p>
               </div>
             </div>
@@ -43,7 +35,6 @@
               <div class="icon-block">
                 <h2 class="center"><i class="material-icons">add_circle_outline</i></h2>
                 <h5 class="center">Add beers</h5>
-    
                 <p class="light">We have over 6000 beers in our database, you can easily add beers to our databse if we dont have it.</p>
               </div>
             </div>
@@ -55,17 +46,24 @@
               <div class="icon-block">
                 <h2 class="center"><i class="material-icons">data_usage</i></h2>
                 <h5 class="center">Contributions</h5>
-    
                 <p class="light">Follow your friends and other community members on Beerraters to see their contributions.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-    </div>
-    <br><br>
   </div>
+  </section>
+  <section class="intro-section">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 m12">
+          <h4 class="ta-center">Help Us Get Better!</h4>
+          <h6 class="ta-center"><a href="/register">Sing up</a> or <a href="/login">login</a> and give us feedback on how we can improve.</h6>        
+        </div>  
+      </div>
+    </div>
+  </section>
 <% } else { %>
 <section class="main-section">
   <div class="container">
