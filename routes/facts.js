@@ -5,7 +5,7 @@ const request = require('request')
 const Beer = require('../models/beer')
 
 router.get('/', (req, res, next) => {
-  console.log('hej')
+  res.render('facts', { session: req.session.user })
 })
 
 module.exports = router

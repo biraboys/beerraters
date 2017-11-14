@@ -116,7 +116,7 @@ const controller = module.exports = {
     const userName = req.query.q
     await User.find({
       'username': { '$regex': userName, '$options': 'i' }
-    }, 'username')
+    }, 'username active')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())

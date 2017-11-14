@@ -268,7 +268,7 @@ module.exports = {
     const { beerId } = req.value.params
     const beer = await Beer.findById(beerId)
     if (beer.avg_rating) {
-      res.json(beer.avg_rating)
+      res.json(beer.avg_rating.toFixed(1))
     } else {
       res.json(0)
     }

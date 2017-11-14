@@ -1,111 +1,109 @@
-// Globals
-const searchForm = document.forms.searchForm
-const beerSearch = document.getElementById('beer-search-btn')
-const userSearch = document.getElementById('user-search-btn')
-const searchButtonArr = Array.from(document.getElementsByClassName('search-btn'))
-const beerContainer = document.getElementById('beer-container')
-const resultsContainer = document.getElementById('results-container')
-const loadingContainer = document.getElementById('loading-container')
-const pageNavigation = document.getElementById('page-navigation')
-const filterOptions = Array.from(document.getElementsByClassName('filter-option'))
-const filterOptionsContainer = document.getElementById('filter-options')
-const scrollButton = document.getElementById('scroll-button')
-
 // Storage check
-if (sessionStorage.getItem('searchVal') !== null) {
-  const searchVal = sessionStorage.getItem('searchVal')
-  sessionStorage.removeItem('searchVal')
-  searchForm.q.value = searchVal
-  searchForm.q.focus()
-  getInputValues(searchVal, 'name')
-}
-
-if (sessionStorage.getItem('beerCards') !== null) {
-  const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
-  const resultMessage = JSON.parse(sessionStorage.getItem('resultMessage'))
-  const navigationButtons = JSON.parse(sessionStorage.getItem('navigationButtons'))
-  const beersJSON = JSON.parse(sessionStorage.getItem('beersJSON'))
-  resultsContainer.innerHTML = resultMessage
-  beerContainer.innerHTML = beerCards
-  pageNavigation.innerHTML = navigationButtons
-  if (beersJSON.length > 50) {
-    generateButtons(beersJSON.length, beersJSON)
+function checkSessionStorage () {
+  if (sessionStorage.getItem('searchVal') !== null) {
+    const searchForm = document.forms.searchForm
+    const searchVal = sessionStorage.getItem('searchVal')
+    sessionStorage.removeItem('searchVal')
+    searchForm.q.value = searchVal
+    searchForm.q.focus()
+    getInputValues(searchVal, 'name')
+  }
+  if (sessionStorage.getItem('beerCards') !== null) {
+    const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
+    const resultMessage = JSON.parse(sessionStorage.getItem('resultMessage'))
+    const navigationButtons = JSON.parse(sessionStorage.getItem('navigationButtons'))
+    const beersJSON = JSON.parse(sessionStorage.getItem('beersJSON'))
+    const beerContainer = document.getElementById('beer-container')
+    const resultsContainer = document.getElementById('results-container')
+    const pageNavigation = document.getElementById('page-navigation')
+    resultsContainer.innerHTML = resultMessage
+    beerContainer.innerHTML = beerCards
+    pageNavigation.innerHTML = navigationButtons
+    if (beersJSON.length > 50) {
+      generateButtons(beersJSON.length, beersJSON)
+    }
   }
 }
 
 // Search buttons and form
-function activeButtons (current) {
+function activeButtons (current, buttons) {
   current.classList.add('active')
   current.classList.remove('white')
   current.classList.remove('black-text')
-  searchButtonArr.forEach(button => {
+  for (const button of buttons) {
     if (button !== current) {
       button.classList.add('white')
       button.classList.add('black-text')
       button.classList.remove('active')
     }
-  })
+  }
 }
 
-function setChecked (active) {
-  active.checked = true
-  filterOptions.forEach(option => {
-    if (option !== active) {
-      option.checked = false
-    }
-  })
-}
-
-beerSearch.addEventListener('click', function () {
-  filterOptionsContainer.style.display = 'block'
-  searchForm.q.select()
-  searchForm.q.focus()
-  activeButtons(this)
-})
-
-userSearch.addEventListener('click', function () {
-  filterOptionsContainer.style.display = 'none'
-  searchForm.q.select()
-  searchForm.q.focus()
-  activeButtons(this)
-})
-
-filterOptions.forEach(option => {
-  option.addEventListener('click', function () {
+function setSearchButtonsListeners () {
+  const beerSearch = document.getElementById('beer-search-btn')
+  const userSearch = document.getElementById('user-search-btn')
+  const filterOptionsContainer = document.getElementById('filter-options')
+  const searchForm = document.forms.searchForm
+  const searchButtons = document.getElementsByClassName('search-btn')
+  beerSearch.addEventListener('click', function () {
+    filterOptionsContainer.style.display = 'block'
     searchForm.q.select()
     searchForm.q.focus()
-    setChecked(this)
+    activeButtons(this, searchButtons)
   })
-})
+  userSearch.addEventListener('click', function () {
+    filterOptionsContainer.style.display = 'none'
+    searchForm.q.select()
+    searchForm.q.focus()
+    activeButtons(this, searchButtons)
+  })
+}
 
-searchForm.q.addEventListener('keyup', function () {
-  const errorContainer = document.getElementById('error-container')
-  if (this.value.length < 3) {
-    errorContainer.innerHTML = 'Search needs to be at least three characters long'
-  } else {
-    errorContainer.innerHTML = ''
+function setFilterButtonsListeners () {
+  const filterButtons = document.getElementsByClassName('filter-btn')
+  const searchForm = document.forms.searchForm
+  for (const button of filterButtons) {
+    button.addEventListener('click', function () {
+      searchForm.q.select()
+      searchForm.q.focus()
+      activeButtons(this, filterButtons)
+    })
   }
-})
+}
 
-searchForm.addEventListener('submit', function (e) {
-  e.preventDefault()
-  searchButtonArr.forEach(button => {
-    if (button.classList.contains('active')) {
-      checkSubmitValue(button.name)
+function setSearchformListeners () {
+  const searchForm = document.forms.searchForm
+  const searchButtons = document.getElementsByClassName('search-btn')
+  searchForm.q.addEventListener('keyup', function () {
+    const errorContainer = document.getElementById('error-container')
+    if (this.value.length < 3) {
+      errorContainer.innerHTML = 'Search needs to be at least three characters long'
+    } else {
+      errorContainer.innerHTML = ''
     }
   })
-})
+  searchForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    for (const button of searchButtons) {
+      if (button.classList.contains('active')) {
+        checkSubmitValue(button.name)
+      }
+    }
+  })
+}
 
 function checkSubmitValue (searchItem) {
+  const searchForm = document.forms.searchForm
   const beerName = searchForm.q.value
+  const filterButtons = document.getElementsByClassName('filter-btn')
   if (beerName.length >= 3) {
     if (searchItem === 'beer') {
       let filter
-      filterOptions.forEach(option => {
-        if (option.checked === true) {
-          filter = option.value
+      for (const button of filterButtons) {
+        if (button.classList.contains('active')) {
+          filter = button.name
         }
-      })
+      }
       getInputValues(beerName, filter)
     } else {
       searchUser(beerName)
@@ -115,6 +113,10 @@ function checkSubmitValue (searchItem) {
 
 // DB calls
 async function getInputValues (beerName, filter) {
+  const beerContainer = document.getElementById('beer-container')
+  const resultsContainer = document.getElementById('results-container')
+  const loadingContainer = document.getElementById('loading-container')
+  const pageNavigation = document.getElementById('page-navigation')
   loadingContainer.classList.add('active')
   try {
     const response = await fetch(`/search/beers/${filter}/?q=${beerName}`)
@@ -164,6 +166,10 @@ async function getBeerInfo (beer) {
 }
 
 async function searchUser (userName) {
+  const beerContainer = document.getElementById('beer-container')
+  const resultsContainer = document.getElementById('results-container')
+  const loadingContainer = document.getElementById('loading-container')
+  const pageNavigation = document.getElementById('page-navigation')
   loadingContainer.classList.add('active')
   try {
     const response = await fetch(`/search/users/?q=${userName}`)
@@ -184,10 +190,8 @@ async function searchUser (userName) {
       clearContent(pageNavigation)
       users.forEach(async (user, index) => {
         if (index <= 50) {
-          console.log(user)
           const imageBlob = await getUserProfileImg(user._id)
           const imageObj = createUserImage(imageBlob)
-          console.log(imageObj.src)
           const userCard = generateUserCard(user, imageObj.src)
           await displayBeer(userCard)
         }
@@ -361,11 +365,13 @@ function generateUserCard (user, profileImg) {
 }
 
 function displayBeer (beerCard) {
+  const beerContainer = document.getElementById('beer-container')
   addContent(beerContainer, beerCard)
   sessionStorage.setItem('beerCards', JSON.stringify(beerContainer.innerHTML))
 }
 
 function displayErrorMessage (beerName, filter) {
+  const resultsContainer = document.getElementById('results-container')
   const errorMessage = `
     <div class="row">
       <h4>Sorry, could not find ${filter} <strong>"${beerName}"</strong></h4>
@@ -377,9 +383,10 @@ function displayErrorMessage (beerName, filter) {
 }
 
 function displayResultCount (beerName, resultAmount, startValue, endValue) {
+  const resultsContainer = document.getElementById('results-container')
   const resultMessage = `
     <div class="row">
-      <h4 class="hero-heading" id="search-results">Results for <strong>"${beerName}"</strong>, showing <span id="start-value">${startValue}</span> - <span id="end-value">${endValue}</span> out of ${resultAmount}</h4>       
+      <h4 id="search-results">Results for <strong>"${beerName}"</strong>, showing <span id="start-value">${startValue}</span> - <span id="end-value">${endValue}</span> out of ${resultAmount}</h4>       
     </div>
   `
   clearContent(resultsContainer)
@@ -396,6 +403,7 @@ function clearContent (element) {
 }
 
 function addNextButton (beersAmount, beers) {
+  const pageNavigation = document.getElementById('page-navigation')
   clearContent(pageNavigation)
   const button = generateButton('next')
   addContent(pageNavigation, button)
@@ -407,6 +415,7 @@ function addNextButton (beersAmount, beers) {
 }
 
 function generateButtons (beersAmount, beers) {
+  const pageNavigation = document.getElementById('page-navigation')
   let startValue = Number(document.getElementById('start-value').innerHTML)
   let endValue = Number(document.getElementById('end-value').innerHTML)
   endValue += 50
@@ -441,6 +450,7 @@ function generateButtons (beersAmount, beers) {
 }
 
 function generateOtherButtons (beersAmount, beers) {
+  const pageNavigation = document.getElementById('page-navigation')
   let startValue = Number(document.getElementById('start-value').innerHTML)
   let endValue = Number(document.getElementById('end-value').innerHTML)
   let button
@@ -500,6 +510,8 @@ function buttonCalculations (direction, startValue, endValue, beersAmount) {
 }
 
 async function newBeerCards (beersAmount, beers, startValue, endValue) {
+  const searchForm = document.forms.searchForm
+  const beerContainer = document.getElementById('beer-container')
   const currentBeers = beers.slice(startValue, endValue)
   displayResultCount(searchForm.q.value, beersAmount, startValue, endValue)
   clearContent(beerContainer)
@@ -541,10 +553,8 @@ function generateButton (direction) {
   return button
 }
 
-window.onscroll = function () { scrollFunction() }
-scrollButton.onclick = topFunction
-
 function scrollFunction () {
+  const scrollButton = document.getElementById('scroll-button')
   if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
     scrollButton.style.display = 'block'
   } else {
@@ -557,3 +567,16 @@ function topFunction () {
   document.body.scrollTop = 0 // For Chrome, Safari and Opera
   document.documentElement.scrollTop = 0 // For IE and Firefox
 }
+
+function setWindowScroll () {
+  const scrollButton = document.getElementById('scroll-button')
+  window.onscroll = scrollFunction
+  scrollButton.onclick = topFunction
+}
+
+// Init calls
+checkSessionStorage()
+setSearchButtonsListeners()
+setFilterButtonsListeners()
+setSearchformListeners()
+setWindowScroll()

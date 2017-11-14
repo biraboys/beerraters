@@ -122,12 +122,20 @@
   margin-top: -1rem;
 }
 
+.mt-1 {
+  margin-top: 1rem;
+}
+
 .bt-1 {
   border-top: 1px solid rgba(160,160,160,0.2)
 }
 
 .p-0 {
   padding: 0;
+}
+
+.pb-1 {
+  padding-bottom: 1rem;
 }
 
 .chip-link {
@@ -226,5 +234,9 @@ a {
     position: sticky;
     top: 100px;
   }
+}
+
+.bg-gold {
+  background-color: #BC6733;
 }
 
