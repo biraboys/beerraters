@@ -7,6 +7,7 @@
 <title>BeerRaters</title>
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 <link href="/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 <link href="/css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 <link rel="icon" type="image/png" href="/images/beer.png">
@@ -39,38 +40,39 @@
   </div>
 
   <div class="navbar-fixed hide-on-med-and-down">
-    <nav class="bg-gold" role="navigation">
+    <nav class="bgc-brown" role="navigation">
     <div class="nav-wrapper container">
       <div class="row">
-        <div class="col m1">
-          <img class="responsive-img" src="/images/logo_placeholder.png" />
+        <div class="col m3">
+          <a href="#" class="brand-logo">BeerRaters</a>
         </div>
-      <div class="col m4">
-        <form name="navSearchForm">
-        <div class="input-field">
-          <input style="height: 100%;" id="search" name="search" type="search" required>
-          <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-          <i class="material-icons">close</i>
+        <div class="col m3">
+            <form name="navSearchForm">
+                <div class="input-field">
+                  <input style="height: 100%;" id="search" name="search" type="search" required>
+                  <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                  <i class="material-icons">close</i>
+                </div>
+              </form>
         </div>
-      </form>
+        <div class="col m6">
+            <ul class="right hide-on-med-and-down">
+                <% if (!session) { %>
+                <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
+                  <% } else { %>
+                <li><a href="/"><i class="material-icons left">rss_feed</i>Feed</a></li>            
+                  <% } %>
+                <% if (!session) { %>
+                <li><a href="/register"><i class="material-icons left">explore</i>Sign Up</a></li>
+                <li><a href="/login"><i class="material-icons left">input</i>Login</a></li>    
+                <% } else { %>
+                <li><a id="user-session-id" href="/users/<%= session._id %>"><i class="material-icons left">person</i><span>Profile</span></a></li>
+                <li><a id="logout"><i class="material-icons left">power_settings_new</i>Logout</a></li>
+                <% } %>
+              </ul>
+        </div>
       </div>
-      <div class="col m6">
-      <ul class="right hide-on-med-and-down">
-        <% if (!session) { %>
-        <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-          <% } else { %>
-        <li><a href="/"><i class="material-icons left">rss_feed</i>Feed</a></li>            
-          <% } %>
-        <% if (!session) { %>
-        <li><a href="/register"><i class="material-icons left">explore</i>Sign Up</a></li>
-        <li><a href="/login"><i class="material-icons left">input</i>Login</a></li>    
-        <% } else { %>
-        <li><a id="user-session-id" href="/users/<%= session._id %>"><i class="material-icons left">person</i><span>Profile</span></a></li>
-        <li><a id="logout"><i class="material-icons left">power_settings_new</i>Logout</a></li>
-        <% } %>
-      </ul>
     </div>
-  </div>
 </nav>
 </div>
 <nav class="light-blue lighten-1 hide-on-large-only" role="navigation">

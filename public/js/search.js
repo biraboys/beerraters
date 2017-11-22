@@ -1,4 +1,6 @@
-// Storage check
+/**
+ * Checks in session storage for previous search and applies it to DOM if found.
+*/
 function checkSessionStorage () {
   if (sessionStorage.getItem('searchVal') !== null) {
     const searchForm = document.forms.searchForm
@@ -25,7 +27,11 @@ function checkSessionStorage () {
   }
 }
 
-// Search buttons and form
+/**
+ * Toggles active class of buttons when user clicks on one.
+ * @param {string} current - DOM element of the clicked button.
+ * @param {string} buttons - The rest of the buttons of the same DOM class.
+*/
 function activeButtons (current, buttons) {
   current.classList.add('active')
   current.classList.remove('white')
@@ -39,6 +45,9 @@ function activeButtons (current, buttons) {
   }
 }
 
+/**
+ * Sets click functions for all search buttons.
+*/
 function setSearchButtonsListeners () {
   const beerSearch = document.getElementById('beer-search-btn')
   const userSearch = document.getElementById('user-search-btn')
