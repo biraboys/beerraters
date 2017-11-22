@@ -464,5 +464,9 @@ const controller = module.exports = {
     } else {
       res.redirect(`/users/${req.session.user._id}`)
     }
+  },
+  getLoginPageFromActivationEmail: async (req, res, next) => {
+    const { username } = req.params
+    res.render('login', { success: true, username: username, session: req.session.user })
   }
 }

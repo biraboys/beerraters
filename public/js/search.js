@@ -8,7 +8,7 @@ function checkSessionStorage () {
     sessionStorage.removeItem('searchVal')
     searchForm.q.value = searchVal
     searchForm.q.focus()
-    getInputValues(searchVal, 'name')
+    searchBeer(searchVal, 'name')
   }
   if (sessionStorage.getItem('beerCards') !== null) {
     const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
@@ -46,7 +46,7 @@ function activeButtons (current, buttons) {
 }
 
 /**
- * Sets click functions for all search buttons.
+ * Sets listeners for beer and user search buttons.
 */
 function setSearchButtonsListeners () {
   const beerSearch = document.getElementById('beer-search-btn')
@@ -68,6 +68,9 @@ function setSearchButtonsListeners () {
   })
 }
 
+/**
+ * Sets listeners for name, style, brewery, and country filter buttons.
+*/
 function setFilterButtonsListeners () {
   const filterButtons = document.getElementsByClassName('filter-btn')
   const searchForm = document.forms.searchForm
@@ -80,6 +83,9 @@ function setFilterButtonsListeners () {
   }
 }
 
+/**
+ * Sets listeners for seach form.
+*/
 function setSearchformListeners () {
   const searchForm = document.forms.searchForm
   const searchButtons = document.getElementsByClassName('search-btn')
@@ -101,27 +107,37 @@ function setSearchformListeners () {
   })
 }
 
-function checkSubmitValue (searchItem) {
+/**
+ * Checks length and filter of search value and starts beer or user search.
+ * @param {string} searchButtonName  - Name of search button.
+*/
+function checkSubmitValue (searchButtonName) {
   const searchForm = document.forms.searchForm
-  const beerName = searchForm.q.value
+  const searchValue = searchForm.q.value
   const filterButtons = document.getElementsByClassName('filter-btn')
-  if (beerName.length >= 3) {
-    if (searchItem === 'beer') {
+  if (searchValue.length >= 3) {
+    if (searchButtonName === 'beer') {
       let filter
       for (const button of filterButtons) {
         if (button.classList.contains('active')) {
           filter = button.name
         }
       }
-      getInputValues(beerName, filter)
+      searchBeer(searchValue, filter)
     } else {
-      searchUser(beerName)
+      searchUser(searchValue)
     }
   }
 }
 
 // DB calls
-async function getInputValues (beerName, filter) {
+
+/**
+ * Searches for beers in the database.
+ * @param {string} beerName - Name of beer from search form.
+ * @param {string} filter - Name, style, brewery, or country of beer.
+*/
+async function searchBeer (beerName, filter) {
   const beerContainer = document.getElementById('beer-container')
   const resultsContainer = document.getElementById('results-container')
   const loadingContainer = document.getElementById('loading-container')
@@ -164,28 +180,22 @@ async function getInputValues (beerName, filter) {
   loadingContainer.classList.remove('active')
 }
 
-async function getBeerInfo (beer) {
-  try {
-    const response = await fetch(`/beers/fetch/${beer._id}`)
-    const json = await response.json()
-    return json
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-async function searchUser (userName) {
+/**
+ * Searches for users in the database.
+ * @param {string} user - Name or username of user from search form.
+*/
+async function searchUser (user) {
   const beerContainer = document.getElementById('beer-container')
   const resultsContainer = document.getElementById('results-container')
   const loadingContainer = document.getElementById('loading-container')
   const pageNavigation = document.getElementById('page-navigation')
   loadingContainer.classList.add('active')
   try {
-    const response = await fetch(`/search/users/?q=${userName}`)
+    const response = await fetch(`/search/users/?q=${user}`)
     const users = await response.json()
     if (users.length < 1) {
       clearContent(beerContainer)
-      displayErrorMessage(userName, 'user')
+      displayErrorMessage(user, 'user')
     } else {
       const startValue = 1
       let endValue
@@ -194,7 +204,7 @@ async function searchUser (userName) {
       } else {
         endValue = users.length
       }
-      displayResultCount(userName, users.length, startValue, endValue)
+      displayResultCount(user, users.length, startValue, endValue)
       clearContent(beerContainer)
       clearContent(pageNavigation)
       users.forEach(async (user, index) => {
@@ -219,6 +229,11 @@ async function searchUser (userName) {
   loadingContainer.classList.remove('active')
 }
 
+/**
+ * Gets image of each beer and returns an HTML representation of a card with beer props.
+ * @param {object} beerObj - Beer object from MongoDB.
+ * @returns {string} HTML representation of a card with beer props.
+*/
 async function generateBeerCard (beerObj) {
   let rating, beerImage, style, brewery, country
   const blobResponse = await fetch(`/beers/${beerObj._id}/getImage`, {

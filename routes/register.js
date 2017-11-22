@@ -1,6 +1,6 @@
 const router = require('express-promise-router')()
 const UsersController = require('../controllers/users')
-const Country = require('../models/country')
+// const { validateParams, schemas } = require('../helpers/routeHelpers')
 
 router.route('/')
   .get(async (req, res, next) => {
@@ -9,10 +9,7 @@ router.route('/')
   .post(UsersController.newUser)
 
 router.route('/:username')
-  .get((req, res, next) => {
-    const { username } = req.params
-    res.render('login', { success: true, username: username, session: req.session.user })
-  })
+  .get(UsersController.getLoginPageFromActivationEmail)
   .post(UsersController.loginUser)
 
 module.exports = router

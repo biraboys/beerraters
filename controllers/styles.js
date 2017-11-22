@@ -4,7 +4,7 @@ const Category = require('../models/category')
 module.exports = {
   index: async (req, res, next) => {
     const styles = await Style.find({}, 'name')
-    res.json(styles)
+    res.status(200).json(styles)
   },
   getStyle: async (req, res, next) => {
     const { styleId } = req.params
@@ -14,6 +14,6 @@ module.exports = {
   getCategories: async (req, res, next) => {
     const {styleId} = req.params
     const categories = await Category.find({style_id: styleId}, 'name')
-    res.json(categories)
+    res.status(200).json(categories)
   }
 }
