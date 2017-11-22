@@ -22,14 +22,24 @@
 
 function setRemoveFeedListener () {
   const activityList = document.getElementById('activity-list')
-  $('.feed-closer').each().click(function () {
-    const feedId = this.parentNode.getAttribute('data-target')
-    removeFeedItem(feedId)
-    activityList.removeChild(this.parentNode)
-  })
+  const feedClosers = document.getElementsByClassName('feed-closer')
+  console.log(feedClosers)
+  for (const closer of feedClosers) {
+    closer.addEventListener('click', function () {
+      const feedId = this.getAttribute('data-target')
+      console.log(this)
+      removeFeedItem(feedId)
+      // activityList.removeChild(this.parentNode.parentNode)
+    })
+  }
+  // $('.feed-closer').each().click(function () {
+  //   const feedId = this.parentNode.getAttribute('data-target')
+  //   removeFeedItem(feedId)
+  //   activityList.removeChild(this.parentNode)
+  // })
 }
 
-function setRemoveFeedListenerOnToucb () {
+function setRemoveFeedListenerOnTouch () {
   $('.dismissable').each().on('panend', function () {
     const transFormValue = this.style.transform.substr(11)
     if (transFormValue.substr(0, 1) === '-') {
@@ -96,4 +106,4 @@ async function removeFeedItem (feedId) {
 getUsersOnline()
 // getUserFollowing()
 setRemoveFeedListener()
-setRemoveFeedListenerOnToucb()
+// setRemoveFeedListenerOnTouch()

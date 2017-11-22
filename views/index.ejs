@@ -73,6 +73,7 @@
           <span class="card-title">
             Feed
           </span>
+          <p>Here you can see all the actions of the users that you follow. Swipe or click the X to remove any item from your feed.</p>
           <ul class="collection no-border" id="activity-list">
               <% if (feed.length > 0) { %>
                 <% feed.forEach(function(feedItem) { %>
@@ -127,7 +128,7 @@
     })
     if (userIds.includes(data.user) && data.follower === userId) {
     const list = document.getElementById('activity-list')
-    list.innerHTML += `<li class="collection-item dismissable feed-item" data-target="${data.id}">${data.message}<i class="material-icons right pointer feed-closer">close</i></li>`
+    list.innerHTML += `<li class="collection-item dismissable feed-item">${data.message}<i data-target="${data.id}" class="material-icons right pointer feed-closer">close</i></li>`
 
 $('.feed-closer').each(function () {
 }).click(function () {

@@ -361,5 +361,10 @@ module.exports = {
       'Content-Type': beer.images[imageIndex].contentType
     })
     res.send(beer.images[imageIndex].data)
+  },
+  getAmoutOfBeerImages: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId)
+    res.status(200).json(beer.images.length)
   }
 }
