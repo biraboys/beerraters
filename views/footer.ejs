@@ -13,9 +13,21 @@
   </footer>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script>window.jQuery || document.write('<script src="/js/libs/jquery.min.js"><\/script>')</script>
+<script>
+  if (!window.jQuery) {
+    const jQuery = document.createElement('script')
+    jQuery.src = "/js/libs/jquery.min.js"
+    document.body.appendChild(jQuery)
+  }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
-<script>window.Materialize || document.write('<script src="/js/libs/materialize.min.js"><\/script>')</script>
+<script>
+if (!window.Materialize) {
+    const Materialize = document.createElement('script')
+    Materialize.src = "/js/libs/materialize.min.js"
+    document.body.appendChild(Materialize)
+  }
+</script>
 <script src="/js/init.js"></script>
 <script src="/js/logout.js"></script>
 <script src="/js/navsearch.js"></script>
