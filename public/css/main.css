@@ -188,8 +188,8 @@ a {
 .scroll-button {
   display: none;
   position: fixed;
-  bottom:0;
-  left: 50%;
+  bottom:10;
+  right: 0;
   cursor: pointer;
 }
 
