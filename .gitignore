@@ -6,3 +6,4 @@ npm-debug.log
 .env
 yarn.lock
 yarn-error.log
+dump.rdb

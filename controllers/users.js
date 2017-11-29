@@ -155,7 +155,6 @@ const controller = module.exports = {
   },
   editProfile: async (req, res, next) => {
     const { userId } = req.params
-
     const [name, displayName, description] = [req.body.name, req.body.displayname, req.body.description]
     if (req.file !== undefined) {
       const image = await Jimp.read(req.file.buffer)
@@ -305,7 +304,11 @@ const controller = module.exports = {
             res.json({ success: false, message: 'No user found with that email adress.' })
           } else {
             User.findOneAndUpdate({ _id: user._id }, { $set: { resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 } }, err => {
-              done(err, token, user)
+              if (!user.active) {
+                res.json({ success: false, message: 'User must be registered and active to do this.' })
+              } else {
+                done(err, token, user)
+              }
             })
           }
         })

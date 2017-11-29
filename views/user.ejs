@@ -44,7 +44,7 @@
                 </div>
                 <div class="card-action flex-center flex-column">
                   <% if (session && session._id === user.id) { %>
-                <a class="waves-effect waves-light btn" href="/users/<%= session._id %>/edit">Edit my profile</a>
+                <a class="waves-effect waves-light btn" href="/users/<%= session._id %>/edit">Edit</a>
                 <% } else { %>
                   <% if (follower) { %>
                     <a class="waves-effect waves-light btn" id="follow" data-id="<%= user._id %>" href="">Unfollow</a>
