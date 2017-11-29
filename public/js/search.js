@@ -148,7 +148,7 @@ async function searchBeer (beerName, filter) {
     const beers = await response.json()
     if (beers.length < 1) {
       clearContent(beerContainer)
-      displayErrorMessage(beerName, 'beer')
+      displayErrorMessage(beerName, 'beer', filter)
     } else {
       const startValue = 1
       let endValue
@@ -394,12 +394,14 @@ function displayBeer (beerCard) {
   sessionStorage.setItem('beerCards', JSON.stringify(beerContainer.innerHTML))
 }
 
-function displayErrorMessage (beerName, filter) {
+function displayErrorMessage (beerName, type, filter) {
   const resultsContainer = document.getElementById('results-container')
+  let addBeerMessage
+  filter === 'name' ? addBeerMessage = 'Add this beer to our database <a href="/beers/add">here!</a>' : addBeerMessage = ''
   const errorMessage = `
     <div class="row">
-      <h4>Sorry, could not find ${filter} <strong>"${beerName}"</strong></h4>
-      <p>Add this beer to our database <a href="/beers/add">here!</a></p>
+      <h4>Sorry, could not find ${type} <strong>"${beerName}"</strong></h4>
+      <p>${addBeerMessage}</p>
     </div>
   `
   clearContent(resultsContainer)
