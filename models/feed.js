@@ -7,7 +7,14 @@ const feedSchema = new Schema({
     ref: 'user',
     required: true
   },
-  item: String,
+  username: { type: String, required: true },
+  type: { type: String, required: true },
+  beer_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'beer',
+    required: true
+  },
+  beer_name: { type: String, required: true },
   expiration: { type: Date, expires: '60s' },
   created: { type: Date }
 })

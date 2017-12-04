@@ -65,6 +65,7 @@ const activation = require('./routes/activation')
 const error = require('./routes/404')
 const resend = require('./routes/resend')
 const report = require('./routes/report')
+const feed = require('./routes/feed')
 
 app.use('/', index)
 app.use('/users', users)
@@ -84,6 +85,7 @@ app.use('/activation', activation)
 app.use('/404', error)
 app.use('/resend', resend)
 app.use('/report', report)
+app.use('/feed', feed)
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'))

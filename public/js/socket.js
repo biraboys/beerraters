@@ -9,7 +9,7 @@ socket.on('news', async function (data) {
   const userIds = users.following.map(user => {
     return user._id
   })
-  if (userIds.includes(data.user) && data.follower === userId) {
+  if (userIds.includes(data.user)) {
     $('#feed-link').addClass('pulse')
     $('#feed-link').click(() => {
       $('#feed-link').removeClass('pulse')

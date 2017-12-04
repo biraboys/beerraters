@@ -20,43 +20,6 @@
 //   }
 // }
 
-function setRemoveFeedListener () {
-  const activityList = document.getElementById('activity-list')
-  const feedClosers = document.getElementsByClassName('feed-closer')
-  console.log(feedClosers)
-  for (const closer of feedClosers) {
-    closer.addEventListener('click', function () {
-      const feedId = this.getAttribute('data-target')
-      console.log(this)
-      removeFeedItem(feedId)
-      // activityList.removeChild(this.parentNode.parentNode)
-    })
-  }
-  // $('.feed-closer').each().click(function () {
-  //   const feedId = this.parentNode.getAttribute('data-target')
-  //   removeFeedItem(feedId)
-  //   activityList.removeChild(this.parentNode)
-  // })
-}
-
-function setRemoveFeedListenerOnTouch () {
-  $('.dismissable').each().on('panend', function () {
-    const transFormValue = this.style.transform.substr(11)
-    if (transFormValue.substr(0, 1) === '-') {
-      if (Number(transFormValue.substr(1, 2)) >= 42) {
-        const feedId = this.getAttribute('data-target')
-        removeFeedItem(feedId)
-      }
-    } else {
-      if (Number(transFormValue.substr(0, 2)) >= 42) {
-        const feedId = this.getAttribute('data-target')
-        removeFeedItem(feedId)
-      }
-    }
-  })
-
-}
-
 async function getUsersOnline () {
   const followingList = document.getElementById('following-list')
   const userId = document.getElementById('user-session-id').href.split('/')[4]
@@ -88,22 +51,61 @@ async function getUsersOnline () {
     console.log(err)
   }
 }
-
-async function removeFeedItem (feedId) {
+async function getFeedItems () {
+  const userId = document.getElementById('user-session-id').href.split('/')[4]
+  const url = `/users/${userId}/following`
   try {
-    const response = await fetch(`/users/feed/${feedId}`, {
-      method: 'post',
+    const response = await fetch(url, {
+      method: 'get',
       credentials: 'same-origin'
     })
-    response.status === 500
-    ? Materialize.toast(`Could not remove feed item`, 2000)
-    : Materialize.toast(`Feed item removed!`, 2000)
+    const user = await response.json()
+    const followingIds = user.following.map(user => {
+      return user._id
+    })
+    getFeed(followingIds)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function getFeed (followingIds) {
+  const activityList = document.getElementById('activity-list')  
+  try {
+    const feed = await fetch('/feed', {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    const json = await feed.json()
+    json.forEach(feedItem => {
+      if (followingIds.includes(feedItem.user_id)) {
+        activityList.innerHTML += `
+        <div class="col s12 m12 l5">
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                <a href="/users/${feedItem.user_id}">${feedItem.username}</a>
+                <i class="material-icons">account_circle</i>
+              </span>
+              <p>${feedItem.type} <a href="/beers/${feedItem.beer_id}">${feedItem.beer_name}</a></p>
+              <div class="card-action">
+                <span>
+                  <i class="material-icons">schedule</i>
+                  ${feedItem.created}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        `
+      }
+    })
+    console.log(json)
   } catch (err) {
     console.log(err)
   }
 }
 
 getUsersOnline()
+getFeedItems()
 // getUserFollowing()
-setRemoveFeedListener()
-// setRemoveFeedListenerOnTouch()
