@@ -77,6 +77,7 @@ const userSchema = new Schema({
   profileImg: { data: Buffer, contentType: String },
   resetPasswordToken: { type: String, default: '' },
   resetPasswordExpires: { type: Date, default: null },
+  reactivationToken: { type: String, default: null },
   role: { type: String, default: 'User' },
   active: { type: Boolean, required: true, default: false },
   registrationToken: { type: String, required: true },

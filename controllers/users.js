@@ -209,7 +209,8 @@ const controller = module.exports = {
         country_id: ''
       },
       $set: {
-        active: false
+        active: false,
+        status: false
       }
     })
     if (!user) {
@@ -472,5 +473,103 @@ const controller = module.exports = {
   getLoginPageFromActivationEmail: async (req, res, next) => {
     const { username } = req.params
     res.render('login', { success: true, username: username, session: req.session.user })
+  },
+  sendReactivationMail: async(req, res, next) => {
+    async.waterfall([
+      done => {
+        crypto.randomBytes(20, (err, buff) => {
+          const token = buff.toString('hex')
+          done(err, token)
+        })
+      },
+      (token, done) => {
+        User.findOne({ email: req.body.email }, (err, user) => {
+          if (!user || err) {
+            res.json({ success: false, message: 'No user found with that email adress.' })
+          } else {
+            if (user.active) {
+              res.json({ success: false, message: 'User is already active.' })
+            } else {
+              User.findOneAndUpdate({ _id: user._id }, { $set: { reactivationToken: token } }, err => {
+                if (err) {
+                  res.json({ success: false, message: 'Something went wrong, please try again later.' })
+                } else {
+                  done(err, token, user)
+                }
+              })
+            }
+          }
+        })
+      },
+      (token, user, done) => {
+        const stmpTransport = nodemailer.createTransport({
+          service: 'Gmail',
+          auth: {
+            user: process.env.GMAIL_U,
+            pass: process.env.GMAIL_PASS
+          }
+        })
+        const mailOptions = {
+          to: user.email,
+          from: 'noreply@beerraters.com',
+          subject: 'Reactivation of account - Beerraters.com',
+          text: `We are glad you want to join us again!\n Please click on the following link, or paste this into your browser to reactivate your account:\n\n http://${req.headers.host}/reactivate/${token}\n\n`
+        }
+        stmpTransport.sendMail(mailOptions, err => {
+          console.log('mail sent')
+          res.json({ success: true, message: `An email has been sent to ${user.email} with further instructions.` })
+          done(err, 'done')
+        })
+      }
+    ], err => {
+      if (err) return next(err)
+      res.redirect('/reactivate')
+    })
+  },
+  getReactivationToken: async (req, res, next) => {
+    await User.findOne({ reactivationToken: req.params.token }, (err, user) => {
+      if (!user || err) {
+        res.status(400).json({ message: 'Something went wrong, please try again later.' })
+      } else {
+        res.render('activate', { token: req.params.token, session: req.session.user })
+      }
+    })
+  },
+  activateUserAccount: async (req, res, next) => {
+    async.waterfall([
+      done => {
+        User.findOne({ reactivationToken: req.params.token }, 'password', (err, user) => {
+          if (!user || err) {
+            res.json({ message: 'Something went wrong, please try again later.' })
+          } else {
+            if (req.body.password === req.body.confirmpass) {
+              user.password = req.body.password
+              user.active = true
+              user.reactivationToken = null
+
+              user.save(err => {
+                if (err) {
+                  if (err.errors != null) {
+                    if (err.errors.password) {
+                      res.json({ message: err.errors.password.message })
+                    } else if (err) {
+                      console.log(err)
+                    } else {
+                      done(err, user)
+                    }
+                  } else {
+                    console.log(err)
+                  }
+                } else {
+                  res.json({ success: true, session: req.session.user })
+                }
+              })
+            } else {
+              res.json({ success: false })
+            }
+          }
+        })
+      }
+    ])
   }
 }
