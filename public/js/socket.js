@@ -10,12 +10,9 @@ socket.on('news', async function (data) {
     return user._id
   })
   if (userIds.includes(data.user) && data.follower === userId) {
-    $('#menu').addClass('pulse')
-    $('#feed').html(data.title)
-    $('#feed-info').append(`<p>${data.message}</p>`)
-    $('#menu').click(() => {
-      $('.tap-target').tapTarget('open')
-      $('#menu').removeClass('pulse')
+    $('#feed-link').addClass('pulse')
+    $('#feed-link').click(() => {
+      $('#feed-link').removeClass('pulse')
     })
   }
 })
