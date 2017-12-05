@@ -131,15 +131,17 @@ const controller = module.exports = {
           const userSession = { _id: user._id }
           req.session.user = userSession
           await User.findByIdAndUpdate(userSession, { $set: { status: true } })
-          res.json({ success: true, message: 'Success!' })
+          res.status(200).json({ success: true, message: 'Success!' })
         } else {
-          res.json({ success: false, active: true, message: 'Password does not match.' })
+          res.status(400).json({ success: false, active: true, message: 'Password does not match.' })
         }
+      } else if (!user.password) {
+        res.status(400).json({ success: false, active: false, message: 'User not active, please reactivate your account first.' })
       } else {
-        res.json({ success: false, active: false, message: 'Please verify your account before logging in.' })
+        res.status(400).json({ success: false, active: false, message: 'Please verify your account before logging in.' })
       }
     } else {
-      res.json({ success: false, active: true, message: 'Could not find user with username' })
+      res.status(400).json({ success: false, active: true, message: 'Could not find user with username' })
     }
   },
   logoutUser: async (req, res, next) => {
