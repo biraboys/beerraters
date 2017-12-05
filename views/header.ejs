@@ -60,7 +60,7 @@
                 <% if (!session) { %>
                 <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
                   <% } else { %>
-                <li><a href="/"><i class="material-icons left">rss_feed</i>Feed</a></li>            
+                <li><a href="/" class="btn" id="feed-link"><i class="material-icons left">rss_feed</i>Feed</a></li>            
                   <% } %>
                 <% if (!session) { %>
                 <li><a href="/register"><i class="material-icons left">explore</i>Sign Up</a></li>
@@ -75,8 +75,8 @@
     </div>
 </nav>
 </div>
-<nav class="light-blue lighten-1 hide-on-large-only" role="navigation">
-    <div class="nav-wrapper container">
+<nav class="bgc-brown hide-on-large-only" role="navigation">
+    <div class="nav-wrapper">
       <ul id="nav-mobile" class="side-nav">
         <li class="logo" style="margin-bottom: 100px;">
           <a id="logo-container" class="brand-logo">
