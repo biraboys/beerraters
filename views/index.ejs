@@ -88,8 +88,8 @@
     <div class="row">
       <div class="col s12 m12 l8 card">
         <div class="card-content">
-          <span class="card-title">
-            <h3>Feed <span class="new badge">0</span></h3>
+          <span class="card-title" id="feed-info-card-title">
+            <h3>Feed <span class="new badge" id="new-feed-counter">0</span></h3>
           </span>
           <p>Here you can see all the actions of the users that you follow. Feed items will automatically be removed after one week.</p>          
         </div>
@@ -123,29 +123,8 @@
 <%- include footer.ejs %>
 
 <% if (session) { %>
-  <script src="/js/feed.js"></script>
   <script src="/socket.io/socket.io.js"></script>
-<script>
-  const socket = io.connect('/', {transports: ['websocket']})
-  socket.on('news', async function (data) {
-    const userId = document.getElementById('user-session-id').href.split('/')[4]
-      const response = await fetch(`/users/${userId}/following`, {
-        method: 'get',
-        credentials: 'same-origin'
-      })
-      const users = await response.json()
-      const userIds = users.following.map(user => {
-      return user._id
-    })
-    if (userIds.includes(data.user) && data.follower === userId) {
-      const list = document.getElementById('activity-list')
-      list.innerHTML += `<li class="collection-item feed-item">${data.message}</li>`
-    }
-})
-</script>
-<script>
-  Materialize.showStaggeredList('#activity-list')
-</script>    
+  <script src="/js/feed.js"></script>
   <% } %>
 </body>
 </html>

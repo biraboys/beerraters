@@ -1,24 +1,41 @@
-// async function getUserFollowing () {
-//   const userId = document.getElementById('user-session-id').href.split('/')[4]
-//   const activityList = document.getElementById('activity-list')
-//   try {
-//     const response = await fetch(`/users/${userId}/following`, {
-//       method: 'get',
-//       credentials: 'same-origin'
-//     })
-//     const user = await response.json()
-//     console.log(user)
-//     user.feed.forEach(feedItem => {
-//       const feedListEl = document.createElement('li')
-//       feedListEl.setAttribute('class', 'collection-item feed-item')
-//       feedListEl.setAttribute('blah', feedItem._id)
-//       feedListEl.innerHTML = feedItem.item
-//       $(activityList).append(feedListEl)
-//     })
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
+const socket = io.connect('/', {transports: ['websocket']})
+socket.on('news', async function (feedItem) {
+  const userId = document.getElementById('user-session-id').href.split('/')[4]
+  const response = await fetch(`/users/${userId}/following`, {
+    method: 'get',
+    credentials: 'same-origin'
+  })
+  const users = await response.json()
+  const userIds = users.following.map(user => {
+    return user._id
+  })
+  if (userIds.includes(feedItem.user_id)) {
+    const activityList = document.getElementById('activity-list')
+    const newFeedCounter = document.getElementById('new-feed-counter')
+    let counter = Number(newFeedCounter.innerText)
+    counter++
+    newFeedCounter.innerText = counter
+    activityList.innerHTML += `
+      <div class="col s12 m12 l4">
+        <div class="card" style="border:solid #BF923B;">
+          <div class="card-content">
+            <span class="card-title">
+              <i class="material-icons">account_circle</i>
+              <a href="/users/${feedItem.user_id}">${feedItem.username}</a>
+            </span>
+            <p>${feedItem.type} <a href="/beers/${feedItem.beer_id}">${feedItem.beer_name}</a></p>
+            </div>
+            <div class="card-action">
+              <span>
+                <i class="material-icons">schedule</i>
+                ${feedItem.created}
+              </span>
+            </div>
+          </div>
+      </div>
+      `
+  }
+})
 
 async function getUsersOnline () {
   const followingList = document.getElementById('following-list')
@@ -70,37 +87,40 @@ async function getFeedItems () {
 }
 
 async function getFeed (followingIds) {
-  const activityList = document.getElementById('activity-list')  
+  const activityList = document.getElementById('activity-list')
   try {
     const feed = await fetch('/feed', {
       method: 'get',
       credentials: 'same-origin'
     })
     const json = await feed.json()
+    json.sort((a, b) => {
+      return new Date(b.created) - new Date(a.created)
+    })
     json.forEach(feedItem => {
+      feedItem.created = new Date(feedItem.created.toLocaleString())
       if (followingIds.includes(feedItem.user_id)) {
         activityList.innerHTML += `
-        <div class="col s12 m12 l5">
+        <div class="col s12 m12 l4">
           <div class="card">
             <div class="card-content">
               <span class="card-title">
-                <a href="/users/${feedItem.user_id}">${feedItem.username}</a>
-                <i class="material-icons">account_circle</i>
+                <i class="material-icons va-middle fs-32">account_circle</i>
+                <a href="/users/${feedItem.user_id}" class="va-middle">${feedItem.username}</a>
               </span>
               <p>${feedItem.type} <a href="/beers/${feedItem.beer_id}">${feedItem.beer_name}</a></p>
+              </div>
               <div class="card-action">
                 <span>
-                  <i class="material-icons">schedule</i>
-                  ${feedItem.created}
+                  <i class="material-icons va-middle fs-32">schedule</i>
+                  <span class="class="va-middle">${feedItem.created}</span>
                 </span>
               </div>
             </div>
-          </div>
         </div>
         `
       }
     })
-    console.log(json)
   } catch (err) {
     console.log(err)
   }
@@ -108,4 +128,3 @@ async function getFeed (followingIds) {
 
 getUsersOnline()
 getFeedItems()
-// getUserFollowing()

@@ -1,5 +1,5 @@
 const socket = io.connect('/', {transports: ['websocket']})
-socket.on('news', async function (data) {
+socket.on('news', async function (feedItem) {
   const userId = document.getElementById('user-session-id').href.split('/')[4]
   const response = await fetch(`/users/${userId}/following`, {
     method: 'get',
@@ -9,7 +9,7 @@ socket.on('news', async function (data) {
   const userIds = users.following.map(user => {
     return user._id
   })
-  if (userIds.includes(data.user)) {
+  if (userIds.includes(feedItem.user_id)) {
     $('#feed-link').addClass('pulse')
     $('#feed-link').click(() => {
       $('#feed-link').removeClass('pulse')
