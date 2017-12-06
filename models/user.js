@@ -56,7 +56,7 @@ const passwordValidator = [
 
 const userSchema = new Schema({
   username: { type: String, required: true, lowercase: true, unique: true, validate: usernameValidator },
-  name: { type: String },
+  name: { type: String, default: '' },
   email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
   password: { type: String, required: true, validate: passwordValidator },
   registered: { type: Date, default: Date.now },

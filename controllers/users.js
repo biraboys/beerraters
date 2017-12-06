@@ -204,7 +204,6 @@ const controller = module.exports = {
         name: '',
         resetPasswordExpires: '',
         resetPasswordToken: '',
-        profileImg: '',
         followers: '',
         following: '',
         description: '',
@@ -216,8 +215,15 @@ const controller = module.exports = {
       }
     })
     if (!user) {
-      res.json({ message: 'No user found' })
+      res.status(404).json({ message: 'No user found' })
     } else {
+      Jimp.read('./public/images/user-placeholder.png', function (err, image) {
+        image.quality(60)
+        image.getBuffer('image/png', async function (err, data) {
+          if (err) throw err
+          await User.findByIdAndUpdate(user._id, { $set: { profileImg: { data: data, contentType: 'image/png' } } })
+        })
+      })
       req.session.destroy(err => {
         if (err) {
           res.status(500).json({ err: 'Internal server error' })
@@ -548,14 +554,6 @@ const controller = module.exports = {
               user.password = req.body.password
               user.active = true
               user.reactivationToken = undefined
-
-              Jimp.read('./public/images/user-placeholder.png', function (err, image) {
-                image.quality(60)
-                image.getBuffer('image/png', async function (err, data) {
-                  if (err) throw err
-                  await User.findByIdAndUpdate(user._id, { $set: { profileImg: { data: data, contentType: 'image/png' } } })
-                })
-              })
 
               user.save(err => {
                 if (err) {
