@@ -28,44 +28,47 @@ module.exports = {
     }
   },
   newBeer: async (req, res, next) => {
-    const [name, styleId, countryId, description] = [req.value.body.name.trim(), req.value.body.style, req.value.body.country, req.value.body.description.trim()]
+    const [name, styleId, countryId, description, otherCategory, otherBrewery] = [req.value.body.name.trim(), req.value.body.style, req.value.body.country, req.value.body.description.trim(), req.value.body.otherCategory.trim(), req.value.body.otherBrewery.trim()]
     let [categoryId, breweryId] = [req.value.body.category, req.value.body.brewery]
-    if (categoryId === 'Other') {
-      categoryId = req.body.value.otherCategory
-      const newCategory = new Category({
-        name: categoryId,
-        style_id: styleId
-      })
-      categoryId = newCategory._id
-      await newCategory.save()
+    if (otherCategory && otherCategory.length > 0) {
+      const pattern = /^[0-9a-fA-F$åäöÅÄÖ]+$/i
+      console.log(otherCategory)
+      console.log(pattern.test(otherCategory))
+      // const newCategory = new Category({
+      //   name: otherCategory.trim(),
+      //   style_id: styleId
+      // })
+      // categoryId = newCategory._id
+      // await newCategory.save()
     }
-    if (breweryId === 'Other') {
-      breweryId = req.body.value.otherBrewery
-      const newBrewery = new Brewery({
-        name: breweryId,
-        country_id: countryId
-      })
-      breweryId = newBrewery._id
-      await newBrewery.save()
+    if (otherBrewery && otherBrewery.length > 0) {
+      console.log(otherBrewery)
+      console.log(otherBrewery.length)
+      // const newBrewery = new Brewery({
+      //   name: otherBrewery.trim(),
+      //   country_id: countryId
+      // })
+      // breweryId = newBrewery._id
+      // await newBrewery.save()
     }
-    const category = await Category.findById(categoryId, 'name')
-    const style = await Style.findById(styleId, 'name')
-    const country = await Country.findById(countryId, 'name')
-    const brewery = await Brewery.findById(breweryId, 'name')
+    // const category = await Category.findById(categoryId, 'name')
+    // const style = await Style.findById(styleId, 'name')
+    // const country = await Country.findById(countryId, 'name')
+    // const brewery = await Brewery.findById(breweryId, 'name')
 
-    const beer = new Beer({
-      name: name,
-      description: description,
-      category_id: categoryId,
-      category_name: category.name,
-      style_id: styleId,
-      style_name: style.name,
-      brewery_id: breweryId,
-      brewery_name: brewery.name,
-      country_id: countryId,
-      country_name: country.name
-    })
-    await beer.save()
+    // const beer = new Beer({
+    //   name: name,
+    //   description: description,
+    //   category_id: categoryId,
+    //   category_name: category.name,
+    //   style_id: styleId,
+    //   style_name: style.name,
+    //   brewery_id: breweryId,
+    //   brewery_name: brewery.name,
+    //   country_id: countryId,
+    //   country_name: country.name
+    // })
+    // await beer.save()
     // const stmpTransport = nodemailer.createTransport({
     //   service: 'Gmail',
     //   auth: {
@@ -83,7 +86,8 @@ module.exports = {
     //   if (err) { console.log(err) }
     //   res.end()
     // })
-    res.redirect(`/beers/${beer._id}`)
+    // res.redirect(`/beers/${beer._id}`)
+    res.end()
   },
   getBeer: async (req, res, next) => {
     const { beerId } = req.params
@@ -204,19 +208,17 @@ module.exports = {
     if (beer.consumes.indexOf(user._id) === -1) {
       await Beer.findByIdAndUpdate(beerId, { $push: { consumes: user._id } })
       await User.findByIdAndUpdate(user._id, { $push: { consumes: beerId } })
-      const users = await User.find({ 'following': user._id }, 'username')
-      const message = `<span><a href="/users/${user._id}">${user.username}</a> consumed <a href="/beers/${beer._id}">${beer.name}</a><span>`
-      const title = "Someone's thirsty!"
-      for (const following of users) {
-        const newFeed = new Feed({
-          user_id: following._id,
-          item: message,
-          expiration: Date.now() + 604800000,
-          created: Date.now()
-        })
-        await newFeed.save()
-        res.io.emit('news', {user: req.session.user._id, follower: String(following._id), id: String(newFeed._id), title: title, message: message})
-      }
+      const newFeed = new Feed({
+        user_id: user._id,
+        username: user.username,
+        type: 'consumed',
+        beer_id: beer._id,
+        beer_name: beer.name,
+        expiration: Date.now() + 604800000,
+        created: Date.now()
+      })
+      await newFeed.save()
+      res.io.emit('news', newFeed)
       res.end()
     } else {
       res.send('Already consumed, you thirsty bastard!')

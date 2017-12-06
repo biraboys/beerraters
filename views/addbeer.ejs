@@ -19,11 +19,8 @@
               <select id="style" name="style" required>
                 <option value="" disabled selected>Select style</option>
                 <% styles.forEach(function(style, index) { %>
-                  <% if (style.name !== 'Other style') { %> 
                     <option value="<%= style._id %>"><%= style.name %></option>
-                    <% } %>
                     <% }); %>
-                    <option value="Other style">Other style</option>
               </select>
               <label for="style">Style</label>
             </div>
@@ -65,7 +62,6 @@
     </div>
   </section> 
   
-  <%- include feedButton.ejs %>
   <%- include footer.ejs %>
   
   <% if (session) { %>

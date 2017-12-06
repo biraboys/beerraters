@@ -25,9 +25,9 @@ async function showMatchingCategories (style) {
         categoryInput.innerHTML +=
         `<option value="${category._id}">${category.name}</option>`
       })
-      categoryInput.innerHTML += `<option value="Other">Other</option>`
+      categoryInput.innerHTML += `<option value="180158b3c3014c618706d0d7">Other</option>`
       addBeerForm.category.onchange = function () {
-        if (this.value === 'Other') {
+        if (this.value === '180158b3c3014c618706d0d7') {
           otherCategoryInput.removeAttribute('hidden')
           otherCategoryInput.setAttribute('required', true)
         } else {
@@ -37,7 +37,7 @@ async function showMatchingCategories (style) {
       }
     } else {
       categoryInputField.classList.remove('hide')
-      categoryInput.innerHTML = `<option value="Other">Other</option>`
+      categoryInput.innerHTML = `<option value="180158b3c3014c618706d0d7">Other</option>`
       otherCategoryInput.removeAttribute('hidden')
       otherCategoryInput.setAttribute('required', true)
     }
@@ -65,9 +65,9 @@ async function showMatchingBreweries (country) {
         breweryInput.innerHTML +=
           `<option value="${brewery._id}">${brewery.name}</option>`
       })
-      breweryInput.innerHTML += `<option value="Other">Other</option>`
+      breweryInput.innerHTML += `<option value="f92603c88a6f4ae6a76d513a">Other</option>`
       addBeerForm.brewery.onchange = function () {
-        if (this.value === 'Other') {
+        if (this.value === 'f92603c88a6f4ae6a76d513a') {
           otherBreweryInput.removeAttribute('hidden')
           otherBreweryInput.setAttribute('required', true)
         } else {
@@ -77,7 +77,7 @@ async function showMatchingBreweries (country) {
       }
     } else {
       breweryInputField.classList.remove('hide')
-      breweryInput.innerHTML = `<option value="Other">Other</option>`
+      breweryInput.innerHTML = `<option value="f92603c88a6f4ae6a76d513a">Other</option>`
       otherBreweryInput.removeAttribute('hidden')
       otherBreweryInput.setAttribute('required', true)
     }
@@ -93,3 +93,19 @@ function sortByName (array) {
     return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
   })
 }
+
+/**
+ * Blocks space as first character in input fields
+ */
+function blockSpaceAsFirstInput () {
+  const inputs = document.getElementsByTagName('input')
+  for (const input of inputs) {
+    input.addEventListener('keydown', e => {
+      if (e.which === 32 && e.target.selectionStart === 0) {
+        e.preventDefault()
+      }
+    })
+  }
+}
+
+blockSpaceAsFirstInput()
