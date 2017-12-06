@@ -207,7 +207,13 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/socket.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
-<script>window.Chart || $('body').append(`<script src="/js/libs/chart.min.js"></script>`)</script>
+<script>
+if (!window.Chart) {
+    const Chart = document.createElement('script')
+    Chart.src = "/js/libs/chart.min.js"
+    document.body.appendChild(Chart)
+  }
+</script>
 <script src="/js/user.js"></script>
 
 <% } %>

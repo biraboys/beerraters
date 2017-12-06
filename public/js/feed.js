@@ -12,34 +12,41 @@ socket.on('news', async function (feedItem) {
   if (userIds.includes(feedItem.user_id)) {
     const activityList = document.getElementById('activity-list')
     const feedCounterSpan = document.getElementById('feed-counter-span')
-    if (localStorage.getItem('newFeedCounter') !== null) {
-      let feedCounter = Number(localStorage.getItem('newFeedCounter'))
-      feedCounter++
-      localStorage.setItem('newFeedCounter', feedCounter)
+    const newFeedStorage = localStorage.getItem('newFeedCounter')
+    let newFeedCounter
+    if (newFeedStorage !== null) {
+      newFeedCounter = Number(newFeedStorage)
+      newFeedCounter++
+      localStorage.setItem('newFeedCounter', newFeedCounter)
     } else {
       localStorage.setItem('newFeedCounter', 1)
+      newFeedCounter = 1
     }
-    feedCounterSpan.innerText = localStorage.getItem('newFeedCounter')
+    feedCounterSpan.innerText = newFeedCounter
     const newFeedItem = `
     <div class="col s12 m12 l4">
-      <div class="card pulse">
+      <div class="card feed-item pulse" tabindex="0">
         <div class="card-content">
           <span class="card-title">
-            <i class="material-icons">account_circle</i>
-            <a href="/users/${feedItem.user_id}">${feedItem.username}</a>
+            <i class="material-icons va-middle">account_circle</i>
+            <a href="/users/${feedItem.user_id}" class="va-middle">${feedItem.username}</a>
           </span>
-          <p>${feedItem.type} <a href="/beers/${feedItem.beer_id}">${feedItem.beer_name}</a></p>
-          </div>
-          <div class="card-action">
-            <span>
-              <i class="material-icons">schedule</i>
-              ${feedItem.created}
-            </span>
-          </div>
+          <p>
+            <i class="material-icons va-middle">done</i> <span class="va-middle">${feedItem.type}</span>
+            <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>
+          </p>
         </div>
+        <div class="card-action">
+          <span>
+            <i class="material-icons va-middle">schedule</i>
+            <span class="va-middle">${feedItem.created}</span>
+          </span>
+        </div>
+      </div>
     </div>
     `
     activityList.insertAdjacentHTML('afterbegin', newFeedItem)
+    addFeedItemsListeners(document.getElementsByClassName('feed-item')[0], newFeedCounter, feedCounterSpan)
   }
 })
 
@@ -103,25 +110,29 @@ async function getFeed (followingIds) {
     json.sort((a, b) => {
       return new Date(b.created) - new Date(a.created)
     })
-    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
     json.forEach(feedItem => {
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
       const date = new Date(feedItem.created)
       feedItem.created = date.toLocaleDateString('en-GB', dateOptions)
+      feedItem.beer_name.length > 20 ? feedItem.beer_name = `${feedItem.beer_name.substring(0, 20)}...` : feedItem.beer_name = feedItem.beer_name
       if (followingIds.includes(feedItem.user_id)) {
         activityList.innerHTML += `
         <div class="col s12 m12 l4">
-          <div class="card feed-item">
+          <div class="card feed-item" tabindex="0">
             <div class="card-content">
               <span class="card-title">
-                <i class="material-icons va-middle fs-32">account_circle</i>
+                <i class="material-icons va-middle">account_circle</i>
                 <a href="/users/${feedItem.user_id}" class="va-middle">${feedItem.username}</a>
               </span>
-              <p>${feedItem.type} <a href="/beers/${feedItem.beer_id}">${feedItem.beer_name}</a></p>
+              <p>
+                <i class="material-icons va-middle">done</i> <span class="va-middle">${feedItem.type}</span>
+                <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>
+              </p>
               </div>
               <div class="card-action">
                 <span>
-                  <i class="material-icons va-middle fs-32">schedule</i>
-                  <span class="class="va-middle">${feedItem.created}</span>
+                  <i class="material-icons va-middle">schedule</i>
+                  <span class="va-middle">${feedItem.created}</span>
                 </span>
               </div>
             </div>
@@ -141,19 +152,39 @@ async function getFeed (followingIds) {
 function getNewFeedCounter () {
   const feedCounterSpan = document.getElementById('feed-counter-span')
   const feedItems = document.getElementsByClassName('feed-item')
-  const newFeedCounter = localStorage.getItem('newFeedCounter')
-  if (newFeedCounter !== null) {
+  const newFeedStorage = localStorage.getItem('newFeedCounter')
+  let newFeedCounter
+  if (newFeedStorage !== null) {
     let feedItemIndex = 0
+    newFeedCounter = Number(newFeedStorage)
     for (const feedItem of feedItems) {
-      if (feedItemIndex < Number(newFeedCounter)) {
+      if (feedItemIndex < newFeedCounter) {
         feedItem.classList.add('pulse')
+        addFeedItemsListeners(feedItem, newFeedCounter, feedCounterSpan)
       }
       feedItemIndex++
     }
     feedCounterSpan.innerText = newFeedCounter
-  } else {
-    feedCounterSpan.innerText = 0
   }
+}
+
+function addFeedItemsListeners (feedItem, newFeedCounter, feedCounterSpan) {
+  feedItem.addEventListener('mouseover', function () {
+    if (this.classList.contains('pulse')) {
+      newFeedCounter--
+      localStorage.setItem('newFeedCounter', newFeedCounter)
+      feedCounterSpan.innerText = newFeedCounter
+    }
+    this.classList.remove('pulse')
+  })
+  feedItem.addEventListener('focus', function () {
+    if (this.classList.contains('pulse')) {
+      newFeedCounter--
+      localStorage.setItem('newFeedCounter', newFeedCounter)
+      feedCounterSpan.innerText = newFeedCounter
+    }
+    this.classList.remove('pulse')
+  })
 }
 
 getUsersOnline()
