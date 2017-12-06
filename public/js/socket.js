@@ -14,5 +14,12 @@ socket.on('news', async function (feedItem) {
     $('#feed-link').click(() => {
       $('#feed-link').removeClass('pulse')
     })
+    if (localStorage.getItem('newFeedCounter') !== null) {
+      let feedCounter = Number(localStorage.getItem('newFeedCounter'))
+      feedCounter++
+      localStorage.setItem('newFeedCounter', feedCounter)
+    } else {
+      localStorage.setItem('newFeedCounter', 1)
+    }
   }
 })
