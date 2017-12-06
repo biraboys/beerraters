@@ -56,7 +56,7 @@ const passwordValidator = [
 
 const userSchema = new Schema({
   username: { type: String, required: true, lowercase: true, unique: true, validate: usernameValidator },
-  name: { type: String },
+  name: { type: String, default: '' },
   email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
   password: { type: String, required: true, validate: passwordValidator },
   registered: { type: Date, default: Date.now },
@@ -75,8 +75,9 @@ const userSchema = new Schema({
   ],
   description: { type: String, default: '' },
   profileImg: { data: Buffer, contentType: String },
-  resetPasswordToken: { type: String, default: '' },
-  resetPasswordExpires: { type: Date, default: null },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
+  reactivationToken: { type: String },
   role: { type: String, default: 'User' },
   active: { type: Boolean, required: true, default: false },
   registrationToken: { type: String, required: true },
