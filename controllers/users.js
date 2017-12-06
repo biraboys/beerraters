@@ -343,7 +343,7 @@ const controller = module.exports = {
   },
   getResetToken: async(req, res) => {
     await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
-      if (!user) {
+      if (!user || err) {
         res.json({ message: 'Password reset token invalid or has expired.' })
       } else {
         res.render('reset', { token: req.params.token, session: req.session.user })
@@ -366,13 +366,13 @@ const controller = module.exports = {
     async.waterfall([
       done => {
         User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, 'password', (err, user) => {
-          if (!user) {
+          if (!user || err) {
             res.json({ message: 'Password reset token is invalid or has expired.' })
           }
           if (req.body.password === req.body.confirmpass) {
             user.password = req.body.password
-            user.resetPasswordExpires = null
-            user.resetPasswordToken = ''
+            user.resetPasswordToken = undefined
+            user.resetPasswordExpires = undefined
 
             user.save(err => {
               if (err) {
@@ -388,7 +388,7 @@ const controller = module.exports = {
                   console.log(err)
                 }
               } else {
-                res.json({ success: true, session: req.session.user })
+                res.status(200).json({ success: true, session: req.session.user })
               }
             })
           } else {
@@ -490,7 +490,7 @@ const controller = module.exports = {
             res.json({ success: false, message: 'No user found with that email adress.' })
           } else {
             if (user.active) {
-              res.json({ success: false, message: 'User is already active.' })
+              res.json({ success: false, message: 'This user is already active.' })
             } else {
               User.findOneAndUpdate({ _id: user._id }, { $set: { reactivationToken: token } }, err => {
                 if (err) {
@@ -547,7 +547,15 @@ const controller = module.exports = {
             if (req.body.password === req.body.confirmpass) {
               user.password = req.body.password
               user.active = true
-              user.reactivationToken = null
+              user.reactivationToken = undefined
+
+              Jimp.read('./public/images/user-placeholder.png', function (err, image) {
+                image.quality(60)
+                image.getBuffer('image/png', async function (err, data) {
+                  if (err) throw err
+                  await User.findByIdAndUpdate(user._id, { $set: { profileImg: { data: data, contentType: 'image/png' } } })
+                })
+              })
 
               user.save(err => {
                 if (err) {
@@ -563,7 +571,7 @@ const controller = module.exports = {
                     console.log(err)
                   }
                 } else {
-                  res.json({ success: true, session: req.session.user })
+                  res.status(200).json({ success: true, session: req.session.user })
                 }
               })
             } else {
