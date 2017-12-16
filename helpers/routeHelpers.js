@@ -48,8 +48,7 @@ module.exports = {
     }),
     reviewSchema: Joi.object().keys({
       place: Joi.string().required(),
-      location: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
-      review: Joi.string().required()
+      review: Joi.string().required().max(120)
     }),
     ratingSchema: Joi.object().keys({
       rating: Joi.number().required()

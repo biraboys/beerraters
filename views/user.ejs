@@ -202,18 +202,12 @@
   $(document).ready(function () {
     $('.collapsible').collapsible()
     $('.modal').modal()
-})
-</script>
+  })
+  </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+<script>if(!window.Chart){const Chart=document.createElement('script');Chart.src="/js/libs/chart.min.js";document.body.appendChild(Chart)}</script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/socket.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
-<script>
-if (!window.Chart) {
-    const Chart = document.createElement('script')
-    Chart.src = "/js/libs/chart.min.js"
-    document.body.appendChild(Chart)
-  }
-</script>
 <script src="/js/user.js"></script>
 
 <% } %>

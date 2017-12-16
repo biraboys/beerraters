@@ -55,7 +55,4 @@ router.route('/:beerId/getImage')
 router.route('/fetch/:beerId')
   .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getBeer)
 
-router.route('/:beerId/images')
-  .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getAmoutOfBeerImages)
-
 module.exports = router

@@ -13,8 +13,7 @@ const reviewSchema = new Schema({
   },
   country_id: {
     type: Schema.Types.ObjectId,
-    ref: 'country',
-    required: true
+    ref: 'country'
   },
   body: {
     type: String,
