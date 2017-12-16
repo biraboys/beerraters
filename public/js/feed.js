@@ -23,6 +23,7 @@ socket.on('news', async function (feedItem) {
       newFeedCounter = 1
     }
     feedCounterSpan.innerText = newFeedCounter
+    const feedTypeHtml = generateFeedTypeHtml(feedItem)
     const newFeedItem = `
     <div class="col s12 m12 l4">
       <div class="card feed-item pulse" tabindex="0">
@@ -32,8 +33,7 @@ socket.on('news', async function (feedItem) {
             <a href="/users/${feedItem.user_id}" class="va-middle">${feedItem.username}</a>
           </span>
           <p>
-            <i class="material-icons va-middle">done</i> <span class="va-middle">${feedItem.type}</span>
-            <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>
+            ${feedTypeHtml}
           </p>
         </div>
         <div class="card-action">
@@ -50,6 +50,9 @@ socket.on('news', async function (feedItem) {
   }
 })
 
+/**
+ * Checks online status of following users from back end
+ */
 async function getUsersOnline () {
   const followingList = document.getElementById('following-list')
   const userId = document.getElementById('user-session-id').href.split('/')[4]
@@ -81,7 +84,11 @@ async function getUsersOnline () {
     console.log(err)
   }
 }
-async function getFeedItems () {
+
+/**
+ * Gets user ids of following users
+ */
+async function getUserFollowing () {
   const userId = document.getElementById('user-session-id').href.split('/')[4]
   const url = `/users/${userId}/following`
   try {
@@ -98,6 +105,11 @@ async function getFeedItems () {
     console.log(err)
   }
 }
+
+/**
+ * Gets all feed items from backend and displays them basing on following users
+ * @param {Array} followingIds - User ids of following users
+ */
 
 async function getFeed (followingIds) {
   const activityList = document.getElementById('activity-list')
@@ -116,8 +128,9 @@ async function getFeed (followingIds) {
       feedItem.created = date.toLocaleDateString('en-GB', dateOptions)
       feedItem.beer_name.length > 20 ? feedItem.beer_name = `${feedItem.beer_name.substring(0, 20)}...` : feedItem.beer_name = feedItem.beer_name
       if (followingIds.includes(feedItem.user_id)) {
+        const feedTypeHtml = generateFeedTypeHtml(feedItem)
         activityList.innerHTML += `
-        <div class="col s12 m12 l4">
+        <div class="col s12 m12 l4 feed-item-column">
           <div class="card feed-item" tabindex="0">
             <div class="card-content">
               <span class="card-title">
@@ -125,8 +138,7 @@ async function getFeed (followingIds) {
                 <a href="/users/${feedItem.user_id}" class="va-middle">${feedItem.username}</a>
               </span>
               <p>
-                <i class="material-icons va-middle">done</i> <span class="va-middle">${feedItem.type}</span>
-                <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>
+                ${feedTypeHtml}
               </p>
               </div>
               <div class="card-action">
@@ -168,6 +180,12 @@ function getNewFeedCounter () {
   }
 }
 
+/**
+ * Add feed item listener depending on if item is new or not
+ * @param {Object} feedItem - Feed item from backend based on Mongoose schema
+ * @param {Number} newFeedCounter - Counter from localstorage keeping strack on amount of new items
+ * @param {String} feedCounterSpan - Html span to display new feed counter
+ */
 function addFeedItemsListeners (feedItem, newFeedCounter, feedCounterSpan) {
   feedItem.addEventListener('mouseover', function () {
     if (this.classList.contains('pulse')) {
@@ -187,5 +205,50 @@ function addFeedItemsListeners (feedItem, newFeedCounter, feedCounterSpan) {
   })
 }
 
-getUsersOnline()
-getFeedItems()
+/**
+ * Generates a Html string depending on feed type (consumed, rated, reviewed, uploaded)
+ * @param {Object} feedItem - Feed item from backend based on Mongoose schema
+ */
+function generateFeedTypeHtml (feedItem) {
+  let feedTypeHtml
+  switch (feedItem.type) {
+    case 'consumed':
+      feedTypeHtml = `
+      <i class="material-icons va-middle" aria-hidden="true">done</i> <span class="va-middle">${feedItem.type}</span>
+      <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>
+      `
+      break
+    case 'reviewed':
+      feedTypeHtml = `
+    <i class="material-icons va-middle" aria-hidden="true">rate_review</i>
+    <span class="va-middle">${feedItem.type}</span>
+    <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>
+    `
+      break
+    case 'uploaded':
+      feedTypeHtml = `
+    <i class="material-icons va-middle" aria-hidden="true">insert_photo</i>
+    <span class="va-middle">${feedItem.type} photo of</span>
+    <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>
+    `
+      break
+    // Rated
+    default:
+      feedTypeHtml = `
+    <i class="material-icons va-middle" aria-hidden="true">star</i>
+    <span class="va-middle">${feedItem.type.split(' ')[0]}
+      <a href="/beers/${feedItem.beer_id}">${feedItem.beer_name}</a>
+      <span>${feedItem.type.split(' ')[1]}</span>
+    </span>
+    `
+      break
+  }
+  return feedTypeHtml
+}
+
+(async () => {
+  await Promise.all([
+    getUserFollowing(),
+    getUsersOnline()
+  ])
+})()
