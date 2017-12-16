@@ -268,3 +268,7 @@ a {
 .hidden {
   display: none;
 }
+
+.feed-item-column {
+  max-height: 195px;
+}
