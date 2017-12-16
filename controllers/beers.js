@@ -205,7 +205,9 @@ module.exports = {
     const beer = await Beer.findById(beerId, 'consumes name')
     const user = await User.findById(userId, 'username')
 
-    if (beer.consumes.indexOf(user._id) === -1) {
+    if (beer.consumes.includes(userId)) {
+      res.status(400).end()
+    } else {
       await Beer.findByIdAndUpdate(beerId, { $push: { consumes: user._id } })
       await User.findByIdAndUpdate(user._id, { $push: { consumes: beerId } })
       const newFeed = new Feed({
@@ -219,51 +221,41 @@ module.exports = {
       })
       await newFeed.save()
       res.io.emit('news', newFeed)
-      res.end()
-    } else {
-      res.send('Already consumed, you thirsty bastard!')
+      res.status(201).end()
     }
   },
   addBeerRating: async (req, res, next) => {
     const { beerId } = req.value.params
     const userId = req.session.user._id
     const user = await User.findById(userId, 'username ratings')
-
-    if (user.ratings.indexOf(beerId) === -1) {
+    if (user.ratings.includes(beerId)) {
+      res.status(400).end()
+    } else {
       const rating = req.value.body.rating
-
       if (typeof rating === 'number') {
         await Beer.findByIdAndUpdate(beerId, { $push: { ratings: {rating: rating, user: userId} } })
         await User.findByIdAndUpdate(userId, { $push: { ratings: beerId } })
-
         const beer = await Beer.findById(beerId, 'name ratings')
-
         const beerRatings = beer.ratings.map(obj => {
           return obj.rating
         })
         const ratingSum = beerRatings.reduce((a, b) => a + b, 0)
         const avgRating = ratingSum / beerRatings.length
         avgRating.toFixed(1)
-
         await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
-        const users = await User.find({ 'following': user._id }, 'username')
-        const message = `<span><a href="/users/${user._id}">${user.username}</a> rated <a href="/beers/${beer._id}">${beer.name}</a> ${rating}</span>`
-        const title = "Everyone's a critic!"
-        for (const following of users) {
-          const newFeed = new Feed({
-            user_id: following._id,
-            item: message,
-            expiration: Date.now() + 604800000,
-            created: Date.now()
-          })
-          await newFeed.save()
-          res.io.emit('news', {user: req.session.user._id, follower: String(following._id), id: String(newFeed._id), title: title, message: message})
-        }
+        const newFeed = new Feed({
+          user_id: user._id,
+          username: user.username,
+          type: `rated ${rating}`,
+          beer_id: beer._id,
+          beer_name: beer.name,
+          expiration: Date.now() + 604800000,
+          created: Date.now()
+        })
+        await newFeed.save()
+        res.io.emit('news', newFeed)
+        res.status(201).end()
       }
-
-      res.end()
-    } else {
-      res.send('Already Rated')
     }
   },
   getAverageRating: async (req, res, next) => {
@@ -278,70 +270,77 @@ module.exports = {
   getContributions: async (req, res, next) => {
     const { beerId } = req.params
     const userId = req.session.user._id
-    const beer = await Beer.findOne({_id: beerId}, 'consumes ratings images reviews')
-    res.status(200).json({beer: beer, user: userId})
+    const beer = await Beer.findById(beerId, 'consumes ratings images reviews')
+    res.status(200).json({beer: beer, user_id: userId})
   },
   addBeerImage: async (req, res, next) => {
     const { beerId } = req.params
     const userId = req.session.user._id
     const user = await User.findById(userId, 'username')
     const beer = await Beer.findById(beerId, 'name')
-    const image = await Jimp.read(req.file.buffer)
-    image.resize(Jimp.AUTO, 250)
-    image.quality(60)
-    image.getBuffer('image/png', async function (err, data) {
-      if (err) throw err
-      await Beer.findByIdAndUpdate(beer._id, { $push: { images: { data: data, contentType: 'image/png', user_id: user._id } } })
-      await User.findByIdAndUpdate(user._id, { $push: { images: { data: data, contentType: 'image/png', beer_id: beer._id } } })
-    })
-    const users = await User.find({ 'following': user._id }, 'username')
-    const message = `<span><a href="/users/${user._id}">${user.username}</a> posted a photo of <a href="/beers/${beer._id}">${beer.name}</a></span>`
-    const title = 'Click, click...'
-    for (const following of users) {
-      const newFeed = new Feed({
-        user_id: following._id,
-        item: message,
-        expiration: Date.now() + 604800000,
-        created: Date.now()
+    let postedImageUserIds
+    if (beer.images) {
+      postedImageUserIds = beer.images.map(imageObj => {
+        return imageObj.user_id
       })
-      await newFeed.save()
-      res.io.emit('news', {user: req.session.user._id, follower: String(following._id), id: String(newFeed._id), title: title, message: message})
     }
-    res.redirect(`/beers/${beerId}`)
+    if (postedImageUserIds && postedImageUserIds.includes(userId)) {
+      res.status(400).end()
+    }
+    const image = await Jimp.read(req.file.buffer)
+    if (image) {
+      image.resize(Jimp.AUTO, 250)
+      image.quality(60)
+      image.getBuffer('image/png', async function (err, data) {
+        if (err) throw err
+        await Beer.findByIdAndUpdate(beer._id, { $push: { images: { data: data, contentType: 'image/png', user_id: user._id } } })
+        await User.findByIdAndUpdate(user._id, { $push: { images: { data: data, contentType: 'image/png', beer_id: beer._id } } })
+        const newFeed = new Feed({
+          user_id: user._id,
+          username: user.username,
+          type: 'uploaded',
+          beer_id: beer._id,
+          beer_name: beer.name,
+          expiration: Date.now() + 604800000,
+          created: Date.now()
+        })
+        await newFeed.save()
+        res.io.emit('news', newFeed)
+        res.status(201).end()
+      })
+    } else {
+      res.status(406).end()
+    }
   },
   addBeerReview: async (req, res, next) => {
     const userId = req.session.user._id
     const user = await User.findById(userId, 'username')
     const { beerId } = req.value.params
     const beer = await Beer.findById(beerId, 'reviews name')
-    if (beer.reviews.indexOf(userId) === -1) {
-      const review = new Review({
-        user_id: user._id,
-        place: req.value.body.place.trim(),
-        country_id: req.value.body.location,
-        body: req.value.body.review.trim(),
-        beer_id: beer._id
-      })
-      await review.save()
-      await Beer.findByIdAndUpdate(beerId, { $push: { reviews: { review_id: review._id, user_id: userId } } })
-      await User.findByIdAndUpdate(userId, { $push: { reviews: review._id } })
-      const users = await User.find({ 'following': user._id }, 'username')
-      const message = `<span><a href="/users/${user._id}">${user.username}</a> reviewed <a href="/beers/${beer._id}">${beer.name}</a></span>`
-      const title = 'Extra, extra!'
-      for (const following of users) {
-        const newFeed = new Feed({
-          user_id: following._id,
-          item: message,
-          expiration: Date.now() + 604800000,
-          created: Date.now()
-        })
-        await newFeed.save()
-        res.io.emit('news', {user: req.session.user._id, follower: String(following._id), id: String(newFeed._id), title: title, message: message})
-      }
-      res.redirect(`/beers/${beer._id}`)
-    } else {
-      res.send('Already reviewed')
+    if (beer.reviews.includes(userId)) {
+      res.status(400).end()
     }
+    const review = new Review({
+      user_id: user._id,
+      place: req.value.body.place.trim(),
+      body: req.value.body.review.trim(),
+      beer_id: beer._id
+    })
+    await review.save()
+    await Beer.findByIdAndUpdate(beerId, { $push: { reviews: { review_id: review._id, user_id: userId } } })
+    await User.findByIdAndUpdate(userId, { $push: { reviews: review._id } })
+    const newFeed = new Feed({
+      user_id: user._id,
+      username: user.username,
+      type: 'reviewed',
+      beer_id: beer._id,
+      beer_name: beer.name,
+      expiration: Date.now() + 604800000,
+      created: Date.now()
+    })
+    await newFeed.save()
+    res.io.emit('news', newFeed)
+    res.status(201).json(review)
   },
   getBeerImage: async (req, res, next) => {
     const { beerId } = req.params
@@ -363,10 +362,5 @@ module.exports = {
       'Content-Type': beer.images[imageIndex].contentType
     })
     res.send(beer.images[imageIndex].data)
-  },
-  getAmoutOfBeerImages: async (req, res, next) => {
-    const { beerId } = req.params
-    const beer = await Beer.findById(beerId)
-    res.status(200).json(beer.images.length)
   }
 }

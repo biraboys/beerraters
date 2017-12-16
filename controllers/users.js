@@ -184,7 +184,7 @@ const controller = module.exports = {
     User.findById(userId, (err, doc) => {
       if (err) return next(err)
       res.contentType(doc.profileImg.contentType)
-      res.send(doc.profileImg.data)
+      res.status(200).send(doc.profileImg.data)
     })
   },
   checkUserPassword: async (req, res, next) => {

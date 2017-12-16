@@ -5,71 +5,45 @@
          <% if (beer === undefined) { %>
             <h1>Sorry could not found beer</h1>
             <% } else { %>
+              <div class="col s12 m3">
+                <div class="card">
+                   <div class="card-content">
+                     <figure class="flex-center flex-column">
+                        <i class="material-icons">done</i>
+                       <figcaption>Consumes
+                        <span id="consume-amount-span"><%= beer.consumes.length %></span>
+                       </figcaption>
+                       <button class="va-middle no-border bgc-transparent tc-lightblue hidden" id="add-consume-button">Add consume</button>
+                     </figure>
+                   </div>
+                 </div>
+                <div class="card">
+                  <div class="card-content">
+                    <figure class="flex-center flex-column">
+                       <i class="material-icons">star</i>
+                      <figcaption>Ratings
+                        <span id="rating-amount-span"><%= beer.ratings.length %></span>
+                      </figcaption>
+                      <button class="modal-trigger va-middle no-border bgc-transparent tc-lightblue hidden" id="post-rating-button">Post rating</button>                      
+                    </figure>
+                  </div>
+                </div>
+              </div>
                       
-      <div class="col s12 m3">
-        <div class="card-panel flex-center flex-column" id="image-container"></div>                              
-      </div>
 <div class="col s12 m6">
             <div class="card">
               <div class="card-content">
-                  <% if (session) { %>
-                  <div class="right">
-                     <a class="tooltipped" data-position="bottom" data-delay="50" id="consume-link" data-tooltip="Drank it?">
-                      <svg id="consume-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
-                      </svg>
-                    </a> 
-                    <a class="tooltipped modal-trigger" data-position="bottom" data-delay="50" id="review-link" data-tooltip="Review">
-                      <svg id="review-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 0h24v24H0zm15.35 6.41l-1.77-1.77c-.2-.2-.51-.2-.71 0L6 11.53V14h2.47l6.88-6.88c.2-.19.2-.51 0-.71z" fill="none"/>
-                        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 14v-2.47l6.88-6.88c.2-.2.51-.2.71 0l1.77 1.77c.2.2.2.51 0 .71L8.47 14H6zm12 0h-7.5l2-2H18v2z"/>
-                      </svg>
-                    </a>
-                    <a class="tooltipped modal-trigger" data-position="bottom" data-delay="50" id="rating-link" data-tooltip="Rate">
-                      <svg id="rating-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                      </svg>
-                    </a>
-                    <a class="tooltipped" data-position="bottom" data-delay="50" id="image-link" data-tooltip="Add image">
-                      <svg id="image-icon" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-                      </svg>
-                    </a>
-                  </div>
-                  <% } else { %>
-                  <div class="right">
-                    <p>Log in <a href="/login">here</a> to view more content</p>
-                  </div>                    
-                    <% } %>
                   <span class="card-title" id="beer-name"><%= beer.name %></span>
-                  <div class="card-title" id="rating-container">
-                  <% if (!beer.avg_rating) { %>
-                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                      <path d="M0 0h24v24H0z" fill="none"/>
-                    </svg>
-                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                      <path d="M0 0h24v24H0z" fill="none"/>
-                    </svg>
-                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                      <path d="M0 0h24v24H0z" fill="none"/>
-                    </svg>
-                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                      <path d="M0 0h24v24H0z" fill="none"/>
-                    </svg>
-                    <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                      <path d="M0 0h24v24H0z" fill="none"/>
-                    </svg>                   
-                    <span class="card-subtitle">N/A</span>
-                  <% } %>
-                  </div>
+                  <span class="card-title" id="rating-container">
+                    <% if (!beer.avg_rating) { %>
+                      <i class="material-icons" style="color: #E8EDFA;">star</i>
+                      <i class="material-icons" style="color: #E8EDFA;">star</i>
+                      <i class="material-icons" style="color: #E8EDFA;">star</i>
+                      <i class="material-icons" style="color: #E8EDFA;">star</i>
+                      <i class="material-icons" style="color: #E8EDFA;">star</i>            
+                      <span class="card-subtitle">N/A</span>
+                      <% } %>
+                    </span>                
                 <p><%= beer.description %></p>
               </div>
                 <div class="card-content bt-1">                
@@ -88,7 +62,6 @@
                     <% if (beer.brewery_id) { %>
                       <div class="chip">
                           <%= beer.brewery_id.name %>
-                        </a>
                       </div> 
                     <% } %>
                     <% if (beer.country_id) { %>
@@ -99,47 +72,56 @@
                         </a>
                       </div>
                     <% } %>
-                    </div>  
+                    </div>
            </div>
               </div>
-
      <div class="col s12 m3">
        <div class="card">
          <div class="card-content">
-           <figure class="flex-center flex-column">
-             <img src="/icons/reviews.svg" alt="Reviews" />
-             <figcaption>Reviews</figcaption>
-             <figcaption><%= beer.reviews.length %></figcaption>
-           </figure>
-         </div>
+            <figure class="flex-center flex-column">
+            <i class="material-icons">rate_review</i>
+            <figcaption>Reviews
+              <span id="review-amount-span"><%= beer.reviews.length %></span>
+            </figcaption>
+            <button class="va-middle no-border bgc-transparent tc-lightblue hidden" id="write-review-button">Write review</button>
+          </div>
        </div>
-       <div class="card">
-         <div class="card-content">
-           <figure class="flex-center flex-column">
-             <img src="/icons/ratings.svg" alt="Ratings" />
-             <figcaption>Ratings</figcaption>
-             <figcaption><%= beer.ratings.length %></figcaption>
-           </figure>
+        <div class="card">
+           <div class="card-content">
+             <figure class="flex-center flex-column">
+                 <i class="material-icons">insert_photo</i>
+               <figcaption>Images
+                <span id="image-amount-span"><%= beer.images.length %></span>
+              </figcaption>
+               <button class="va-middle no-border bgc-transparent tc-lightblue hidden" id="upload-image-button">Upload photo</button>
+             </figure>
+           </div>
          </div>
-       </div>
-       <div class="card">
-         <div class="card-content">
-           <figure class="flex-center flex-column">
-             <img src="/icons/consumes.svg" alt="Consumes" />
-             <figcaption>Consumes</figcaption>
-             <figcaption><%= beer.consumes.length %></figcaption>
-           </figure>
-         </div>
-       </div>
      </div>
           </div>   
       <% } %>
-      <% if (beer.reviews) { %>  
+      <div class="row">
+        <h3>Photos</h3>
+        <% if (beer.images.length === 0) { %>
+          <p id="no-images-message">Be the first one to upload a photo of this beer!</p>
+        <% } %> 
+        <div id="beer-image-container" style="display:flex;"></div>
+      </div>  
 <div class="row">
-  <ul class="collection no-border" id="reviews-container">
-  </ul>
+    <h3>Reviews</h3>
+    <% if (beer.reviews.length === 0) { %>
+      <p id="no-reviews-message">Be the first one to write a review of this beer!</p>      
+      <% } %> 
+    <ul class="collection no-border" id="reviews-container">
+    </ul>
+  </div>
 </div>
-<% } %>  
+<% if (session) { %>
+  <% } else { %>
+  <div class="right">
+    <p>Log in <a href="/login">here</a> to view more content</p>
+  </div>                    
+    <% } %> 
 
  </div> <!-- main container -->
 </section>
@@ -162,12 +144,6 @@
           <input placeholder="On a balcony, at a beach, in a restaurant..." type="text" class="validate" name="place" id="place" required>
           <label for="place">Where did you drink this beer?</label>
           </div>
-          <div class="input-field">
-            <select id="location" name="location" required>
-              <option value="" disabled selected>Select country</option>
-            </select>
-            <label for="location">Location</label>
-          </div>
         <button id="review-btn" class="btn waves-effect waves-light" type="submit" name="submit">Submit</button>
         </div>
         </div>
@@ -179,6 +155,7 @@
         <div class="modal" id="rating-modal" style="width: 400px;">
           <form name="ratingForm">
                 <div class="modal-content" id="rating-modal-body">
+                  <h4>Post beer rating</h4>
                   <div class="container">
                     <div class="flex-center">
                       <svg class="add-rating-symbol" style="margin: 5px; cursor: pointer;" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -212,9 +189,13 @@
                 </div>
           </form>
               </div>
-                              <div class="modal" id="image-modal">
+            <div class="modal" id="image-modal">
                 <div class="modal-content" id="image-modal-body">
-                          <form action="/beers/<%= beer._id %>/addImage" method="post" enctype="multipart/form-data">
+                  <h4>Upload beer image</h4>
+                    <p><b>Please do not include any faces in the image.</b></p>
+                    <p>Try to only capture the beer and its surrounding. Where is the beer? What is it doing there? Try to make your picture unique and have some fun!</p>
+                    <p>Check out these examples if you are unsure.</p>
+                          <form id="upload-image-form">
                                 <div class="file-field input-field">
                                   <div class="btn">
                                     <span>Add Photo</span>
@@ -224,64 +205,22 @@
                                     <input class="file-path validate" type="text">
                                   </div>
                                 </div>
-                              <button id="submit-img-btn" class="btn waves-effect waves-light right" type="submit" name="submit">Submit</button>
+                              <button type="submit" class="btn waves-effect waves-light right" name="submit">Submit</button>
                           </form>
+                          <div id="loading-container" class="preloader-wrapper big">
+                              <div class="spinner-layer spinner-blue-only">
+                                  <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                  </div><div class="gap-patch">
+                                    <div class="circle"></div>
+                                  </div><div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                  </div>
+                                </div>
+                           </div>
                         </div>
                       </div>
 
-                            <% if (session) { %>
-              <div class="modal" id="edit-modal">
-                <div class="modal-content" id="edit-modal-body">
-                          <form class="mt-1" name="beerDescription">
-                            <label for="style">Style</label>
-                            <select class="u-full-width" id="style" name="style" required>
-                              <% if (beer.style_id) { %>
-                              <option value="<%= beer.style_id %>" selected><%= beer.style_id.name %></option>                              
-                              <% } else { %> 
-                              <option value="" disabled selected>Select style</option>
-                              <% } %>
-                            </select>
-                            <label for="category">Category</label>
-                            <% if (beer.category_id) { %>
-                            <select class="u-full-width" id="category" name="category" required>
-                            <option value="<%= beer.category_id.name %>" selected><%= beer.category_id.name %></option>
-                            <% } else { %>
-                            <select class="u-full-width" id="category" name="category" disabled>
-                            <% } %>
-                            </select>
-                            <input class="u-full-width" type="text" placeholder="New category" name="otherCategory" id="other-category" hidden>
-                            <label for="country">Country</label>
-                            <select class="u-full-width" id="country" name="country" required>
-                              <% if (beer.country_id) { %>
-                              <option value="<%= beer.country_id %>" selected><%= beer.country_id.name %></option>                              
-                              <% } else { %> 
-                              <option value="" disabled selected>Selected country</option>
-                              <% } %>
-                            </select>
-                            <label for="brewery">Brewery</label>
-                            <div id="loader"></div>
-                            <% if (beer.brewery_id) { %>
-                            <select class="u-full-width" id="brewery" name="brewery" required>
-                            <option value="<%= beer.brewery_id.name %>" selected><%= beer.brewery_id.name %></option>
-                            <% } else { %> 
-                            <select class="u-full-width" id="brewery" name="brewery" disabled>
-                            <% } %>                                                          
-                            </select>
-                            <input class="u-full-width" type="text" placeholder="New brewery" name="otherBrewery" id="other-brewery" hidden>
-                            <div id="state-group" hidden>
-                              <label for="state">State</label>                            
-                              <select class="u-full-width" id="state" name="state">
-                              </select>
-                              <input class="u-full-width" type="text" placeholder="New state" name="otherState" id="other-state" hidden>
-                            </div>                            
-                            <label for="beer-description">Description</label>
-                            <textarea class="u-full-width" placeholder="There ones was a beer..." id="beer-description" name="description"><%= beer.description %></textarea>
-                            <input class="button-primary" type="submit" value="Submit">
-                            <input type="button" value="Cancel" id="cancel-description-btn">
-                          </form>
-                        </div>
-                      </div>              
-           <% } %>  
 <%- include footer.ejs %>
 
 <% if (session) { %>

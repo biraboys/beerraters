@@ -1,88 +1,49 @@
-// Variables
-const beerIdElement = location.href
-const beerId = beerIdElement.split('/')[4]
-const consumeLink = document.getElementById('consume-link')
-const imageLink = document.getElementById('image-link')
-const consumeIcon = document.getElementById('consume-icon')
-const ratingIcon = document.getElementById('rating-icon')
-const imageIcon = document.getElementById('image-icon')
-const reviewIcon = document.getElementById('review-icon')
-// const editLink = document.getElementById('edit-link')
-const beerDescriptionForm = document.forms.beerDescription
-const ratingLink = document.getElementById('rating-link')
-const reviewLink = document.getElementById('review-link')
-const ratingModal = document.getElementById('rating-modal')
-const reviewModal = document.getElementById('review-modal')
-const reviewForm = document.forms.reviewForm
-const cancelButton = document.getElementById('cancel-description-btn')
-const closeModal = document.getElementById('close-modal-btn')
-const editModal = document.getElementById('edit-modal')
-const imageModal = document.getElementById('image-modal')
-const ratingModalBody = document.getElementById('rating-modal-body')
-const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
-const stateGroup = document.getElementById('state-group')
-const submitImgBtn = document.getElementById('submit-img-btn')
-const review = document.getElementById('review')
-const reviewLabel = document.getElementById('review-label')
-const reviewBtn = document.getElementById('review-btn')
-const ratingSlider = document.getElementById('rating-slider')
-
-// Click bindings
-consumeLink.onclick = () => {
-  checkIconColor('consume')
-}
-
-imageLink.onclick = () => {
-  checkIconColor('image')
-}
-
-reviewLink.onclick = () => {
-  checkIconColor('review')
-}
-
-submitImgBtn.onclick = () => {
-  imageModal.classList.remove('active')
-}
-
-ratingLink.onclick = () => {
-  checkIconColor('rating')
-}
-
-// DOM functions
-function checkIconColor (icon) {
-  switch (icon) {
-    case 'consume':
-      if (consumeIcon.getAttribute('fill') === '#E8EDFA') {
-        postConsume()
-      }
-      break
-    case 'rating':
-      if (ratingIcon.getAttribute('fill') === '#E8EDFA') {
-        $('#rating-modal').modal('open')
-      }
-      break
-    case 'image':
-      if (imageIcon.getAttribute('fill') === '#E8EDFA') {
-        $('#image-modal').modal('open')
-      }
-      break
-    case 'review':
-      if (reviewIcon.getAttribute('fill') === '#E8EDFA') {
-        $('#review-modal').modal('open')
-      }
-      break
+/**
+ * Adds click functions for user to consume, rate, review, upload image of beer
+ */
+function addContributionButtonsListeners () {
+  document.getElementById('add-consume-button').onclick = () => {
+    addConsume()
+  }
+  document.getElementById('post-rating-button').onclick = () => {
+    addRatingSliderandFormListeners()
+    $('#rating-modal').modal('open')
+  }
+  document.getElementById('write-review-button').onclick = async () => {
+    addReviewFormListeners()
+    $('#review-modal').modal('open')
+  }
+  document.getElementById('upload-image-button').onclick = () => {
+    document.getElementById('upload-image-form').addEventListener('submit', e => {
+      e.preventDefault()
+      document.getElementById('loading-container').classList.add('active')
+      uploadImage()
+      $('#image-modal').modal('open')
+    })
   }
 }
-ratingSlider.addEventListener('input', function () {
-  changeSymbolColor(this.value - 1)
-})
 
-document.forms.ratingForm.addEventListener('submit', e => {
-  e.preventDefault()
-  postRating(ratingSlider.value)
-})
+/**
+ * Adds event listerns for slider and form in rating modal
+ */
+function addRatingSliderandFormListeners () {
+  document.getElementById('rating-slider').addEventListener('input', function () {
+    changeSymbolColor(this.value)
+  })
+  document.forms.ratingForm.addEventListener('submit', e => {
+    const ratingSliderValue = document.getElementById('rating-slider').value
+    e.preventDefault()
+    postRating(ratingSliderValue)
+  })
+}
 
-function changeSymbolColor (position) {
+/**
+ * Changes color of rating stars as user drags slider
+ * @param {Number} ratingSliderValue - Value of rating slider
+ */
+function changeSymbolColor (ratingSliderValue) {
+  const ratingSymbols = Array.from(document.getElementsByClassName('add-rating-symbol'))
+  const position = ratingSliderValue - 1
   const symbol = ratingSymbols[position]
   const color = symbol.getAttribute('fill')
   if (color === '#E8EDFA') {
@@ -100,16 +61,13 @@ function changeSymbolColor (position) {
   }
 }
 
-// Helper functions
-function sortByName (array) {
-  return array.sort((a, b) => {
-    return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
-  })
-}
-
-// DB functions
+/**
+ * Posts beer rating in back end
+ * @param {number} rating - Rating of beer 
+ */
 async function postRating (rating) {
   const beerName = document.getElementById('beer-name').innerHTML
+  const beerId = location.href.split('/')[4]
   rating = Number(rating)
   try {
     const response = await fetch(`/beers/${beerId}/rating`, {
@@ -122,86 +80,59 @@ async function postRating (rating) {
       }),
       credentials: 'same-origin'
     })
-    if (response.status === 500) {
-      Materialize.toast(`Sorry could not rate ${beerName}`, 2000)
-    } else {
-      Materialize.toast(`You rated ${beerName} ${rating}`, 2000)
-      $('#rating-modal').modal('close')
-      ratingIcon.setAttribute('fill', '#000000')
-      ratingLink.setAttribute('data-tooltip', 'Already rated')
-      $(ratingLink).tooltip()
-      location.reload(true)
+    if (response.status === 201) {
+      await avgRatingSymbols()
+      updateRatingElementsInDom(beerName, rating)
     }
   } catch (err) {
-    console.log(err)
+    Materialize.toast(`Sorry could not rate ${beerName}`, 2000)
   }
 }
 
-async function postConsume () {
-  const beerName = document.getElementById('beer-name').innerHTML
+/**
+ * Post consume to backend and display toast
+ */
+async function addConsume () {
+  const beerName = document.getElementById('beer-name').innerText
+  const beerId = location.href.split('/')[4]
   try {
     const response = await fetch(`/beers/${beerId}/consume`, {
       method: 'post',
       credentials: 'same-origin'
     })
-    if (response.status === 500) {
-      Materialize.toast(`Sorry could not consume ${beerName}`, 2000)
-    } else {
-      Materialize.toast(`Hope your ${beerName} tasted good!`, 2000)
-      consumeIcon.setAttribute('fill', '#000000')
-      consumeLink.setAttribute('data-tooltip', 'Consumed, nice!')
-      $(consumeLink).tooltip()
+    if (response.status === 201) {
+      updateConsumeElementsInDom(beerName)
     }
   } catch (err) {
-    console.log(err)
+    Materialize.toast(`Sorry could not consume ${beerName}`, 2000)
   }
 }
 
-async function checkContributions () {
+/**
+ * Gets beer ratings, reviews, images, contributions and current user's id from backend
+ */
+async function getContributions () {
+  const beerId = location.href.split('/')[4]
   try {
     const response = await fetch(`/beers/${beerId}/contributions`, {
       method: 'get',
       credentials: 'same-origin'
     })
-    const json = await response.json()
-    const userId = json.user
-    const contributions = json.beer
-    const ratingUsers = contributions.ratings.map(rating => {
-      return rating.user
-    })
-    const userImages = contributions.images.map(image => {
-      return image.user_id
-    })
-    const userReviews = contributions.reviews.map(review => {
-      return review.user_id
-    })
-    if (contributions.consumes.indexOf(userId) !== -1) {
-      consumeIcon.setAttribute('fill', '#000000')
-      consumeLink.setAttribute('data-tooltip', 'Consumed, nice!')
-      $(consumeLink).tooltip()
-    }
-    if (userReviews.indexOf(userId) !== -1) {
-      reviewIcon.setAttribute('fill', '#000000')
-      reviewLink.setAttribute('data-tooltip', 'Reviewed')
-      $(reviewLink).tooltip()
-    }
-    if (userImages.indexOf(userId) !== -1) {
-      imageIcon.setAttribute('fill', '#000000')
-      imageLink.setAttribute('data-tooltip', 'Posted photo')
-      $(imageLink).tooltip()
-    }
-    if (ratingUsers.indexOf(userId) !== -1) {
-      ratingIcon.setAttribute('fill', '#000000')
-      ratingLink.setAttribute('data-tooltip', 'Already rated')
-      $(ratingLink).tooltip()
+    if (response.status === 200) {
+      const json = await response.json()
+      checkAndDisplayContributions(json)
     }
   } catch (err) {
     console.log(err)
   }
 }
 
+/**
+ * Fetches average rating of beer from backend and displays it in DOM
+ */
 async function avgRatingSymbols () {
   const ratingContainer = document.getElementById('rating-container')
+  const beerId = location.href.split('/')[4]
   try {
     const response = await fetch(`/beers/${beerId}/rating`, {
       method: 'get',
@@ -211,6 +142,7 @@ async function avgRatingSymbols () {
     if (rating !== 0) {
       let numberType
       rating % 1 === 0 ? numberType = 'int' : numberType = 'float'
+      ratingContainer.innerHTML = ''
       switch (numberType) {
         case 'int':
           for (let i = 1; i <= rating; i++) {
@@ -274,75 +206,89 @@ async function avgRatingSymbols () {
   }
 }
 
-async function getCountries () {
-  try {
-    const response = await fetch('/countries')
-    const countries = await response.json()
-    sortByName(countries)
-    await countries.forEach(country => {
-      reviewForm.location.innerHTML += `
-      <option value="${country._id}">${country.name}</option>
-      `
-    })
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-reviewForm.place.addEventListener('focus', displayCountries)
-
-function displayCountries () {
-  $('select').material_select()
-  this.removeEventListener('focus', displayCountries)
-}
-
+/**
+ * Checks all reviews for beer in back end
+ */
 async function checkReviews () {
-  const reviewsContainer = document.getElementById('reviews-container')
+  const beerId = location.href.split('/')[4]
   try {
     const response = await fetch(`/beers/${beerId}/review`, {
       method: 'get',
       credentials: 'same-origin'
     })
-    const reviewsObj = await response.json()
-    if (reviewsObj.reviews.length > 0) {
-      reviewsObj.reviews.forEach(async obj => {
-        const reviewResponse = await fetch(`/reviews/${obj.review_id}`)
-        const review = await reviewResponse.json()
-        const userImage = await fetch(`/users/${review.user_id._id}/get-profileimage`, {
-          method: 'get',
-          credentials: 'same-origin'
+    if (response.status === 200) {
+      const reviewsObj = await response.json()
+      if (reviewsObj.reviews.length > 0) {
+        reviewsObj.reviews.forEach(async reviewObj => {
+          await getReview(reviewObj)
         })
-        const img = await userImage.blob()
-        const image = createUserImage(img)
-        reviewsContainer.innerHTML += `
-            <div class="card-panel">
-             <li class="collection-item avatar">
-      ${image.outerHTML}
-      <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.username}</strong></a></span>
-      <p>
-         <span class="card-subtitle">${review.place} in </span><a class="card-link" href="/countries/${review.country_id._id}">${review.country_id.name}</a> <br>
-         ${review.body}
-      </p>
-    </li>
-  </div>
-        `
-      })
+      }
+    }
+  } catch (err) {
+    Materialize.toast('Sorry, could not get reviews', 2000)
+  }
+}
+
+/**
+ * Gets a single review from back end
+ * @param {Object} reviewObj - Review object populated from Beer schema
+ */
+async function getReview (reviewObj) {
+  try {
+    const reviewResponse = await fetch(`/reviews/${reviewObj.review_id}`)
+    if (reviewResponse.status === 200) {
+      const review = await reviewResponse.json()
+      getReviewUserImage(review)
     }
   } catch (err) {
     console.log(err)
   }
 }
 
-async function getBeerImage () {
-  const imageContainer = document.getElementById('image-container')
+/**
+ * Gets a single review from back end
+ * @param {Object} reviewId - Id of newly posted review
+ */
+async function getNewReview (reviewId) {
   try {
-    const response = await fetch(`/beers/${beerId}/images`)
-    const imageAmount = await response.text()
-    if (imageAmount === '0') {
-      imageContainer.innerHTML += `
-        <img class="responsive-img" src="/images/bottle.png">
-      `
-    } else {
+    const reviewResponse = await fetch(`/reviews/${reviewId}`)
+    if (reviewResponse.status === 200) {
+      const review = await reviewResponse.json()
+      getReviewUserImage(review)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+/**
+ * Gets user image of current review
+ * @param {Object} review - Review object from schema
+ */
+async function getReviewUserImage (review) {
+  try {
+    const userImageResponse = await fetch(`/users/${review.user_id._id}/get-profileimage`, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    if (userImageResponse.status === 200) {
+      const userImage = await userImageResponse.blob()
+      const image = createUserImage(userImage)
+      displayReview(review, image)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+/**
+ * Gets Buffer of beer images from backend
+ */
+async function getBeerImages () {
+  const beerId = location.href.split('/')[4]
+  const imageAmount = Number(document.getElementById('image-amount-span').innerText)
+  if (imageAmount > 0) {
+    try {
       let i = 0
       while (i < imageAmount) {
         const response = await fetch(`/beers/${beerId}/getImage`, {
@@ -355,72 +301,101 @@ async function getBeerImage () {
             index: i
           })
         })
-        const image = document.createElement('img')
-        const img = await response.blob()
-        const userName = response.headers.get('User-Name')
-        const objectURL = URL.createObjectURL(img)
-        image.src = objectURL
-        image.setAttribute('class', 'responsive-img materialboxed caption-images')
-        image.setAttribute('data-caption', `Posted by ${userName}`)
-        imageContainer.appendChild(image)
+        if (response.status === 200) {
+          const beerImageBlob = await response.blob()
+          const userName = response.headers.get('User-Name')
+          createBeerImage(beerImageBlob, userName)
+        }
         i++
       }
       $('.materialboxed').materialbox()
+    } catch (err) {
+      console.log(err)
     }
+  }
+}
+
+/**
+ * Gets Buffer of upload beer images from backend
+ */
+async function getUplaodedBeerImage () {
+  const beerId = location.href.split('/')[4]
+  const imageIndex = Number(document.getElementById('image-amount-span').innerText) - 1
+  try {
+    const response = await fetch(`/beers/${beerId}/getImage`, {
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      method: 'post',
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        index: imageIndex
+      })
+    })
+    if (response.status === 200) {
+      const beerImageBlob = await response.blob()
+      const userName = response.headers.get('User-Name')
+      createBeerImage(beerImageBlob, userName)
+    }
+    $('.materialboxed').materialbox()
   } catch (err) {
     console.log(err)
   }
 }
 
-reviewForm.addEventListener('submit', async function (e) {
-  e.preventDefault()
-  const beerName = document.getElementById('beer-name').innerHTML
-  if (review.value.length > 0 && review.value.length < 121) {
-    if (!review.value.replace(/\s/g, '').length) {
-      reviewLabel.classList.add('invalid')
-      reviewLabel.innerHTML = `This seems like a funny review... eh?`
+/**
+ * Add submit listener for review form and validates review contents in front end
+ */
+function addReviewFormListeners () {
+  const beerId = location.href.split('/')[4]
+  const reviewForm = document.forms.reviewForm
+  const reviewLabel = document.getElementById('review-label')
+  const review = document.getElementById('review')
+  reviewForm.addEventListener('submit', async function (e) {
+    e.preventDefault()
+    if (review.value.length > 0 && review.value.length < 121) {
+      if (!review.value.replace(/\s/g, '').length) {
+        reviewLabel.classList.add('invalid')
+        reviewLabel.innerHTML = `This seems like a funny review... eh?`
+        reviewLabel.style.color = '#F44336'
+      } else {
+        try {
+          const response = await fetch(`/beers/${beerId}/review`, {
+            headers: new Headers({
+              'Content-Type': 'application/json'
+            }),
+            method: 'post',
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              place: reviewForm.place.value,
+              review: reviewForm.review.value
+            })
+          })
+          if (response.status === 201) {
+            const newReview = await response.json()
+            await getNewReview(newReview._id)
+            updateReviewElementsInDom()
+          }
+        } catch (err) {
+          Materialize.toast(`Sorry could not review beer`, 2000)
+        }
+      }
+    } else if (review.value.length > 120) {
+      review.classList.add('invalid')
+      reviewLabel.innerHTML = 'Too many characters.'
       reviewLabel.style.color = '#F44336'
     } else {
-      try {
-        const response = await fetch(`/beers/${beerId}/review`, {
-          headers: new Headers({
-            'Content-Type': 'application/json'
-          }),
-          method: 'post',
-          credentials: 'same-origin',
-          body: JSON.stringify({
-            place: reviewForm.place.value,
-            location: reviewForm.location.value,
-            review: reviewForm.review.value
-          })
-        })
-        if (response.status === 500) {
-          Materialize.toast(`Sorry could not review ${beerName}`, 2000)
-        } else {
-          Materialize.toast(`You reviewed ${beerName}, thanks!`, 2000)
-          reviewIcon.setAttribute('fill', '#000000')
-          reviewLink.setAttribute('data-tooltip', 'Reviewed')
-          $(reviewLink).tooltip()
-          $('#review-modal').modal('close')
-          setTimeout(() => {
-            location.href = location.pathname
-          }, 1000)
-        }
-      } catch (err) {
-        console.log(err)
-      }
+      review.classList.add('invalid')
+      reviewLabel.innerHTML = 'Please enter some text here...'
+      reviewLabel.style.color = '#F44336'
     }
-  } else if (review.value.length > 120) {
-    review.classList.add('invalid')
-    reviewLabel.innerHTML = 'Too many characters.'
-    reviewLabel.style.color = '#F44336'
-  } else {
-    review.classList.add('invalid')
-    reviewLabel.innerHTML = 'Please enter some text here...'
-    reviewLabel.style.color = '#F44336'
-  }
-})
+  })
+}
 
+/**
+ * Creates a user image to be displayed in DOM
+ * @param {String} imageBlob - HTML blob of user image
+ */
 function createUserImage (imageBlob) {
   const image = document.createElement('img')
   const objectURL = URL.createObjectURL(imageBlob)
@@ -429,9 +404,154 @@ function createUserImage (imageBlob) {
   return image
 }
 
+/**
+ * Creates a beer image to be displayed in DOM
+ * @param {String} beerImageBlob - HTML blob of beer image
+ * @param {String} userName - Username to use for beer image caption
+ */
+function createBeerImage (beerImageBlob, userName) {
+  const beerImageContainer = document.getElementById('beer-image-container')
+  const beerImage = document.createElement('img')
+  const objectURL = URL.createObjectURL(beerImageBlob)
+  beerImage.src = objectURL
+  beerImage.setAttribute('class', 'responsive-img materialboxed caption-images')
+  beerImage.setAttribute('data-caption', `Posted by ${userName}`)
+  beerImageContainer.insertAdjacentElement('afterbegin', beerImage)
+}
+
+/**
+ * Checks if user has contrbuted to the beer and hides DOM actions buttons if so
+ * @param {Object} json - Beer ratings, reviews, images, consumes and current user's id
+ */
+function checkAndDisplayContributions (json) {
+  const userId = json.user_id
+  const beer = json.beer
+  const ratingUsers = beer.ratings.map(rating => rating.user)
+  const userImages = beer.images.map(image => image.user_id)
+  const userReviews = beer.reviews.map(review => review.user_id)
+  const consumeButton = document.getElementById('add-consume-button')
+  const imageButton = document.getElementById('upload-image-button')
+  const ratingButton = document.getElementById('post-rating-button')
+  const reviewButton = document.getElementById('write-review-button')
+  if (!beer.consumes.includes(userId)) consumeButton.style.display = 'block'
+  if (!userReviews.includes(userId)) reviewButton.style.display = 'block'
+  if (!userImages.includes(userId)) imageButton.style.display = 'block'
+  if (!ratingUsers.includes(userId)) ratingButton.style.display = 'block'
+}
+/**
+ * Displays success message to user and updates number of ratings
+ * @param {String} beerName - Name of rated beer
+ * @param {Number} rating - Rating of beer
+ */
+function updateRatingElementsInDom (beerName, rating) {
+  let ratingAmoutSpanText = document.getElementById('rating-amount-span').innerText
+  let ratingAmout = Number(ratingAmoutSpanText)
+  document.getElementById('post-rating-button').style.display = 'none'
+  ratingAmout++
+  document.getElementById('rating-amount-span').innerText = ratingAmout
+  $('#rating-modal').modal('close')
+  Materialize.toast(`You rated ${beerName} ${rating}`, 2000)
+}
+
+/**
+ * Displays success message to user and updates number of consumes
+ * @param {String} beerName - Name of consumed beer
+ */
+function updateConsumeElementsInDom (beerName) {
+  let consumeAmoutSpanText = document.getElementById('consume-amount-span').innerText
+  let consumeAmout = Number(consumeAmoutSpanText)
+  document.getElementById('add-consume-button').style.display = 'none'
+  consumeAmout++
+  document.getElementById('consume-amount-span').innerText = consumeAmout
+  Materialize.toast(`Hope your ${beerName} tasted good!`, 2000)
+}
+
+/**
+ * Displays success message to user and updates number of review
+ * @param {String} beerName - Name of reviewed beer
+ */
+function updateReviewElementsInDom () {
+  let reviewAmoutSpanText = document.getElementById('review-amount-span').innerText
+  let reviewAmout = Number(reviewAmoutSpanText)
+  document.getElementById('write-review-button').style.display = 'none'
+  reviewAmout++
+  if (document.getElementById('no-reviews-message') !== null) {
+    $('#no-reviews-message').remove()
+  }
+  document.getElementById('review-amount-span').innerText = reviewAmout
+  $('#review-modal').modal('close')
+  Materialize.toast(`Your review was posted!`, 2000)
+}
+
+/**
+ * Displays review in DOM
+ * @param {String} userImage - String representation of HTML element img
+ */
+function displayReview (review, userImage) {
+  const reviewsContainer = document.getElementById('reviews-container')
+  const reviewHtml = `
+  <div class="card-panel col s12 m4">
+    <li class="collection-item avatar">
+      ${userImage.outerHTML}
+      <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.username}</strong></a></span>
+      <p>
+        <span class="card-subtitle">${review.place}</span>
+        <br>
+        ${review.body}
+      </p>
+    </li>
+  </div>
+`
+  reviewsContainer.insertAdjacentHTML('afterbegin', reviewHtml)
+}
+
+/**
+ * Uploads beer image to back end
+ */
+async function uploadImage () {
+  const beerId = location.href.split('/')[4]
+  const imageForm = document.getElementById('upload-image-form')
+  try {
+    const formData = new FormData(imageForm)
+    const response = await fetch(`/beers/${beerId}/addImage`, {
+      method: 'post',
+      credentials: 'same-origin',
+      body: formData
+    })
+    if (response.status === 201) {
+      updateImageElementsInDom()
+      getUplaodedBeerImage()
+    }
+  } catch (err) {
+    console.log(err)
+    Materialize.toast('Sorry, could not post your photo', 2000)
+  }
+}
+
+/**
+ * Displays success message to user and updates number of images
+ */
+function updateImageElementsInDom () {
+  let imageAmoutSpanText = document.getElementById('image-amount-span').innerText
+  let imageAmout = Number(imageAmoutSpanText)
+  document.getElementById('upload-image-button').style.display = 'none'
+  imageAmout++
+  document.getElementById('image-amount-span').innerText = imageAmout
+  if (document.getElementById('no-images-message') !== null) {
+    $('#no-images-message').remove()
+  }
+  document.getElementById('loading-container').classList.remove('active')
+  $('#image-modal').modal('close')
+  Materialize.toast('Your photo was posted!', 2000)
+}
+
 // Init calls
-getBeerImage()
-checkContributions()
-avgRatingSymbols()
-checkReviews()
-getCountries()
+(async () => {
+  await Promise.all([
+    getBeerImages(),
+    getContributions(),
+    checkReviews()
+  ])
+  addContributionButtonsListeners()
+  avgRatingSymbols()
+})()

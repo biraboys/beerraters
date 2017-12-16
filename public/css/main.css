@@ -249,10 +249,22 @@ a {
   background-color: #BF923B;
 }
 
+.bgc-transparent {
+  background-color: transparent;
+}
+
 .va-middle {
   vertical-align: middle;
 }
 
 .fs-32 {
   font-size: 32px;
+}
+
+.tc-lightblue {
+  color: #1EAEDB;
+}
+
+.hidden {
+  display: none;
 }
