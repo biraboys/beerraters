@@ -65,15 +65,11 @@
 }
 
 .card-subtitle {
-  color: #bbc1cd;
+  color: #757775;
 }
 
 .card-link {
-  color: #bbc1cd;
-}
-
-.card-link:hover {
-  color: #1EAEDB;
+  color: #757775;
 }
 
 .pt-1 {
@@ -197,15 +193,6 @@ a {
   margin-left: 10px;
 }
 
-.search-card {
-  -webkit-transition: all .3s ease-in-out;
-  transition: all .3s ease-in-out;
-}
-
-.search-card:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 18px 0 rgba(232,237,250,.5);
-}
 
 #report-bug {
   position: fixed;
@@ -271,4 +258,8 @@ a {
 
 .feed-item-column {
   max-height: 195px;
+}
+
+.beerraters-link {
+  color: #BF813A;
 }

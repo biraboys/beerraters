@@ -66,7 +66,7 @@
                     <% } %>
                     <% if (beer.country_id) { %>
                       <div class="chip">
-                        <img src="/images/flags/<%= beer.country_id.flag %>" alt="Contact Person">
+                        <img src="/images/flags/<%= beer.country_id.flag %>" alt="Flag of beer country">
                         <a class="chip-link" href="/countries/<%= beer.country_id._id %>">
                           <%= beer.country_id.code %>
                         </a>

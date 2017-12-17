@@ -235,26 +235,50 @@ async function searchUser (user) {
  * @returns {string} HTML representation of a card with beer props.
 */
 async function generateBeerCard (beerObj) {
-  let rating, beerImage, style, brewery, country
-  const blobResponse = await fetch(`/beers/${beerObj._id}/getImage`, {
-    credentials: 'same-origin'
-  })
-  const beerBlob = await blobResponse.blob()
-  if (beerBlob.type === 'image/png') {
-    beerImage = URL.createObjectURL(beerBlob)
+  let rating, style, brewery, country, consumes, ratings, reviews, images
+  beerObj.style_id ? style = `<span class="chip">${beerObj.style_name}</span>` : style = ''
+  beerObj.brewery_id ? brewery = `<span class="chip">${beerObj.brewery_name}</span>` : brewery = ''
+  beerObj.country_id ? country = `<span class="chip">${beerObj.country_name}</span>` : country = ''
+  console.log(beerObj)
+  if (beerObj.consumes && beerObj.consumes.length > 0) {
+    consumes = `
+      <i class="material-icons va-middle" aria-hidden="true">done</i>
+      <span class="card-subtitle va-middle">${beerObj.consumes.length} consumes</span>
+    `
   } else {
-    beerImage = `/images/bottle.png`
+    consumes = ''
   }
-  beerObj.style_id ? style = beerObj.style_name : style = ''
-  beerObj.brewery_id ? brewery = beerObj.brewery_name : brewery = ''
-  beerObj.country_id ? country = beerObj.country_name : country = ''
-  if (beerObj.rating) {
+  if (beerObj.ratings && beerObj.ratings.length > 0) {
+    ratings = `
+      <i class="material-icons va-middle" aria-hidden="true">star</i>
+      <span class="card-subtitle va-middle">${beerObj.ratings.length} ratings</span>
+    `
+  } else {
+    ratings = ''
+  }
+  if (beerObj.reviews && beerObj.reviews.length > 0) {
+    reviews = `
+      <i class="material-icons va-middle" aria-hidden="true">rate_review</i>
+      <span class="card-subtitle va-middle">${beerObj.reviews.length} reviews</span>
+    `
+  } else {
+    reviews = ''
+  }
+  if (beerObj.images && beerObj.images.length > 0) {
+    images = `
+      <i class="material-icons va-middle" aria-hidden="true">insert_photo</i>
+      <span class="card-subtitle va-middle">${beerObj.images.length} images</span>
+    `
+  } else {
+    images = ''
+  }
+  if (beerObj.avg_rating) {
     let numberType, blackStars, greyStars
     rating = ''
-    beerObj.rating % 1 === 0 ? numberType = 'int' : numberType = 'float'
+    beerObj.avg_rating % 1 === 0 ? numberType = 'int' : numberType = 'float'
     switch (numberType) {
       case 'int':
-        blackStars = beerObj.rating / 1
+        blackStars = beerObj.avg_rating / 1
         for (let i = 1; i <= blackStars; i++) {
           rating += `
                <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -274,7 +298,7 @@ async function generateBeerCard (beerObj) {
         }
         break
       case 'float':
-        blackStars = beerObj.rating / 1
+        blackStars = beerObj.avg_rating / 1
         for (let i = 1; i <= Math.floor(blackStars); i++) {
           rating += `
           <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -307,7 +331,7 @@ async function generateBeerCard (beerObj) {
     }
 
     rating += `
-    <span class="va-middle card-subtitle">${beerObj.rating}</span>
+    <span class="va-middle card-subtitle">${beerObj.avg_rating.toFixed(1)}</span>
     `
   } else {
     rating = `
@@ -336,30 +360,33 @@ async function generateBeerCard (beerObj) {
   }
   const beerCard = `
     <div class="row">
-      <div class="card horizontal search-card">
-            <div class="card-image">
-              <img class="responsive-img h-200" src="${beerImage}" /> 
-            </div>
-            <div class="card-stacked">
+      <div class="card">
             <div class="card-content">
               <div class="card-title">
-                <a href="/beers/${beerObj._id}">${beerObj.name}</a>
+                <a class="beerraters-link" href="/beers/${beerObj._id}">${beerObj.name}</a>
               </div> 
               <div class="card-title">                  
                 ${rating}
               </div>
-              <div class="card-subtitle">                  
-                ${style}
-              </div>
-              <div class="card-subtitle">                  
-              ${brewery}
+              <span>
+                ${consumes}
+              </span>
+              <span>
+                ${ratings}
+              </span>
+              <span>
+                ${reviews}
+              </span>
+              <span>
+                ${images}
+              </span>
             </div>
-            <div class="card-subtitle">                  
-            ${country}
-          </div>
+            <div class="card-content bt-1">                 
+              ${style}             
+              ${brewery}                 
+              ${country}
           </div>
         </div>
-      </div>
       </div>
       `
   return beerCard
@@ -396,14 +423,38 @@ function displayBeer (beerCard) {
 
 function displayErrorMessage (beerName, type, filter) {
   const resultsContainer = document.getElementById('results-container')
-  let addBeerMessage
-  filter === 'name' ? addBeerMessage = 'Add this beer to our database <a href="/beers/add">here!</a>' : addBeerMessage = ''
+  const pageNavigation = document.getElementById('page-navigation')
+  console.log(filter)
+  let addBeerMessage, filterMessage
+  switch (filter) {
+    case 'name':
+      addBeerMessage = 'Add this beer to our database <a href="/beers/add">here!</a>'
+      filterMessage = `beer <span style="font-weight: bold;">"${beerName}"</span>`
+      break
+    case 'style':
+      filterMessage = `any beers for style <span style="font-weight: bold;">"${beerName}"</span>`
+      addBeerMessage = ''
+      break
+    case 'brewery':
+      filterMessage = `any beers for brewery <span style="font-weight: bold;">"${beerName}"</span>`
+      addBeerMessage = ''
+      break
+    case 'country':
+      filterMessage = `any beers for country <span style="font-weight: bold;">"${beerName}"</span>`
+      addBeerMessage = ''
+      break
+    default:
+      filterMessage = `user <span style="font-weight: bold;">"${beerName}"</span>`
+      addBeerMessage = ''
+      break
+  }
   const errorMessage = `
-    <div class="row">
-      <h4>Sorry, could not find ${type} <strong>"${beerName}"</strong></h4>
-      <p>${addBeerMessage}</p>
-    </div>
+  <div class="row">
+  <h4>Sorry, could not find ${filterMessage}</span></h4>
+  <p>${addBeerMessage}</p>
+  </div>
   `
+  clearContent(pageNavigation)
   clearContent(resultsContainer)
   addContent(resultsContainer, errorMessage)
 }
@@ -579,30 +630,8 @@ function generateButton (direction) {
   return button
 }
 
-function scrollFunction () {
-  const scrollButton = document.getElementById('scroll-button')
-  if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
-    scrollButton.style.display = 'block'
-  } else {
-    scrollButton.style.display = 'none'
-  }
-}
-
-// When the user clicks on the button, scroll to the top of the document
-function topFunction () {
-  document.body.scrollTop = 0 // For Chrome, Safari and Opera
-  document.documentElement.scrollTop = 0 // For IE and Firefox
-}
-
-function setWindowScroll () {
-  const scrollButton = document.getElementById('scroll-button')
-  window.onscroll = scrollFunction
-  scrollButton.onclick = topFunction
-}
-
 // Init calls
 checkSessionStorage()
 setSearchButtonsListeners()
 setFilterButtonsListeners()
 setSearchformListeners()
-setWindowScroll()
