@@ -157,7 +157,7 @@ module.exports = {
     const beerName = req.query.q
     await Beer.find({
       'name': { '$regex': beerName, '$options': 'i' }
-    }, '-v -images')
+    }, '-v')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -167,7 +167,7 @@ module.exports = {
     const beerName = req.query.q
     await Beer.find({
       'style_name': { '$regex': beerName, '$options': 'i' }
-    }, '-v -images')
+    }, '-v')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -177,7 +177,7 @@ module.exports = {
     const beerName = req.query.q
     await Beer.find({
       'brewery_name': { '$regex': beerName, '$options': 'i' }
-    }, '-v -images')
+    }, '-v')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -187,7 +187,7 @@ module.exports = {
     const beerName = req.query.q
     await Beer.find({
       'country_name': { '$regex': beerName, '$options': 'i' }
-    }, '-v -images')
+    }, '-v')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
