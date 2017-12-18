@@ -447,7 +447,8 @@ const controller = module.exports = {
       }
     }
   },
-  reportBug: async (req, res, next) => {
+  feedback: async (req, res, next) => {
+    const [subjectChosen, feedbackInputValue] = [req.body.subjectChosen, req.body.feedbackInputValue]
     const stmpTransport = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
@@ -458,12 +459,15 @@ const controller = module.exports = {
     const mailOptions = {
       to: process.env.GMAIL_U,
       from: process.env.GMAIL_U,
-      subject: 'Bug report - Beerraters.com',
-      text: `${req.body.message}\n\n This bug report was sent from user: http://localhost:6889/users/${req.session.user._id}`
+      subject: `${subjectChosen} - Beerraters.com`,
+      text: `${feedbackInputValue}\n\n Submitted by: http://localhost:6889/users/${req.session.user._id}`
     }
     await stmpTransport.sendMail(mailOptions, err => {
-      if (err) { console.log(err) }
-      res.end()
+      if (err) {
+        res.status(500).json({ message: 'Something went wrong, please try again later.' })
+      } else {
+        res.status(200).json({ message: 'Thanks for your feedback!' })
+      }
     })
   },
   removeFeedItem: async (req, res, next) => {

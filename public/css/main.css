@@ -194,12 +194,6 @@ a {
 }
 
 
-#report-bug {
-  position: fixed;
-  bottom: 45px;
-  left: 24px;
-}
-
 .collection .collection-item.feed-item {
   margin-bottom: 20px;
 }
