@@ -34,6 +34,11 @@
             <div class="card">
               <div class="card-content">
                   <span class="card-title" id="beer-name"><%= beer.name %></span>
+                  <% if (!session) { %>
+                    <span>
+                      <p>Log in <a href="/login">here</a> to view more content</p>
+                    </span>
+                  <% } %>
                   <span class="card-title" id="rating-container">
                     <% if (!beer.avg_rating) { %>
                       <i class="material-icons" style="color: #E8EDFA;">star</i>
@@ -116,12 +121,6 @@
     </ul>
   </div>
 </div>
-<% if (session) { %>
-  <% } else { %>
-  <div class="right">
-    <p>Log in <a href="/login">here</a> to view more content</p>
-  </div>                    
-    <% } %> 
 
  </div> <!-- main container -->
 </section>
