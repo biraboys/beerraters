@@ -1,0 +1,55 @@
+<%- include header.ejs %>
+  <section class="main-section">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 m6">
+          <h4>Contact</h4>
+          <p>Want to tell us something?</p>
+          <p>Seen a bug? Give us some feedback?</p>
+          <p>We would love to hear from you, anything!</p>
+          <% if (!session) { %>
+            <p><a href="/login">Login here</a> to send us some feedback.</p>
+          <% } %>
+        </div>
+        <% if (session) { %>
+          <div class="col s12 m6">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">Feedback</span>
+                <form name="feedback">
+                  <div class="row">
+                    <div class="col s12">
+                      <div class="row">
+                        <select class="browser-default" id="feedback-subject" required>
+                          <option value="" disabled selected>Select subject</option>
+                          <option value="Feedback">Feedback</option>
+                          <option value="Bug">Bug report</option>
+                          <option value="General">General</option>
+                        </select>
+                        <div class="input-field col s12">
+                          <textarea id="feedback-text" class="materialize-textarea validate" data-length="250" required></textarea>
+                          <label id="feedback-text-label" for="feedback-text">Fire away!</label>
+                        </div>
+                      </div>
+                      <button id="feedback-btn" class="btn waves-effect waves-light" type="submit">Submit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <%- include footer.ejs %>
+
+    <% if (session) { %>
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="/js/socket.js"></script>
+      <script src="/js/contact.js"></script>
+      <% } %>
+        </body>
+
+        </html>
