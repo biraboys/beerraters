@@ -88,6 +88,36 @@ async function showMatchingBreweries (country) {
   }
 }
 
+async function postBeer () {
+  try {
+    const response = await fetch('/beers/add', {
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      method: 'post',
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        name: addBeerForm.name.value.trim(),
+        style: addBeerForm.style.value,
+        category: addBeerForm.category.value,
+        country: addBeerForm.country.value,
+        brewery: addBeerForm.brewery.value,
+        description: addBeerForm.description.value.trim(),
+        otherCategory: addBeerForm.otherCategory.value.trim(),
+        otherBrewery: addBeerForm.otherBrewery.value.trim()
+      })
+    })
+    if (response.status === 201) {
+      const newBeer = await response.json()
+      Materialize.toast(`Your beer was created! Check it out <a href="/beers/${newBeer._id}">here</a>`, 10000)
+    } else {
+      Materialize.toast('Hmmm...Something went wrong. Check your input fields for special characters', 5000)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 function sortByName (array) {
   return array.sort((a, b) => {
     return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
@@ -108,4 +138,12 @@ function blockSpaceAsFirstInput () {
   }
 }
 
+function addBeerFormListener () {
+  addBeerForm.addEventListener('submit', e => {
+    e.preventDefault()
+    postBeer()
+  })
+}
+
+addBeerFormListener()
 blockSpaceAsFirstInput()

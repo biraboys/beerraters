@@ -37,14 +37,14 @@ module.exports = {
   },
   schemas: {
     beerSchema: Joi.object().keys({
-      name: Joi.string().required(),
-      description: Joi.string().required(),
+      name: Joi.string().min(1).max(50).required(),
+      description: Joi.string().min(1).max(500).required(),
       style: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
       category: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
       brewery: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
       country: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
-      otherCategory: Joi.string().min(1).max(24).optional().allow(''),
-      otherBrewery: Joi.string().min(1).max(24).optional().allow('')
+      otherCategory: Joi.string().min(1).max(50).optional().allow(''),
+      otherBrewery: Joi.string().min(1).max(50).optional().allow('')
     }),
     reviewSchema: Joi.object().keys({
       place: Joi.string().required(),

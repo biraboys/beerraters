@@ -20,6 +20,7 @@ io.adapter(redis({ host: 'localhost', port: 6379 }))
 
 // Middleware
 app.use(helmet())
+app.use(compression())
 app.use(function (req, res, next) {
   res.io = io
   next()
@@ -44,7 +45,6 @@ app.use(session({
 
 app.use(cookieParser())
 app.use(favicon(path.join(__dirname, '/public/images/beer_placeholder.svg')))
-app.use(compression())
 
 // Routes
 const index = require('./routes/index')
