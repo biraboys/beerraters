@@ -14,11 +14,11 @@ function addContributionButtonsListeners () {
     $('#review-modal').modal('open')
   }
   document.getElementById('upload-image-button').onclick = () => {
+    $('#image-modal').modal('open')
     document.getElementById('upload-image-form').addEventListener('submit', e => {
       e.preventDefault()
       document.getElementById('loading-container').classList.add('active')
       uploadImage()
-      $('#image-modal').modal('open')
     })
   }
 }
