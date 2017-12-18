@@ -63,7 +63,7 @@ function changeSymbolColor (ratingSliderValue) {
 
 /**
  * Posts beer rating in back end
- * @param {number} rating - Rating of beer 
+ * @param {number} rating - Rating of beer
  */
 async function postRating (rating) {
   const beerName = document.getElementById('beer-name').innerHTML
