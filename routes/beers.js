@@ -17,7 +17,7 @@ router.route('/add')
 
 router.route('/:beerId')
   .get(validateParams(schemas.idSchema, 'beerId'), BeersController.renderBeer)
-  .post(BeersController.updateBeer)
+  // .post(BeersController.updateBeer)
 
 router.route('/:beerId/consume')
   .post(validateParams(schemas.idSchema, 'beerId'), BeersController.consumeBeer)

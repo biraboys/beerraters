@@ -31,11 +31,13 @@ module.exports = {
   newBeer: async (req, res, next) => {
     if (!req.session.user) {
       res.status(401).redirect('/login')
+      return
     }
     const [name, styleId, countryId, description, otherCategory, otherBrewery] = [req.value.body.name.trim(), req.value.body.style, req.value.body.country, req.value.body.description.trim(), req.value.body.otherCategory.trim(), req.value.body.otherBrewery.trim()]
     let [categoryId, breweryId] = [req.value.body.category, req.value.body.brewery]
     if (testForHtml(otherCategory) === true || testForHtml(otherBrewery) === true || testForHtml(name) === true || testForHtml(description) === true) {
       res.status(403).end()
+      return
     }
     if (otherCategory && otherCategory.length > 0) {
       const newCategory = new Category({
@@ -114,46 +116,46 @@ module.exports = {
     const beerReviews = await Beer.findById(beerId, 'reviews')
     res.status(200).json(beerReviews)
   },
-  updateBeer: async (req, res, next) => {
-    const { beerId } = req.params
-    const [description, styleId, countryId] = [req.body.description, req.body.style, req.body.country]
-    let [category, brewery, state] = [req.body.category, req.body.brewery, req.body.state]
+  // updateBeer: async (req, res, next) => {
+  //   const { beerId } = req.params
+  //   const [description, styleId, countryId] = [req.body.description, req.body.style, req.body.country]
+  //   let [category, brewery, state] = [req.body.category, req.body.brewery, req.body.state]
 
-    if (category === 'Other') {
-      category = req.body.otherCategory
-      const newCategory = new Category({
-        name: category,
-        style_id: styleId
-      })
-      await newCategory.save()
-    }
-    if (brewery === 'Other') {
-      brewery = req.body.otherBrewery
-      const newBrewery = new Brewery({
-        name: brewery,
-        country_id: countryId
-      })
-      await newBrewery.save()
-      const breweryId = await Brewery.findOne({name: brewery}, '_id')
-      await Country.findByIdAndUpdate(countryId, { $push: {breweries: breweryId} })
-      if (state === 'Other') {
-        state = req.body.otherState
-        const newState = new State({
-          name: state,
-          country_id: countryId
-        })
-        await newState.save()
-        const stateId = await State.findOne({name: state}, '_id')
-        await Brewery.findByIdAndUpdate(breweryId, { $set: {state_id: stateId} })
-      }
-    }
+  //   if (category === 'Other') {
+  //     category = req.body.otherCategory
+  //     const newCategory = new Category({
+  //       name: category,
+  //       style_id: styleId
+  //     })
+  //     await newCategory.save()
+  //   }
+  //   if (brewery === 'Other') {
+  //     brewery = req.body.otherBrewery
+  //     const newBrewery = new Brewery({
+  //       name: brewery,
+  //       country_id: countryId
+  //     })
+  //     await newBrewery.save()
+  //     const breweryId = await Brewery.findOne({name: brewery}, '_id')
+  //     await Country.findByIdAndUpdate(countryId, { $push: {breweries: breweryId} })
+  //     if (state === 'Other') {
+  //       state = req.body.otherState
+  //       const newState = new State({
+  //         name: state,
+  //         country_id: countryId
+  //       })
+  //       await newState.save()
+  //       const stateId = await State.findOne({name: state}, '_id')
+  //       await Brewery.findByIdAndUpdate(breweryId, { $set: {state_id: stateId} })
+  //     }
+  //   }
 
-    const categoryId = await Category.findOne({name: category}, '_id')
-    const breweryId = await Brewery.findOne({name: brewery}, '_id')
-    await Beer.findByIdAndUpdate(beerId, { $set: { style_id: styleId, category_id: categoryId, description: description, country_id: countryId, brewery_id: breweryId } })
+  //   const categoryId = await Category.findOne({name: category}, '_id')
+  //   const breweryId = await Brewery.findOne({name: brewery}, '_id')
+  //   await Beer.findByIdAndUpdate(beerId, { $set: { style_id: styleId, category_id: categoryId, description: description, country_id: countryId, brewery_id: breweryId } })
 
-    res.status(200).redirect(`/beers/${beerId}`)
-  },
+  //   res.status(200).redirect(`/beers/${beerId}`)
+  // },
   findBeerByName: async (req, res, next) => {
     const beerName = req.query.q
     await Beer.find({
