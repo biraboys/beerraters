@@ -242,8 +242,8 @@ async function generateBeerCard (beerObj) {
   console.log(beerObj)
   if (beerObj.consumes && beerObj.consumes.length > 0) {
     consumes = `
-      <i class="material-icons va-middle" aria-hidden="true">done</i>
-      <span class="card-subtitle va-middle">${beerObj.consumes.length} consumes</span>
+      <i class="material-icons va-middle" aria-hidden="true">local_drink</i>
+      <span class="card-subtitle va-middle">${beerObj.consumes.length} drinks</span>
     `
   } else {
     consumes = ''

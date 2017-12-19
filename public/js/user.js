@@ -179,7 +179,7 @@ function createChart (first, second, third, fourth) {
   const myDoughnutChart = new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: ['Reviews', 'Rankings', 'Images', 'Consumes'],
+      labels: ['Reviews', 'Rankings', 'Images', 'Drinks'],
       datasets: [{
         data: [first, second, third, fourth],
         backgroundColor: [
@@ -215,7 +215,7 @@ function displayUserConsumes (user) {
     })
   } else {
     userConsumesList.innerHTML += `
-    <span class="card-title">No user consumes</span>
+    <span class="card-title">No user drinks</span>
     `
   }
 }

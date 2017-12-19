@@ -98,11 +98,23 @@
 
  <div class="col s12 m12 l6 card">
     <div class="card-tabs">
-      <ul class="tabs tabs-fixed-width" style="overflow: hidden;">
-        <li class="tab"><a class="active" href="#reviews">Reviews</a></li>
-        <li class="tab"><a href="#ratings">Ratings</a></li>
-        <li class="tab"><a href="#consumes">Consumes</a></li>        
-        <li class="tab"><a href="#gallery">Gallery</a></li>        
+      <ul class="tabs tabs-fixed-width" style="overflow-x: hidden;">
+        <li class="tab" style="display: flex; align-items: center; justify-content: center;">
+          <i class="material-icons" aria-hidden="true">local_drink</i>
+          <a style="padding-left: 0; color: #BF813A;" href="#consumes">Drinks</a>
+        </li>        
+        <li class="tab" style="display: flex; align-items: center; justify-content: center;">
+          <i class="material-icons" aria-hidden="true">star</i>
+          <a style="padding-left: 0; color: #BF813A;" href="#ratings">Ratings</a>
+        </li>
+        <li class="tab" style="display: flex; align-items: center; justify-content: center;">
+          <i class="material-icons" aria-hidden="true">rate_review</i>
+          <a style="padding-left: 0; color: #BF813A;" class="active" href="#reviews">Reviews</a>
+        </li>
+        <li class="tab" style="display: flex; align-items: center; justify-content: center;">
+          <i class="material-icons" aria-hidden="true">insert_photo</i>
+          <a style="padding-left: 0; color: #BF813A;" href="#images">Images</a>
+        </li>        
       </ul>
     </div>
     <div class="card-content">
@@ -112,7 +124,7 @@
        <% user.reviews.forEach(function(review) { %>
               <li class="collection-item review-item">
             <span class="title">
-              <a class="review-title" href="/beers/<%= review.beer_id._id %>" data-target="<%= review._id %>"><%= review.beer_id.name %></a>
+              <a class="review-title beerraters-link" href="/beers/<%= review.beer_id._id %>" data-target="<%= review._id %>"><%= review.beer_id.name %></a>
             </span>
             <p>
              <%= review.place %>
@@ -136,7 +148,7 @@
         <div class="collection no-border" id="ratings-list">
         </div>
       </div>
-      <div id="gallery" class="col s12">
+      <div id="images" class="col s12">
         <% if (user.images.length === 0) { %>
           <div class="row">
             <span class="card-title">No user images</span>

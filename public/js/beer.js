@@ -104,7 +104,7 @@ async function addConsume () {
       updateConsumeElementsInDom(beerName)
     }
   } catch (err) {
-    Materialize.toast(`Sorry could not consume ${beerName}`, 2000)
+    Materialize.toast(`Sorry could not drink ${beerName}`, 2000)
   }
 }
 
