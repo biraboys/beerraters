@@ -212,9 +212,9 @@ function addFeedItemsListeners (feedItem, newFeedCounter, feedCounterSpan) {
 function generateFeedTypeHtml (feedItem) {
   let feedTypeHtml
   switch (feedItem.type) {
-    case 'consumed':
+    case 'drank':
       feedTypeHtml = `
-      <i class="material-icons va-middle" aria-hidden="true">done</i> <span class="va-middle">${feedItem.type}</span>
+      <i class="material-icons va-middle" aria-hidden="true">local_drink</i> <span class="va-middle">${feedItem.type}</span>
       <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>
       `
       break
