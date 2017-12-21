@@ -15,7 +15,7 @@ socket.on('news', async function (feedItem) {
     const newFeedStorage = localStorage.getItem('newFeedCounter')
     let newFeedCounter
     if (newFeedStorage !== null) {
-      newFeedCounter = Number(newFeedStorage)
+      newFeedCounter = parseInt(newFeedStorage)
       newFeedCounter++
       localStorage.setItem('newFeedCounter', newFeedCounter)
     } else {
@@ -168,7 +168,7 @@ function getNewFeedCounter () {
   let newFeedCounter
   if (newFeedStorage !== null) {
     let feedItemIndex = 0
-    newFeedCounter = Number(newFeedStorage)
+    newFeedCounter = parseInt(newFeedStorage)
     for (const feedItem of feedItems) {
       if (feedItemIndex < newFeedCounter) {
         feedItem.classList.add('pulse')
@@ -212,7 +212,7 @@ function addFeedItemsListeners (feedItem, newFeedCounter, feedCounterSpan) {
 function generateFeedTypeHtml (feedItem) {
   let feedTypeHtml
   switch (feedItem.type) {
-    case 'drank':
+    case 'consumed':
       feedTypeHtml = `
       <i class="material-icons va-middle" aria-hidden="true">local_drink</i> <span class="va-middle">${feedItem.type}</span>
       <a href="/beers/${feedItem.beer_id}" class="va-middle">${feedItem.beer_name}</a>

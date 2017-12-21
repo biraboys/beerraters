@@ -68,7 +68,7 @@ function changeSymbolColor (ratingSliderValue) {
 async function postRating (rating) {
   const beerName = document.getElementById('beer-name').innerHTML
   const beerId = location.href.split('/')[4]
-  rating = Number(rating)
+  rating = parseInt(rating)
   try {
     const response = await fetch(`/beers/${beerId}/rating`, {
       method: 'post',
@@ -286,7 +286,7 @@ async function getReviewUserImage (review) {
  */
 async function getBeerImages () {
   const beerId = location.href.split('/')[4]
-  const imageAmount = Number(document.getElementById('image-amount-span').innerText)
+  const imageAmount = parseInt(document.getElementById('image-amount-span').innerText)
   if (imageAmount > 0) {
     try {
       let i = 0
@@ -320,7 +320,7 @@ async function getBeerImages () {
  */
 async function getUplaodedBeerImage () {
   const beerId = location.href.split('/')[4]
-  const imageIndex = Number(document.getElementById('image-amount-span').innerText) - 1
+  const imageIndex = parseInt(document.getElementById('image-amount-span').innerText) - 1
   try {
     const response = await fetch(`/beers/${beerId}/getImage`, {
       headers: new Headers({
@@ -433,10 +433,10 @@ function checkAndDisplayContributions (json) {
   const imageButton = document.getElementById('upload-image-button')
   const ratingButton = document.getElementById('post-rating-button')
   const reviewButton = document.getElementById('write-review-button')
-  if (!beer.consumes.includes(userId)) consumeButton.style.display = 'block'
-  if (!userReviews.includes(userId)) reviewButton.style.display = 'block'
-  if (!userImages.includes(userId)) imageButton.style.display = 'block'
-  if (!ratingUsers.includes(userId)) ratingButton.style.display = 'block'
+  if (!beer.consumes.includes(userId)) consumeButton.style.display = 'inline-block'
+  if (!userReviews.includes(userId)) reviewButton.style.display = 'inline-block'
+  if (!userImages.includes(userId)) imageButton.style.display = 'inline-block'
+  if (!ratingUsers.includes(userId)) ratingButton.style.display = 'inline-block'
 }
 /**
  * Displays success message to user and updates number of ratings
@@ -445,7 +445,7 @@ function checkAndDisplayContributions (json) {
  */
 function updateRatingElementsInDom (beerName, rating) {
   let ratingAmoutSpanText = document.getElementById('rating-amount-span').innerText
-  let ratingAmout = Number(ratingAmoutSpanText)
+  let ratingAmout = parseInt(ratingAmoutSpanText)
   document.getElementById('post-rating-button').style.display = 'none'
   ratingAmout++
   document.getElementById('rating-amount-span').innerText = ratingAmout
@@ -459,7 +459,7 @@ function updateRatingElementsInDom (beerName, rating) {
  */
 function updateConsumeElementsInDom (beerName) {
   let consumeAmoutSpanText = document.getElementById('consume-amount-span').innerText
-  let consumeAmout = Number(consumeAmoutSpanText)
+  let consumeAmout = parseInt(consumeAmoutSpanText)
   document.getElementById('add-consume-button').style.display = 'none'
   consumeAmout++
   document.getElementById('consume-amount-span').innerText = consumeAmout
@@ -472,7 +472,7 @@ function updateConsumeElementsInDom (beerName) {
  */
 function updateReviewElementsInDom () {
   let reviewAmoutSpanText = document.getElementById('review-amount-span').innerText
-  let reviewAmout = Number(reviewAmoutSpanText)
+  let reviewAmout = parseInt(reviewAmoutSpanText)
   document.getElementById('write-review-button').style.display = 'none'
   reviewAmout++
   if (document.getElementById('no-reviews-message') !== null) {
@@ -533,7 +533,7 @@ async function uploadImage () {
  */
 function updateImageElementsInDom () {
   let imageAmoutSpanText = document.getElementById('image-amount-span').innerText
-  let imageAmout = Number(imageAmoutSpanText)
+  let imageAmout = parseInt(imageAmoutSpanText)
   document.getElementById('upload-image-button').style.display = 'none'
   imageAmout++
   document.getElementById('image-amount-span').innerText = imageAmout
