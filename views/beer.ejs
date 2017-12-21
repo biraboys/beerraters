@@ -7,25 +7,33 @@
             <% } else { %>
               <div class="col s12 m3">
                 <div class="card">
-                   <div class="card-content">
-                     <figure class="flex-center flex-column">
-                        <i class="material-icons" aria-hidden="true">local_drink</i>
-                       <figcaption>Drinks
-                        <span id="consume-amount-span"><%= beer.consumes.length %></span>
-                       </figcaption>
-                       <button class="va-middle no-border bgc-transparent tc-lightblue hidden" id="add-consume-button">Drink it</button>
-                     </figure>
+                   <div class="card-content ta-center">
+                     <span class="card-title">Style</span>
+                        <% if (beer.style_id) { %>
+                          <span class="card-subtitle">
+                            <a class="beerraters-link" href="/styles/<%= beer.style_id._id %>">
+                              <%= beer.style_id.name %>
+                            </a>
+                          </span>                  
+                          <% } else { %>
+                            <span class="card-subtitle">
+                              No style added for this beer
+                            </span>
+                          <% } %>
                    </div>
                  </div>
                 <div class="card">
-                  <div class="card-content">
-                    <figure class="flex-center flex-column">
-                       <i class="material-icons" aria-hidden="true">star</i>
-                      <figcaption>Ratings
-                        <span id="rating-amount-span"><%= beer.ratings.length %></span>
-                      </figcaption>
-                      <button class="modal-trigger va-middle no-border bgc-transparent tc-lightblue hidden" id="post-rating-button">Post rating</button>                      
-                    </figure>
+                  <div class="card-content ta-center">
+                      <span class="card-title">Category</span>
+                      <% if (beer.category_id) { %>
+                        <span class="card-subtitle">
+                          <%= beer.category_id.name %>
+                        </span>
+                        <% } else { %>
+                          <span class="card-subtitle">
+                              No category added for this beer
+                          </span>
+                        <% } %>
                   </div>
                 </div>
               </div>
@@ -48,62 +56,67 @@
                       <i class="material-icons" style="color: #E8EDFA;">star</i>            
                       <span class="card-subtitle">N/A</span>
                       <% } %>
-                    </span>                
+                    </span>
+                    <span>
+                      <i class="material-icons va-middle" aria-hidden="true">local_drink</i>
+                      <span id="consume-amount-span" class="card-subtitle va-middle"><%= beer.consumes.length %> Drinks</span>                    
+                    </span>
+                    <span>
+                      <i class="material-icons va-middle" aria-hidden="true">star</i>                        
+                      <span id="rating-amount-span" class="card-subtitle va-middle"><%= beer.ratings.length %> Ratings</span>
+                    </span>
+                    <span>
+                      <i class="material-icons va-middle" aria-hidden="true">rate_review</i>
+                      <span id="review-amount-span" class="card-subtitle va-middle"><%= beer.reviews.length %> Reviews</span>
+                    </span>
+                    <span>
+                      <i class="material-icons va-middle" aria-hidden="true">insert_photo</i>
+                      <span id="image-amount-span" class="card-subtitle va-middle"><%= beer.images.length %> Images</span>
+                    </span>
                 <p><%= beer.description %></p>
               </div>
-                <div class="card-content bt-1">                
-                  <% if (beer.style_id) { %>
-                    <div class="chip">
-                      <a class="chip-link" href="/styles/<%= beer.style_id._id %>">
-                        <%= beer.style_id.name %>
-                      </a>
-                    </div>                  
-                    <% } %>
-                      <% if (beer.category_id) { %>
-                    <div class="chip">
-                      <%= beer.category_id.name %>
-                    </div>
-                    <% } %>
-                    <% if (beer.brewery_id) { %>
-                      <div class="chip">
-                          <%= beer.brewery_id.name %>
-                      </div> 
-                    <% } %>
-                    <% if (beer.country_id) { %>
-                      <div class="chip">
-                        <img src="/images/flags/<%= beer.country_id.flag %>" alt="Flag of beer country">
-                        <a class="chip-link" href="/countries/<%= beer.country_id._id %>">
-                          <%= beer.country_id.code %>
-                        </a>
-                      </div>
-                    <% } %>
-                    </div>
+                <div class="card-content bt-1">
+                  <button class="va-middle no-border bgc-transparent beerraters-link hidden" id="add-consume-button">Drink it</button>
+                  <button class="modal-trigger va-middle no-border bgc-transparent beerraters-link hidden" id="post-rating-button">Post rating</button>
+                  <button class="va-middle no-border bgc-transparent beerraters-link hidden" id="write-review-button">Write review</button>
+                  <button class="va-middle no-border bgc-transparent beerraters-link hidden" id="upload-image-button">Upload photo</button>
+                </div>
            </div>
               </div>
      <div class="col s12 m3">
        <div class="card">
-         <div class="card-content">
-            <figure class="flex-center flex-column">
-            <i class="material-icons" aria-hidden="true">rate_review</i>
-            <figcaption>Reviews
-              <span id="review-amount-span"><%= beer.reviews.length %></span>
-            </figcaption>
-            <button class="va-middle no-border bgc-transparent tc-lightblue hidden" id="write-review-button">Write review</button>
+         <div class="card-content ta-center">
+           <span class="card-title">Country</span>
+            <% if (beer.country_id) { %>
+              <span class="card-subtitle">
+                <img class="va-middle" src="/images/flags/<%= beer.country_id.flag %>" alt="Flag of beer country">
+                <a class="beerraters-link" href="/countries/<%= beer.country_id._id %>">
+                  <%= beer.country_id.name %>
+                </a>
+              </span>
+            <% } else { %>
+              <span class="card-subtitle">
+                No country added for this beer
+              </span>
+            <% } %>
           </div>
        </div>
         <div class="card">
-           <div class="card-content">
-             <figure class="flex-center flex-column">
-                 <i class="material-icons" aria-hidden="true">insert_photo</i>
-               <figcaption>Images
-                <span id="image-amount-span"><%= beer.images.length %></span>
-              </figcaption>
-               <button class="va-middle no-border bgc-transparent tc-lightblue hidden" id="upload-image-button">Upload photo</button>
-             </figure>
+           <div class="card-content ta-center">
+             <span class="card-title">Brewery</span>
+              <% if (beer.brewery_id) { %>
+                <span class="card-subtitle">
+                    <%= beer.brewery_id.name %>
+                </span> 
+              <% } else { %>
+                <span class="card-subtitle">
+                    No brewery added for this beer
+                  </span>
+              <% } %>
            </div>
          </div>
      </div>
-          </div>   
+  </div>   
       <% } %>
       <div class="row">
         <h3>Photos</h3>
