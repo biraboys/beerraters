@@ -10,3 +10,14 @@ navSearchForm.addEventListener('submit', function (e) {
   sessionStorage.removeItem('beersJSON')
   location.href = '/search'
 })
+
+$(document).ready(function() {
+  const cookieAccept = localStorage.getItem('cookieAccept')
+  if (!cookieAccept) {
+    $('#cookie-div').removeClass('hide')
+  }
+  $('#cookie').click(function (e) {
+    localStorage.setItem('cookieAccept', true)
+    $('#cookie-div').remove()
+  })
+})

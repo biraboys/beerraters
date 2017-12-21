@@ -257,3 +257,16 @@ a {
 .beerraters-link {
   color: #BF813A;
 }
+
+.cookie-info {
+  text-align: center;
+  background-color: #BE9143;
+  position: fixed;
+  width: 100%;
+  top: 64px;
+}
+
+.cookie-link {
+  color: #003452;
+  text-decoration: underline;
+}
