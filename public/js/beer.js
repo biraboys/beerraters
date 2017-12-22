@@ -286,7 +286,7 @@ async function getBeerImages () {
 /**
  * Gets Buffer of upload beer images from backend
  */
-async function getUplaodedBeerImage () {
+async function getUploadedBeerImage () {
   const beerId = location.href.split('/')[4]
   const imageIndex = parseInt(document.getElementById('image-amount-span').innerText) - 1
   try {
@@ -382,10 +382,14 @@ function createBeerImage (beerImageBlob, userName) {
   const beerImageContainer = document.getElementById('beer-image-container')
   const beerImage = document.createElement('img')
   const objectURL = URL.createObjectURL(beerImageBlob)
+  const columnDiv = document.createElement('div')
+  columnDiv.setAttribute('class', 'col s6 m3 l2')
+  columnDiv.style.padding = '0'
   beerImage.src = objectURL
   beerImage.setAttribute('class', 'responsive-img materialboxed caption-images')
   beerImage.setAttribute('data-caption', `Posted by ${userName}`)
-  beerImageContainer.insertAdjacentElement('afterbegin', beerImage)
+  columnDiv.appendChild(beerImage)
+  beerImageContainer.insertAdjacentElement('afterbegin', columnDiv)
 }
 
 /**
@@ -489,7 +493,7 @@ async function uploadImage () {
     })
     if (response.status === 201) {
       updateImageElementsInDom()
-      getUplaodedBeerImage()
+      getUploadedBeerImage()
     }
   } catch (err) {
     console.log(err)

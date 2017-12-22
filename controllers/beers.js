@@ -4,7 +4,6 @@ const Brewery = require('../models/brewery')
 const Country = require('../models/country')
 const Review = require('../models/review')
 const Feed = require('../models/feed')
-const State = require('../models/state')
 const Style = require('../models/style')
 const User = require('../models/user')
 const { sortByName } = require('../helpers/sort')
@@ -12,6 +11,7 @@ const { testForHtml } = require('../helpers/escape')
 const Jimp = require('jimp')
 const JSONStream = require('JSONStream')
 const nodemailer = require('nodemailer')
+
 module.exports = {
   addBeer: async (req, res, next) => {
     if (!req.session.user) {
@@ -330,6 +330,10 @@ module.exports = {
     if (beer.reviews.includes(userId)) {
       res.status(400).end()
     } else {
+      if (testForHtml(req.value.body.place) === true || testForHtml(req.value.body.review) === true) {
+        res.status(403).end()
+        return
+      }
       const review = new Review({
         user_id: user._id,
         user_username: user.username,

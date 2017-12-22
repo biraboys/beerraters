@@ -57,23 +57,29 @@
                       <span class="card-subtitle">N/A</span>
                       <% } %>
                     </span>
-                    <span>
+                    <span class="mobile-inline-block">
                       <i class="material-icons va-middle" aria-hidden="true">local_drink</i>
-                      <span id="consume-amount-span" class="card-subtitle va-middle"><%= beer.consumes.length %> Drinks</span>                    
+                      <span id="consume-amount-span" class="card-subtitle va-middle"><%= beer.consumes.length %></span>
+                      <span class="card-subtitle va-middle">Drinks</span>                    
                     </span>
-                    <span>
+                    <span class="mobile-inline-block">
                       <i class="material-icons va-middle" aria-hidden="true">star</i>                        
-                      <span id="rating-amount-span" class="card-subtitle va-middle"><%= beer.ratings.length %> Ratings</span>
+                      <span id="rating-amount-span" class="card-subtitle va-middle"><%= beer.ratings.length %></span>
+                      <span class="card-subtitle va-middle">Ratings</span>
                     </span>
-                    <span>
+                    <span class="mobile-inline-block">
                       <i class="material-icons va-middle" aria-hidden="true">rate_review</i>
-                      <span id="review-amount-span" class="card-subtitle va-middle"><%= beer.reviews.length %> Reviews</span>
+                      <span id="review-amount-span" class="card-subtitle va-middle"><%= beer.reviews.length %></span>
+                      <span class="card-subtitle va-middle">Reviews</span>
                     </span>
-                    <span>
+                    <span class="mobile-inline-block">
                       <i class="material-icons va-middle" aria-hidden="true">insert_photo</i>
-                      <span id="image-amount-span" class="card-subtitle va-middle"><%= beer.images.length %> Images</span>
+                      <span id="image-amount-span" class="card-subtitle va-middle"><%= beer.images.length %></span>
+                      <span class="card-subtitle va-middle">Images</span>
                     </span>
-                <p><%= beer.description %></p>
+                    <span class="card-content">
+                      <p><%= beer.description %></p>
+                  </span>
               </div>
                 <div class="card-content bt-1">
                   <button class="va-middle no-border bgc-transparent beerraters-link hidden" id="add-consume-button">Drink it</button>
@@ -123,7 +129,7 @@
         <% if (beer.images.length === 0) { %>
           <p id="no-images-message">Be the first one to upload a photo of this beer!</p>
         <% } %> 
-        <div id="beer-image-container" style="display:flex;"></div>
+        <div id="beer-image-container" class="row"></div>
       </div>  
 <div class="row">
     <h3>Reviews</h3>

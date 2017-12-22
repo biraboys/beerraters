@@ -140,7 +140,7 @@ function displayUserFollowing (userFollowingArr) {
 
 function displayUserFollowers (userFollowersArr) {
   const followersList = document.getElementById('followers-list')
-  followersList.innerHTML = '' 
+  followersList.innerHTML = ''
   userFollowersArr.followers.forEach(followerObj => {
     let followerStatusHtml
     followerObj.status === true ? followerStatusHtml = '<span class="user-status light-green accent-3 ml-10"></span>' : followerStatusHtml = '<span class="user-status grey lighten-2 ml-10"></span>'
@@ -252,9 +252,13 @@ function displayUserReviews (userReviewsArr) {
 function displayUserImages (imageBlob, beerName) {
   const beerImage = createBeerImage(imageBlob)
   const imageContainer = document.getElementById('images-container')
+  const columnDiv = document.createElement('div')
+  columnDiv.setAttribute('class', 'col s6 m4 l3')
+  columnDiv.style.padding = '0'
   beerImage.setAttribute('class', 'materialboxed responsive-img caption-images')
   beerImage.setAttribute('data-caption', `${beerName}`)
-  imageContainer.appendChild(beerImage)
+  columnDiv.appendChild(beerImage)
+  imageContainer.appendChild(columnDiv)
   $('.materialboxed').materialbox()
 }
 

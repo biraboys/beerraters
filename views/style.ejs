@@ -1,5 +1,4 @@
 <%- include header.ejs %>
-<div id="style-color-container" class="vw-100 h-20" style="background-color: <%= style.color_code %>;">
  <div class="container pt-5">
    <div class="row">
          <% if (style === undefined) { %>
@@ -29,52 +28,10 @@
                 <div class="card-content">
                   <span class="card-title">COLOR</span>
                     <div class="row">
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #F8F753;"></div>
+                      <div class="col s12">
+                        <div style="height:50px; background-color: <%= style.color_code %>"></div>
                       </div>  
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #F6F513;"></div>
-                      </div>
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #ECE61A;"></div>
-                      </div>
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #D5BC26;"></div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #BF923B;"></div>
-                      </div>
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #BF813A;"></div>
-                      </div>
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #BC6733;"></div>
-                      </div>
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #8D4C32;"></div>
-                      </div>
-                  </div>
-                    <div class="row">
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #5D341A;"></div>
-                      </div>
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #261716;"></div>
-                      </div>
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #0F0B0A;"></div>
-                      </div>
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #080707;"></div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col s3">
-                        <div class="h-1-5 style-color-box" style="background-color: #030403;"></div>
-                      </div>
-                </div>
+              </div>
               </div>
               </div>
               <div class="card">

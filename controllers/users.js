@@ -1,13 +1,12 @@
 const User = require('../models/user')
-const Beer = require('../models/beer')
 const Review = require('../models/review')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const async = require('async')
 const bcrypt = require('bcryptjs')
 const Jimp = require('jimp')
-const Feed = require('../models/feed')
 const JSONStream = require('JSONStream')
+const { testForHtml } = require('../helpers/escape')
 
 module.exports = {
   newUser: async (req, res, next) => {
@@ -450,6 +449,10 @@ module.exports = {
   },
   feedback: async (req, res, next) => {
     const [subjectChosen, feedbackInputValue] = [req.body.subjectChosen, req.body.feedbackInputValue]
+    if (testForHtml(feedbackInputValue) === true) {
+      res.status(403).end()
+      return
+    }
     const stmpTransport = nodemailer.createTransport({
       service: 'Gmail',
       auth: {

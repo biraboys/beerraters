@@ -93,8 +93,8 @@
 
  <div class="col s12 m12 l8 card">
     <div class="card-tabs">
-      <ul class="tabs tabs-fixed-width" style="overflow-x: hidden;">
-        <li class="tab" style="display: flex; align-items: center; justify-content: center;">
+      <ul class="tabs tabs-fixed-width beerraters-tabs" style="overflow-x: hidden;">
+        <li class="tab beerraters-tab" style="display: flex; align-items: center; justify-content: center;">
           <i class="material-icons" aria-hidden="true">local_drink</i>
           <a style="padding-left: 0; color: #BF813A;" class="active" href="#consumes">Drinks
               <% if (user.consumes && user.consumes.length > 0) { %>   
@@ -104,7 +104,7 @@
               <% } %>
           </a>
         </li>        
-        <li class="tab" style="display: flex; align-items: center; justify-content: center;">
+        <li class="tab beerraters-tab" style="display: flex; align-items: center; justify-content: center;">
           <i class="material-icons" aria-hidden="true">star</i>
           <a id="rating-tab" style="padding-left: 0; color: #BF813A;" href="#ratings">Ratings
               <% if (user.ratings && user.ratings.length > 0) { %>   
@@ -114,7 +114,7 @@
               <% } %>
           </a>
         </li>
-        <li class="tab" style="display: flex; align-items: center; justify-content: center;">
+        <li class="tab beerraters-tab" style="display: flex; align-items: center; justify-content: center;">
           <i class="material-icons" aria-hidden="true">rate_review</i>
           <a id="review-tab" style="padding-left: 0; color: #BF813A;" href="#reviews">Reviews
               <% if (user.reviews && user.reviews.length > 0) { %>   
@@ -124,7 +124,7 @@
               <% } %>
           </a>
         </li>
-        <li class="tab" style="display: flex; align-items: center; justify-content: center;">
+        <li class="tab beerraters-tab" style="display: flex; align-items: center; justify-content: center;">
           <i class="material-icons" aria-hidden="true">insert_photo</i>
           <a id="image-tab" style="padding-left: 0; color: #BF813A;" href="#images">Images
               <% if (user.images && user.images.length > 0) { %>   
@@ -160,7 +160,7 @@
       </div>
       <div id="images" class="col s12">
         <% if (user.images && user.images.length > 0) { %>
-          <div id="images-container" class="user-images-container"></div>
+          <div id="images-container" class="row"></div>
         <% } else { %>
           <span class="card-title">No user images</span>
         <% } %>
