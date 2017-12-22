@@ -1,7 +1,15 @@
 const logout = document.getElementById('logout')
+const logoutMobile = document.getElementById('logout-mobile')
 
 if (logout) {
   logout.addEventListener('click', function (e) {
+    e.preventDefault()
+    logoutSession()
+  })
+}
+
+if (logoutMobile) {
+  logoutMobile.addEventListener('click', function (e) {
     e.preventDefault()
     logoutSession()
   })
