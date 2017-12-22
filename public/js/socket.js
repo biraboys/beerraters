@@ -10,13 +10,13 @@ socket.on('news', async function (feedItem) {
     return user._id
   })
   if (userIds.indexOf(feedItem.user_id) > -1) {
-    $('#new-feed-badge').removeClass('hide')
-    $('#feed-link').click(() => {
-      $('#new-feed-badge').addClass('hide')
-    })
     $('#feed-link').addClass('pulse')
     $('#feed-link').click(() => {
       $('#feed-link').removeClass('pulse')
+    })
+    $('#mobile-feed-link').addClass('pulse')
+    $('#mobile-feed-link').click(() => {
+      $('#mobile-feed-link').removeClass('pulse')
     })
   }
 })
