@@ -31,8 +31,8 @@ const usernameValidator = [
 const passwordValidator = [
   validate({
     validator: 'matches',
-    arguments: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{8,35}$/,
-    message: 'Password needs to have at least one lower case, one uppercase, one number, one special character, and must be at least 8 characters but no more than 35.'
+    arguments: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d]).{8,35}$/,
+    message: 'Password needs to have at least one lower case, one uppercase, one number and must be at least 8 characters but no more than 35.'
   }),
   validate({
     validator: 'isLength',

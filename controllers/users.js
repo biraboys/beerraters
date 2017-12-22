@@ -38,9 +38,9 @@ module.exports = {
     await newUser.save(err => {
       if (err) {
         if (err.errors) {
-          res.json({ message: err.errors })
+          res.status(400).json({ message: err.errors })
         } else if (err.code === 11000) {
-          res.json({ message: err.message })
+          res.status(400).json({ message: err.message })
         }
       } else {
         const stmpTransport = nodemailer.createTransport({
