@@ -234,6 +234,11 @@ a {
   background-color: transparent;
 }
 
+.bgc-transparent:focus {
+  background-color: transparent;
+  outline: #BF923B;
+}
+
 .va-middle {
   vertical-align: middle;
 }
@@ -269,4 +274,8 @@ a {
 .cookie-link {
   color: #003452;
   text-decoration: underline;
+}
+
+.intro-card {
+  height: 275px;
 }
