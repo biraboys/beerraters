@@ -220,7 +220,7 @@ async function checkReviews () {
       const reviewsObj = await response.json()
       if (reviewsObj.reviews.length > 0) {
         reviewsObj.reviews.forEach(async reviewObj => {
-          await getReview(reviewObj)
+          await getReviewUserImage(reviewObj)
         })
       }
     }
@@ -230,44 +230,12 @@ async function checkReviews () {
 }
 
 /**
- * Gets a single review from back end
- * @param {Object} reviewObj - Review object populated from Beer schema
- */
-async function getReview (reviewObj) {
-  try {
-    const reviewResponse = await fetch(`/reviews/${reviewObj.review_id}`)
-    if (reviewResponse.status === 200) {
-      const review = await reviewResponse.json()
-      getReviewUserImage(review)
-    }
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-/**
- * Gets a single review from back end
- * @param {Object} reviewId - Id of newly posted review
- */
-async function getNewReview (reviewId) {
-  try {
-    const reviewResponse = await fetch(`/reviews/${reviewId}`)
-    if (reviewResponse.status === 200) {
-      const review = await reviewResponse.json()
-      getReviewUserImage(review)
-    }
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-/**
  * Gets user image of current review
  * @param {Object} review - Review object from schema
  */
 async function getReviewUserImage (review) {
   try {
-    const userImageResponse = await fetch(`/users/${review.user_id._id}/get-profileimage`, {
+    const userImageResponse = await fetch(`/users/${review.user_id}/profileImage`, {
       method: 'get',
       credentials: 'same-origin'
     })
@@ -373,7 +341,8 @@ function addReviewFormListeners () {
           })
           if (response.status === 201) {
             const newReview = await response.json()
-            await getNewReview(newReview._id)
+            console.log(newReview)
+            getReviewUserImage(newReview)
             updateReviewElementsInDom()
           }
         } catch (err) {
@@ -493,7 +462,7 @@ function displayReview (review, userImage) {
   <div class="card-panel col s12 m4">
     <li class="collection-item avatar">
       ${userImage.outerHTML}
-      <span class="title"><a href="/users/${review.user_id._id}"><strong>${review.user_id.username}</strong></a></span>
+      <span class="title"><a href="/users/${review.user_id}"><strong>${review.user_username}</strong></a></span>
       <p>
         <span class="card-subtitle">${review.place}</span>
         <br>

@@ -44,7 +44,7 @@ app.use(session({
 }))
 
 app.use(cookieParser())
-app.use(favicon(path.join(__dirname, '/public/images/beer_placeholder.svg')))
+app.use(favicon(path.join(__dirname, '/public/images/logo_placeholder.png')))
 
 // Routes
 const index = require('./routes/index')

@@ -8,12 +8,9 @@
   <% if (user === undefined) { %>
     <h1>Sorry could not found user</h1>
      <% } else { %>
-     <div class="col s12 m12 l3 desktop-sticky">
+     <div class="col s12 m12 l4 desktop-sticky">
             <div class="card flex-center flex-column ta-center">
-              <div id="profile-img" class="card-image">
-                <% if (user.profileImg.data === null) { %>
-                  <img src="/images/user-placeholder.png" class="responsive-img card-image profile" />
-                <% } %>
+              <div id="profile-img-container" class="card-image">
                 </div>
                 <div class="card-content">
                 <% if (user.status) { %>
@@ -23,7 +20,9 @@
                 <% } %>
                 <span class="card-title">
                   @<%= user.username %>
-                  <img src="/images/flags/SE-32.png" />
+                  <% if (user.active === true) { %>
+                    <img src="/images/flags/<%= user.country_id.flag %>"/>
+                  <% } %>
                 </span>
                 <span class="card-title">
                   <%= user.name %>
@@ -36,135 +35,136 @@
                   <% } %>
                 </span>
                 <br>
-                                  <% if (user.description) { %>
+                <% if (user.description) { %>
                   <p><%= user.description %></p>
                 <% } else { %>
                   <p>User has no description yet.</p>
                 <% } %>
                 </div>
+                <% if (user.active === true) { %>
                 <div class="card-action flex-center flex-column">
                   <% if (session && session._id === user.id) { %>
-                <a class="waves-effect waves-light btn" href="/users/<%= session._id %>/edit">Edit</a>
-                <% } else { %>
-                  <% if (follower) { %>
-                    <a class="waves-effect waves-light btn" id="follow" data-id="<%= user._id %>" href="">Unfollow</a>
+                    <a class="waves-effect waves-light btn" href="/users/<%= session._id %>/edit">Edit</a>
+                  <% } else if (session && user.followers.indexOf(session._id) > -1) { %>
+                    <button id="follow-btn" class="waves-effect waves-light btn">Unfollow</button>
                   <% } else { %>
-                    <a class="waves-effect waves-light btn" id="follow" data-id="<%= user._id %>" href="">Follow</a>
+                    <button id="follow-btn" class="waves-effect waves-light btn">Follow</button>                
                   <% } %>
-               <% } %>
               </div>
+              <% } %>
             </div>
-              <ul class="collapsible" data-collapsible="accordion">
+  <ul class="collapsible" data-collapsible="accordion">
     <li>
-      <div class="collapsible-header active">Followers <span class="card-subtitle">(<span id="followers"><%= followers %></span>)</span><i class="material-icons right">chevron_right</i></div>
+      <div id="followers-header" class="collapsible-header">Followers
+          <% if (user.followers && user.followers.length > 0) { %>   
+            <span class="card-subtitle">(
+              <span id="followers-amount-span"><%= user.followers.length %></span>
+            )</span>
+            <i class="material-icons right">chevron_right</i>
+            <% } else { %>
+              <span id="followers-amount-span" class="card-subtitle">(0)</span>
+            <% } %>
+      </div>
       <div class="collapsible-body p-0">
         <ul class="collection">
-          <% user.followers.forEach(function(follower) { %>
-    <li class="collection-item avatar follower-list">
-      <img src="" class="circle responsive-img" />
-      <% if (follower.status === true) { %>
-        <span class="title follower-span"><a href="/users/<%= follower._id %>"><%= follower.username %></a><span class="user-status light-green accent-3 ml-10"></span></span>
-      <% } else { %>
-        <span class="title follower-span"><a href="/users/<%= follower._id %>"><%= follower.username %></a><span class="user-status grey lighten-2 ml-10"></span></span>
-      <% } %>
-    </li>
-          <% }); %>
+            <li id="followers-list" class="collection-item follower-list">
         </ul>
       </div>
     </li>
        <li>
-      <div class="collapsible-header">Following <span class="card-subtitle">(<span id="following"><%= user.following.length %></span>)</span><i class="material-icons right">chevron_right</i></div>
+      <div id="following-header" class="collapsible-header">Following
+          <% if (user.following && user.following.length > 0) { %>   
+            <span class="card-subtitle">(
+              <span id="following-amount-span"><%= user.following.length %></span>
+            )</span>
+            <i class="material-icons right">chevron_right</i>
+            <% } else { %>
+            <span id="following-amount-span" class="card-subtitle">(0)</span>
+             <% } %>
+      </div>
       <div class="collapsible-body p-0">
         <ul class="collection">
-          <% user.following.forEach(function(following) { %>
-    <li class="collection-item avatar following-list">
-    <% if (following.profileImg.data !== null) { %>
-      <img src="" class="circle responsive-img" />
-    <% } else { %>
-      <img src="/images/user-placeholder.png" class="circle responsive-img" />
-    <% } %>
-      <% if (following.status === true) { %>
-        <span class="title follower-span"><a href="/users/<%= following._id %>"><%= following.username %></a><span class="user-status light-green accent-3 ml-10"></span></span>
-      <% } else { %>
-        <span class="title follower-span"><a href="/users/<%= following._id %>"><%= following.username %></a><span class="user-status grey lighten-2 ml-10"></span></span>
-      <% } %>
-    </li>
-          <% }); %>
+            <li id="following-list" class="collection-item following-list">
         </ul>
       </div>
     </li>
-    </ul>
-          </div>
+  </ul>
+</div>
 
- <div class="col s12 m12 l6 card">
+ <div class="col s12 m12 l8 card">
     <div class="card-tabs">
       <ul class="tabs tabs-fixed-width" style="overflow-x: hidden;">
         <li class="tab" style="display: flex; align-items: center; justify-content: center;">
           <i class="material-icons" aria-hidden="true">local_drink</i>
-          <a style="padding-left: 0; color: #BF813A;" href="#consumes">Drinks</a>
+          <a style="padding-left: 0; color: #BF813A;" class="active" href="#consumes">Drinks
+              <% if (user.consumes && user.consumes.length > 0) { %>   
+                <span class="card-subtitle">(
+                  <span id="consume-amount-span"><%= user.consumes.length %></span>
+                )</span>
+              <% } %>
+          </a>
         </li>        
         <li class="tab" style="display: flex; align-items: center; justify-content: center;">
           <i class="material-icons" aria-hidden="true">star</i>
-          <a style="padding-left: 0; color: #BF813A;" href="#ratings">Ratings</a>
+          <a id="rating-tab" style="padding-left: 0; color: #BF813A;" href="#ratings">Ratings
+              <% if (user.ratings && user.ratings.length > 0) { %>   
+                <span class="card-subtitle">(
+                  <span id="rating-amount-span"><%= user.ratings.length %></span>
+                )</span>
+              <% } %>
+          </a>
         </li>
         <li class="tab" style="display: flex; align-items: center; justify-content: center;">
           <i class="material-icons" aria-hidden="true">rate_review</i>
-          <a style="padding-left: 0; color: #BF813A;" class="active" href="#reviews">Reviews</a>
+          <a id="review-tab" style="padding-left: 0; color: #BF813A;" href="#reviews">Reviews
+              <% if (user.reviews && user.reviews.length > 0) { %>   
+                <span class="card-subtitle">(
+                  <span id="review-amount-span"><%= user.reviews.length %></span>
+                )</span>
+              <% } %>
+          </a>
         </li>
         <li class="tab" style="display: flex; align-items: center; justify-content: center;">
           <i class="material-icons" aria-hidden="true">insert_photo</i>
-          <a style="padding-left: 0; color: #BF813A;" href="#images">Images</a>
+          <a id="image-tab" style="padding-left: 0; color: #BF813A;" href="#images">Images
+              <% if (user.images && user.images.length > 0) { %>   
+                <span class="card-subtitle">(
+                  <span id="image-amount-span"><%= user.images.length %></span>
+                )</span>
+              <% } %>
+          </a>
         </li>        
       </ul>
     </div>
     <div class="card-content">
-      <div id="reviews" class="col s12">
-         <% if (user.reviews.length > 0) { %>   
-       <ul class="collection no-border" id="reviews-container">
-       <% user.reviews.forEach(function(review) { %>
-              <li class="collection-item review-item">
-            <span class="title">
-              <a class="review-title beerraters-link" href="/beers/<%= review.beer_id._id %>" data-target="<%= review._id %>"><%= review.beer_id.name %></a>
-            </span>
-            <p>
-             <%= review.place %>
-             <% if (session._id === id) { %>
-              <a class="secondary-content modal-trigger" href="#edit-modal"><i class="material-icons">mode_edit</i></a>
-            <% } %>
-            </p>
-            <p>
-              <span class="card-subtitle review-body"><%= review.body %></span>
-            </p>
-       </li>
-        <% }); %>
-       </ul>
-         <% } else { %>
-          <div class="row">
-            <span class="card-title">No user reviews</span>
-          </div>
-           <% } %>
-      </div>
-      <div id="ratings" class="col s12">
-        <div class="collection no-border" id="ratings-list">
+        <div id="consumes" class="col s12">
+          <% if (user.consumes && user.consumes.length > 0) { %>   
+            <div class="collection no-border" id="consume-list"></div>
+          <% } else { %>
+            <span class="card-title">No user consumes</span>
+          <% } %>
         </div>
+        <div id="ratings" class="col s12">
+          <% if (user.ratings && user.ratings.length > 0) { %> 
+            <div class="collection no-border" id="ratings-list"></div>
+          <% } else { %>
+            <span class="card-title">No user ratings</span>
+          <% } %>
+        </div>   
+      <div id="reviews" class="col s12">
+         <% if (user.reviews && user.reviews.length > 0) { %>   
+          <ul class="collection no-border" id="reviews-container"></ul>
+         <% } else { %>
+            <span class="card-title">No user reviews</span>
+          <% } %>
       </div>
       <div id="images" class="col s12">
-        <% if (user.images.length === 0) { %>
-          <div class="row">
-            <span class="card-title">No user images</span>
-          </div>
+        <% if (user.images && user.images.length > 0) { %>
+          <div id="images-container" class="user-images-container"></div>
         <% } else { %>
-          <div class="row">
-            <% user.images.forEach(function(image) { %>
-              <div class="col s12 m3 image-column"></div>
-            <% }); %>
-          </div>
+          <span class="card-title">No user images</span>
         <% } %>
-   </div>
-      <div id="consumes" class="col s12">
-        <div class="collection no-border" id="consume-list">
-        </div>
-      </div>            
+   </div>         
   </div>
 </div>
 
@@ -185,21 +185,6 @@
   </div>
     </div>
   </div>
-
-
-  <div class="col s12 m12 l3 desktop-sticky">
-        <div class="card">
-            <div class="card-content">
-              <span class="card-title ta-center">Contributions <span class="card-subtitle">(<%= user.reviews.length + user.ratings.length + user.consumes.length + user.images.length %>)</span></span>                   
-                <canvas id="myChart"></canvas>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-content">
-                <span class="card-title ta-center">Rank <span class="card-subtitle" id="ranking-field"></span></span>            
-              </div>
-          </div>
-  </div>
 <% } %> 
 <% } else { %>
   <h3 class="ta-center">You have to log in to view this content</h3>
@@ -216,8 +201,6 @@
     $('.modal').modal()
   })
   </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
-<script>if(!window.Chart){const Chart=document.createElement('script');Chart.src="/js/libs/chart.min.js";document.body.appendChild(Chart)}</script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/socket.js"></script>
 <script src="/js/user.js"></script>

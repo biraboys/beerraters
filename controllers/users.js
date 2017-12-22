@@ -9,16 +9,7 @@ const Jimp = require('jimp')
 const Feed = require('../models/feed')
 const JSONStream = require('JSONStream')
 
-const controller = module.exports = {
-  index: async (req, res, next) => {
-    const users = await User.find({})
-    res.status(200).json(users)
-  },
-  getUserJson: async (req, res, next) => {
-    const { userId } = req.params
-    const user = await User.findOne({_id: userId}, '-password -_v').populate('consumes ratings')
-    res.status(200).json(user)
-  },
+module.exports = {
   newUser: async (req, res, next) => {
     const [username, name, email, password, country] = [req.body.username, req.body.name, req.body.email, req.body.password, req.body.country]
     const buff = crypto.randomBytes(20)
@@ -72,27 +63,35 @@ const controller = module.exports = {
       }
     })
   },
-  getUser: async (req, res, next) => {
-    const { userId } = req.params
-    const user = await User.findById(userId, '-password -_v').populate('images.beer_id followers following', '-password -_v').populate({
-      path: 'reviews',
-      populate: {path: 'beer_id'}
+
+  userJson: async (req, res, next) => {
+    const id = req.params.userId
+    await User.findOne({ _id: id }, 'description name', (err, user) => {
+      if (err) {
+        res.status(404).render('/404').end()
+      } else {
+        res.status(200).json(user)
+      }
     })
-    const profileId = user.id
-    if (req.session.user) {
-      const session = await User.findById(req.session.user._id)
-      const follow = await controller.checkIfFollowed(user._id, session)
-      const amount = user.followers.length
-      res.status(200).render('user', { followers: amount, follower: follow, user, session: req.session.user, id: profileId })
-    } else {
-      const amount = user.followers.length
-      res.status(200).render('user', { followers: amount, follower: false, user, session: req.session.user, id: profileId })
-    }
+  },
+  renderUser: async (req, res, next) => {
+    const { userId } = req.params
+    const user = await User.findById(userId, 'consumes ratings reviews images followers following username description name active status registered country_id', '-images.data').populate('country_id', 'flag')
+    res.status(200).render('user', { user: user, session: req.session.user })
+  },
+  getUserConsumes: async (req, res, next) => {
+    const { userId } = req.params
+    const userConsumes = await User.findById(userId, 'consumes')
+    res.status(200).json(userConsumes)
+  },
+  getUserRatings: async (req, res, next) => {
+    const { userId } = req.params
+    const userRatings = await User.findById(userId, 'ratings')
+    res.status(200).json(userRatings)
   },
   getUserReviews: async (req, res, next) => {
     const { userId } = req.params
-    const userReviews = await User.findById({userId}, 'reviews').populate('reviews')
-
+    const userReviews = await User.findById(userId, 'reviews')
     res.status(200).json(userReviews)
   },
   newUserReview: async (req, res, next) => {
@@ -116,7 +115,7 @@ const controller = module.exports = {
     const userName = req.query.q
     await User.find({
       'username': { '$regex': userName, '$options': 'i' }
-    }, 'username active')
+    }, '-__v -password -email -profileImg -images.data -images.contentType -resetPasswordToken -resetPasswordExpires -reactivationToken -registrationToken -registrationTokenExpires')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -261,22 +260,20 @@ const controller = module.exports = {
   followUser: async (req, res, next) => {
     if (req.session.user) {
       const { userId } = req.params
-      const [user, session] = await Promise.all([
-        User.findById(userId),
-        User.findById(req.session.user._id)
-      ])
-      const following = session.following
-      if (following.indexOf(user._id) > -1) {
-        // User is already following this user
-        controller.unfollowUser(res, session, user)
+      const user = await User.findById(userId, 'followers')
+      if (user.followers.indexOf(req.session.user._id) > -1) {
+        await User.findByIdAndUpdate(req.session.user._id, { $pull: { following: user._id } })
+        await User.findByIdAndUpdate(userId, { $pull: { followers: req.session.user._id } })
+        const updatedUser = await User.findById(userId, 'followers')
+        res.status(200).json({status: 'Follow', amount: updatedUser.followers.length || 0})
       } else {
-        // User is not following and will now follow this user
-        await User.findOneAndUpdate({ _id: session._id }, { $push: { following: user._id } })
-        await User.findOneAndUpdate({ _id: user._id }, { $push: { followers: session._id } })
-        res.status(200).send()
+        await User.findByIdAndUpdate(req.session.user._id, { $push: { following: user._id } })
+        await User.findByIdAndUpdate(userId, { $push: { followers: req.session.user._id } })
+        const updatedUser = await User.findById(userId, 'followers')
+        res.status(200).json({status: 'Unfollow', amount: updatedUser.followers.length || 0})
       }
-    } else if (!req.session.user) {
-      res.status(401).send()
+    } else {
+      res.status(403).end()
     }
   },
   unfollowUser: async (res, session, user) => {
@@ -296,7 +293,12 @@ const controller = module.exports = {
   },
   getUserFollowing: async (req, res, next) => {
     const { userId } = req.params
-    const user = await User.findById(userId, 'status username following').populate('following', 'username status')
+    const user = await User.findById(userId, 'following').populate('following', 'username status')
+    res.json(user)
+  },
+  getUserFollowers: async (req, res, next) => {
+    const { userId } = req.params
+    const user = await User.findById(userId, 'followers').populate('followers', 'username status')
     res.json(user)
   },
   forgotPassword: async(req, res, next) => {
@@ -408,9 +410,8 @@ const controller = module.exports = {
     const { userId } = req.params
     User.findById(userId, async function (err, doc) {
       if (err) return next(err)
-      const beer = await Beer.findById(doc.images[req.body.index].beer_id, 'name')
       res.set({
-        'Beer-Name': beer.name,
+        'Beer-Name': doc.images[req.body.index].beer_name,
         'Content-Type': doc.images[req.body.index].contentType
       })
       res.send(doc.images[req.body.index].data)
@@ -469,11 +470,6 @@ const controller = module.exports = {
         res.status(200).json({ message: 'Thanks for your feedback!' })
       }
     })
-  },
-  removeFeedItem: async (req, res, next) => {
-    const { feedId } = req.params
-    await Feed.findByIdAndRemove(feedId)
-    res.send('Done')
   },
   checkUser: async (req, res, next) => {
     if (req.session.user._id === req.params.userId) {

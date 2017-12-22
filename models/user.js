@@ -4,19 +4,6 @@ const titlize = require('mongoose-title-case')
 const validate = require('mongoose-validator')
 const bcrypt = require('bcryptjs')
 
-// const nameValidator = [
-//   validate({
-//     validator: 'matches',
-//     arguments: /^(([a-zA-ZåäöÅÄÖ]{3,20})+[ ]+([a-zA-ZåäöÅÄÖ]{3,20})+)+$/,
-//     message: 'Name must be at least 3 characters, max 30, no special characters or numbers, must have space in between name.'
-//   }),
-//   validate({
-//     validator: 'isLength',
-//     arguments: [2, 20],
-//     message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
-//   })
-// ]
-
 const emailValidator = [
   validate({
     validator: 'isEmail',
@@ -60,9 +47,28 @@ const userSchema = new Schema({
   email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
   password: { type: String, required: true, validate: passwordValidator },
   registered: { type: Date, default: Date.now },
-  reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
-  ratings: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
-  consumes: [{ type: Schema.Types.ObjectId, ref: 'beer' }],
+  reviews: [
+    {
+      _id: { type: Schema.Types.ObjectId, ref: 'review' },
+      body: String,
+      place: String,
+      beer_id: { type: Schema.Types.ObjectId, ref: 'beer' },
+      beer_name: String
+    }
+  ],
+  ratings: [
+    {
+      beer_id: { type: Schema.Types.ObjectId, ref: 'beer' },
+      beer_name: String,
+      rating: Number
+    }
+  ],
+  consumes: [
+    {
+      beer_id: { type: Schema.Types.ObjectId, ref: 'beer' },
+      beer_name: String
+    }
+  ],
   country_id: { type: Schema.Types.ObjectId, ref: 'country' },
   following: [{ type: Schema.Types.ObjectId, ref: 'user' }],
   followers: [{ type: Schema.Types.ObjectId, ref: 'user' }],
@@ -70,7 +76,8 @@ const userSchema = new Schema({
     {
       data: Buffer,
       contentType: String,
-      beer_id: { type: Schema.Types.ObjectId, ref: 'beer' }
+      beer_id: { type: Schema.Types.ObjectId, ref: 'beer' },
+      beer_name: String
     }
   ],
   description: { type: String, default: '' },

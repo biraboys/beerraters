@@ -47,8 +47,11 @@ const beerSchema = new Schema({
   avg_rating: Number,
   reviews: [
     {
-      review_id: { type: Schema.Types.ObjectId, ref: 'review' },
-      user_id: { type: Schema.Types.ObjectId, ref: 'user' }
+      _id: { type: Schema.Types.ObjectId, ref: 'review' },
+      body: String,
+      place: String,
+      user_id: { type: Schema.Types.ObjectId, ref: 'user' },
+      user_username: String
     }
   ],
   consumes: [
@@ -61,7 +64,8 @@ const beerSchema = new Schema({
     {
       data: Buffer,
       contentType: String,
-      user_id: { type: Schema.Types.ObjectId, ref: 'user' }
+      user_id: { type: Schema.Types.ObjectId, ref: 'user' },
+      user_username: String
     }
   ]
 })
