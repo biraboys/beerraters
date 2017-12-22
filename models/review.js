@@ -7,6 +7,7 @@ const reviewSchema = new Schema({
     ref: 'user',
     required: true
   },
+  user_username: String,
   place: {
     type: String,
     required: true
@@ -28,7 +29,8 @@ const reviewSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'beer',
     required: true
-  }
+  },
+  beer_name: String
 })
 
 const Review = mongoose.model('review', reviewSchema)

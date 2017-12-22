@@ -16,7 +16,7 @@ const removeAccountForm = document.getElementById('remove-account-form')
 
 async function getUserJson () {
   const path = window.location.pathname.split('/')
-  const url = `/${path[1]}/${path[2]}/json`
+  const url = `/${path[1]}/${path[2]}/userJson`
   try {
     const response = await fetch(url, {
       headers: new Headers({

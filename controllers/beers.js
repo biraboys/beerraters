@@ -111,6 +111,11 @@ module.exports = {
     }
     res.json({ beer: beer, brewery: brewery, country: country, style: style, category: category, rating: rating })
   },
+  getBeerName: async (req, res, next) => {
+    const { beerId } = req.params
+    const beer = await Beer.findById(beerId, 'name')
+    res.status(200).json(beer)
+  },
   getReviews: async (req, res, next) => {
     const { beerId } = req.value.params
     const beerReviews = await Beer.findById(beerId, 'reviews')
@@ -160,7 +165,7 @@ module.exports = {
     const beerName = req.query.q
     await Beer.find({
       'name': { '$regex': beerName, '$options': 'i' }
-    }, '-v')
+    }, '-v -images.data -images.contentType')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -170,7 +175,7 @@ module.exports = {
     const beerName = req.query.q
     await Beer.find({
       'style_name': { '$regex': beerName, '$options': 'i' }
-    }, '-v')
+    }, '-v -images.data -images.contentType')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -180,7 +185,7 @@ module.exports = {
     const beerName = req.query.q
     await Beer.find({
       'brewery_name': { '$regex': beerName, '$options': 'i' }
-    }, '-v')
+    }, '-v -images.data -images.contentType')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -190,7 +195,7 @@ module.exports = {
     const beerName = req.query.q
     await Beer.find({
       'country_name': { '$regex': beerName, '$options': 'i' }
-    }, '-v')
+    }, '-v -images.data -images.contentType')
     .lean()
     .cursor()
     .pipe(JSONStream.stringify())
@@ -212,7 +217,7 @@ module.exports = {
       res.status(400).end()
     } else {
       await Beer.findByIdAndUpdate(beerId, { $push: { consumes: user._id } })
-      await User.findByIdAndUpdate(user._id, { $push: { consumes: beerId } })
+      await User.findByIdAndUpdate(user._id, { $push: { consumes: { beer_id: beerId, beer_name: beer.name } } })
       const newFeed = new Feed({
         user_id: user._id,
         username: user.username,
@@ -229,36 +234,37 @@ module.exports = {
   },
   addBeerRating: async (req, res, next) => {
     const { beerId } = req.value.params
+    const rating = req.value.body.rating
     const userId = req.session.user._id
     const user = await User.findById(userId, 'username ratings')
+    const beer = await Beer.findById(beerId, 'name')
     if (user.ratings.includes(beerId)) {
+      res.status(403).end()
+    } else if (typeof rating !== 'number') {
       res.status(400).end()
     } else {
-      const rating = req.value.body.rating
-      if (typeof rating === 'number') {
-        await Beer.findByIdAndUpdate(beerId, { $push: { ratings: {rating: rating, user: userId} } })
-        await User.findByIdAndUpdate(userId, { $push: { ratings: beerId } })
-        const beer = await Beer.findById(beerId, 'name ratings')
-        const beerRatings = beer.ratings.map(obj => {
-          return obj.rating
-        })
-        const ratingSum = beerRatings.reduce((a, b) => a + b, 0)
-        const avgRating = ratingSum / beerRatings.length
-        avgRating.toFixed(1)
-        await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
-        const newFeed = new Feed({
-          user_id: user._id,
-          username: user.username,
-          type: `rated ${rating}`,
-          beer_id: beer._id,
-          beer_name: beer.name,
-          expiration: Date.now() + 604800000,
-          created: Date.now()
-        })
-        await newFeed.save()
-        res.io.emit('news', newFeed)
-        res.status(201).end()
-      }
+      await Beer.findByIdAndUpdate(beerId, { $push: { ratings: { rating: rating, user: userId } } })
+      await User.findByIdAndUpdate(userId, { $push: { ratings: { beer_id: beerId, beer_name: beer.name, rating: rating } } })
+      const updatedBeer = await Beer.findById(beerId, 'name ratings')
+      const beerRatings = updatedBeer.ratings.map(obj => {
+        return obj.rating
+      })
+      const ratingSum = beerRatings.reduce((a, b) => a + b, 0)
+      const avgRating = ratingSum / beerRatings.length
+      avgRating.toFixed(1)
+      await Beer.findByIdAndUpdate(beerId, { $set: { avg_rating: avgRating } })
+      const newFeed = new Feed({
+        user_id: user._id,
+        username: user.username,
+        type: `rated ${rating}`,
+        beer_id: beer._id,
+        beer_name: beer.name,
+        expiration: Date.now() + 604800000,
+        created: Date.now()
+      })
+      await newFeed.save()
+      res.io.emit('news', newFeed)
+      res.status(201).end()
     }
   },
   getAverageRating: async (req, res, next) => {
@@ -289,61 +295,65 @@ module.exports = {
     }
     if (postedImageUserIds && postedImageUserIds.includes(userId)) {
       res.status(400).end()
-    }
-    const image = await Jimp.read(req.file.buffer)
-    if (image) {
-      image.resize(Jimp.AUTO, 250)
-      image.quality(60)
-      image.getBuffer('image/png', async function (err, data) {
-        if (err) throw err
-        await Beer.findByIdAndUpdate(beer._id, { $push: { images: { data: data, contentType: 'image/png', user_id: user._id } } })
-        await User.findByIdAndUpdate(user._id, { $push: { images: { data: data, contentType: 'image/png', beer_id: beer._id } } })
-        const newFeed = new Feed({
-          user_id: user._id,
-          username: user.username,
-          type: 'uploaded',
-          beer_id: beer._id,
-          beer_name: beer.name,
-          expiration: Date.now() + 604800000,
-          created: Date.now()
-        })
-        await newFeed.save()
-        res.io.emit('news', newFeed)
-        res.status(201).end()
-      })
     } else {
-      res.status(406).end()
+      const image = await Jimp.read(req.file.buffer)
+      if (image) {
+        image.resize(Jimp.AUTO, 250)
+        image.quality(60)
+        image.getBuffer('image/png', async function (err, data) {
+          if (err) throw err
+          await Beer.findByIdAndUpdate(beer._id, { $push: { images: { data: data, contentType: 'image/png', user_id: user._id, user_username: user.username } } })
+          await User.findByIdAndUpdate(user._id, { $push: { images: { data: data, contentType: 'image/png', beer_id: beer._id, beer_name: beer.name } } })
+          const newFeed = new Feed({
+            user_id: user._id,
+            username: user.username,
+            type: 'uploaded',
+            beer_id: beer._id,
+            beer_name: beer.name,
+            expiration: Date.now() + 604800000,
+            created: Date.now()
+          })
+          await newFeed.save()
+          res.io.emit('news', newFeed)
+          res.status(201).end()
+        })
+      } else {
+        res.status(406).end()
+      }
     }
   },
   addBeerReview: async (req, res, next) => {
     const userId = req.session.user._id
-    const user = await User.findById(userId, 'username')
     const { beerId } = req.value.params
+    const user = await User.findById(userId, 'username')
     const beer = await Beer.findById(beerId, 'reviews name')
     if (beer.reviews.includes(userId)) {
       res.status(400).end()
+    } else {
+      const review = new Review({
+        user_id: user._id,
+        user_username: user.username,
+        place: req.value.body.place.trim(),
+        body: req.value.body.review.trim(),
+        beer_id: beer._id,
+        beer_name: beer.name
+      })
+      await review.save()
+      await Beer.findByIdAndUpdate(beerId, { $push: { reviews: { _id: review._id, body: review.body, place: review.place, user_id: userId, user_username: user.username } } })
+      await User.findByIdAndUpdate(userId, { $push: { reviews: { _id: review._id, body: review.body, place: review.place, beer_id: beer._id, beer_name: beer.name } } })
+      const newFeed = new Feed({
+        user_id: user._id,
+        username: user.username,
+        type: 'reviewed',
+        beer_id: beer._id,
+        beer_name: beer.name,
+        expiration: Date.now() + 604800000,
+        created: Date.now()
+      })
+      await newFeed.save()
+      res.io.emit('news', newFeed)
+      res.status(201).json(review)
     }
-    const review = new Review({
-      user_id: user._id,
-      place: req.value.body.place.trim(),
-      body: req.value.body.review.trim(),
-      beer_id: beer._id
-    })
-    await review.save()
-    await Beer.findByIdAndUpdate(beerId, { $push: { reviews: { review_id: review._id, user_id: userId } } })
-    await User.findByIdAndUpdate(userId, { $push: { reviews: review._id } })
-    const newFeed = new Feed({
-      user_id: user._id,
-      username: user.username,
-      type: 'reviewed',
-      beer_id: beer._id,
-      beer_name: beer.name,
-      expiration: Date.now() + 604800000,
-      created: Date.now()
-    })
-    await newFeed.save()
-    res.io.emit('news', newFeed)
-    res.status(201).json(review)
   },
   getBeerImage: async (req, res, next) => {
     const { beerId } = req.params
@@ -359,9 +369,8 @@ module.exports = {
     const { beerId } = req.params
     const imageIndex = req.body.index
     const beer = await Beer.findById(beerId)
-    const user = await User.findById(beer.images[imageIndex].user_id, 'username')
     res.set({
-      'User-Name': user.username,
+      'User-Name': beer.images[imageIndex].user_username,
       'Content-Type': beer.images[imageIndex].contentType
     })
     res.send(beer.images[imageIndex].data)

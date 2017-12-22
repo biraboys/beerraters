@@ -209,9 +209,7 @@ async function searchUser (user) {
       clearContent(pageNavigation)
       users.forEach(async (user, index) => {
         if (index <= 50) {
-          const imageBlob = await getUserProfileImg(user._id)
-          const imageObj = createUserImage(imageBlob)
-          const userCard = generateUserCard(user, imageObj.src)
+          const userCard = generateUserCard(user)
           await displayBeer(userCard)
         }
       })
@@ -239,7 +237,6 @@ async function generateBeerCard (beerObj) {
   beerObj.style_id ? style = `<span class="chip">${beerObj.style_name}</span>` : style = ''
   beerObj.brewery_id ? brewery = `<span class="chip">${beerObj.brewery_name}</span>` : brewery = ''
   beerObj.country_id ? country = `<span class="chip">${beerObj.country_name}</span>` : country = ''
-  console.log(beerObj)
   if (beerObj.consumes && beerObj.consumes.length > 0) {
     consumes = `
       <i class="material-icons va-middle" aria-hidden="true">local_drink</i>
@@ -392,27 +389,65 @@ async function generateBeerCard (beerObj) {
   return beerCard
 }
 
-function generateUserCard (user, profileImg) {
-  if (user.active) {
-    const userCard = `
+function generateUserCard (user) {
+  let consumes, ratings, reviews, images
+  if (user.consumes && user.consumes.length > 0) {
+    consumes = `
+      <i class="material-icons va-middle" aria-hidden="true">local_drink</i>
+      <span class="card-subtitle va-middle">${user.consumes.length} drinks</span>
+    `
+  } else {
+    consumes = ''
+  }
+  if (user.ratings && user.ratings.length > 0) {
+    ratings = `
+      <i class="material-icons va-middle" aria-hidden="true">star</i>
+      <span class="card-subtitle va-middle">${user.ratings.length} ratings</span>
+    `
+  } else {
+    ratings = ''
+  }
+  if (user.reviews && user.reviews.length > 0) {
+    reviews = `
+      <i class="material-icons va-middle" aria-hidden="true">rate_review</i>
+      <span class="card-subtitle va-middle">${user.reviews.length} reviews</span>
+    `
+  } else {
+    reviews = ''
+  }
+  if (user.images && user.images.length > 0) {
+    images = `
+      <i class="material-icons va-middle" aria-hidden="true">insert_photo</i>
+      <span class="card-subtitle va-middle">${user.images.length} images</span>
+    `
+  } else {
+    images = ''
+  }
+  const userCard = `
     <div class="row">
-      <div class="card horizontal">
-            <div class="card-image">
-            <img src="${profileImg}" />
-            </div>
-            <div class="card-stacked">
+      <div class="card">
             <div class="card-content">
               <div class="card-title">
-                <a class="card-link" href="/users/${user._id}">@${user.username}</a>
-              </div> 
-          </div>
+                <a class="beerraters-link" href="/users/${user._id}">@${user.username}</a>
+              </div>
+            <span>
+              ${consumes}
+            </span>
+            <span>
+              ${ratings}
+            </span>
+            <span>
+              ${reviews}
+            </span>
+            <span>
+              ${images}
+            </span>
+          </div> 
         </div>
       </div>
       </div>
         `
-    console.log(userCard)
-    return userCard
-  }
+  return userCard
 }
 
 function displayBeer (beerCard) {
@@ -424,7 +459,6 @@ function displayBeer (beerCard) {
 function displayErrorMessage (beerName, type, filter) {
   const resultsContainer = document.getElementById('results-container')
   const pageNavigation = document.getElementById('page-navigation')
-  console.log(filter)
   let addBeerMessage, filterMessage
   switch (filter) {
     case 'name':
@@ -597,27 +631,6 @@ async function newBeerCards (beersAmount, beers, startValue, endValue) {
     await displayBeer(beerCard)
   })
   window.scrollTo(0, 50)
-}
-
-async function getUserProfileImg (userId) {
-  try {
-    const response = await fetch(`/users/${userId}/get-profileimage`, {
-      method: 'get',
-      credentials: 'same-origin'
-    })
-    const img = await response.blob()
-    return img
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-function createUserImage (imageBlob) {
-  const image = document.createElement('img')
-  const objectURL = URL.createObjectURL(imageBlob)
-  image.src = objectURL
-  image.setAttribute('class', 'responsive-img card-image profile')
-  return image
 }
 
 function generateButton (direction) {

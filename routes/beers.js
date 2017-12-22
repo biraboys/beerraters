@@ -22,6 +22,9 @@ router.route('/:beerId')
 router.route('/:beerId/consume')
   .post(validateParams(schemas.idSchema, 'beerId'), BeersController.consumeBeer)
 
+router.route('/:beerId/name')
+  .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getBeerName)
+
 router.route('/:beerId/review')
   .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getReviews)
   .post([
@@ -50,7 +53,7 @@ router.route('/:beerId/addImage')
 
 router.route('/:beerId/getImage')
   .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getBeerImage)
-  .post(BeersController.getBeerImages)
+  .post(validateParams(schemas.idSchema, 'beerId'), BeersController.getBeerImages)
 
 router.route('/fetch/:beerId')
   .get(validateParams(schemas.idSchema, 'beerId'), BeersController.getBeer)

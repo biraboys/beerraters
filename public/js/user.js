@@ -1,170 +1,207 @@
-// Global DOM elements
-const follow = document.getElementById('follow')
-const followers = document.getElementById('followers')
-const userId = location.href.split('/')[4]
-const ctx = document.getElementById('myChart').getContext('2d')
-const modalTriggers = Array.from(document.getElementsByClassName('modal-trigger'))
-const editReviewForm = document.forms.editReviewForm
-const editModalTitle = document.getElementById('edit-modal-title')
-const imageContainer = document.getElementById('profile-img')
-const followerList = Array.from(document.getElementsByClassName('follower-list'))
-const followingList = Array.from(document.getElementsByClassName('following-list'))
-
-followerList.forEach(async follower => {
-  const userId = follower.childNodes[3].firstChild.href.split('/')[4]
-  const imageBlob = await getUserProfileImg(userId)
-  const userImage = createUserImage(imageBlob)
-  follower.childNodes[1].src = userImage.src
-})
-
-followingList.forEach(async following => {
-  const userId = following.childNodes[3].firstChild.href.split('/')[4]
-  const imageBlob = await getUserProfileImg(userId)
-  const userImage = createUserImage(imageBlob)
-  following.childNodes[1].src = userImage.src
-})
-
-if (imageContainer.childNodes.length === 1) { getUserProfileImg() }
-
-if (follow) {
-  follow.addEventListener('click', function (e) {
-    e.preventDefault()
-    followUser()
-  })
-}
-
-if (modalTriggers.length > 0) {
-  modalTriggers.forEach((trigger, index) => {
-    trigger.addEventListener('click', function () {
-      const body = document.getElementsByClassName('review-body')[index]
-      const title = document.getElementsByClassName('review-title')[index]
-      const reviewId = title.getAttribute('data-target')
-      editModalTitle.innerHTML = title.innerHTML
-      editModalTitle.setAttribute('data-target', reviewId)
-      editReviewForm.body.value = body.innerHTML
-      $('#body').trigger('autoresize')
-    })
-  })
-}
-
-editReviewForm.addEventListener('submit', function (e) {
-  e.preventDefault()
-  const body = this.body.value
-  const title = document.getElementById('edit-modal-title')
-  const reviewId = title.getAttribute('data-target')
-  editReview(reviewId, body)
-})
-
-async function editReview (reviewId, text) {
-  try {
-    const response = await fetch(`/reviews/${reviewId}`, {
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      }),
-      method: 'post',
-      credentials: 'same-origin',
-      body: JSON.stringify({
-        review: text.trim()
+async function getUserConsumes (userId) {
+  const userConsumeSpan = document.getElementById('consume-amount-span')
+  if (userConsumeSpan) {
+    try {
+      const response = await fetch(`/users/${userId}/consumes`, {
+        method: 'get',
+        credentials: 'same-origin'
       })
-    })
-    if (response.status === 200) {
-      Materialize.toast(`Review sucessfully updated!`, 2000)
-      $('#edit-modal').modal('close')
-      location.reload(true)
-    } else {
-      Materialize.toast(`Sorry could not edit review`, 2000)
-    }
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-async function followUser () {
-  const id = follow.dataset.id
-  const response = await fetch(`/users/${id}/follow`, {
-    method: 'post',
-    credentials: 'same-origin'
-  })
-  if (response.status === 401) {
-    window.location.href = '/login'
-  } else if (response.status === 200) {
-    if (follow.innerHTML[0] === 'F') {
-      const value = parseInt(followers.innerHTML) + 1
-      followers.innerHTML = value
-      follow.innerHTML = 'Unfollow'
-      Materialize.toast(`Now following user`, 2000)
-      location.reload(true)
-    } else {
-      const value = parseInt(followers.innerHTML) - 1
-      followers.innerHTML = value
-      follow.innerHTML = 'Follow'
-      Materialize.toast(`Not following user anymore`, 2000)
-      location.reload(true)
+      if (response.status === 200) {
+        const userConsumedBeerArr = await response.json()
+        displayUserConsumes(userConsumedBeerArr)
+      }
+    } catch (err) {
+      Materialize.toast('Sorry, could not get user drinks', 2000)
     }
   }
 }
 
-async function getUserRanking () {
-  const rankingField = document.getElementById('ranking-field')
-  try {
-    const response = await fetch('/users')
-    const users = await response.json()
-    users.forEach(user => {
-      user.contributions = user.reviews.length + user.ratings.length + user.consumes.length + user.images.length
-    })
-    users.sort((a, b) => {
-      return a.contributions > b.contributions ? -1 : a.contributions < b.contributions ? 1 : 0
-    })
-    const newUserArr = users.map(user => {
-      return user._id
-    })
-    const ranking = (newUserArr.indexOf(userId) + 1)
-    rankingField.innerHTML = ranking
-  } catch (err) {
-    console.log(err)
+async function getUserRatings (userId) {
+  const isUserRatingLoaded = sessionStorage.getItem('isUserRatingLoaded')
+  if (isUserRatingLoaded === null) {
+    try {
+      const response = await fetch(`/users/${userId}/ratings`, {
+        method: 'get',
+        credentials: 'same-origin'
+      })
+      if (response.status === 200) {
+        const userRatingsArr = await response.json()
+        displayUserRatings(userRatingsArr)
+      }
+    } catch (err) {
+      Materialize.toast('Sorry, could not get user ratings', 2000)
+    }
+    sessionStorage.setItem('isUserRatingLoaded', 'true')
   }
 }
 
-async function getUser () {
-  try {
-    const response = await fetch(`/users/${userId}/json`, {
-      method: 'get',
-      credentials: 'same-origin'
-    })
-    const userJson = await response.json()
-    const contributions = [userJson.reviews.length, userJson.ratings.length, userJson.images.length, userJson.consumes.length]
-    contributions.sort(function (a, b) {
-      return a - b
-    })
-    createChart(contributions[0], contributions[1], contributions[2], contributions[3])
-    if (userJson.images.length > 0) getGalleryImages(userJson.images)
-    displayUserConsumes(userJson)
-    displayUserRatings(userJson)
-  } catch (err) {
-    console.log(err)
+async function getUserReviews (userId) {
+  const isUserReviewsLoaded = sessionStorage.getItem('isUserReviewsLoaded')
+  if (isUserReviewsLoaded === null) {
+    try {
+      const response = await fetch(`/users/${userId}/reviews`, {
+        method: 'get',
+        credentials: 'same-origin'
+      })
+      if (response.status === 200) {
+        const userReviewsArr = await response.json()
+        displayUserReviews(userReviewsArr)
+      }
+    } catch (err) {
+      Materialize.toast('Sorry, could not get user reviews', 2000)
+    }
+    sessionStorage.setItem('isUserReviewsLoaded', 'true')
   }
 }
 
 async function getUserProfileImg (userId) {
   try {
-    const response = await fetch(`/users/${userId}/get-profileimage`, {
+    const response = await fetch(`/users/${userId}/profileImage`, {
       method: 'get',
       credentials: 'same-origin'
     })
-    const img = await response.blob()
-    return img
+    if (response.status === 200) {
+      const userImage = await response.blob()
+      createUserImage(userImage)
+    }
   } catch (err) {
     console.log(err)
   }
 }
 
+async function toggleFollowUser (userId) {
+  try {
+    const response = await fetch(`/users/${userId}/follow`, {
+      method: 'get',
+      credentials: 'same-origin'
+    })
+    if (response.status === 200) {
+      const followBtn = document.getElementById('follow-btn')
+      const followersAmountSpan = document.getElementById('followers-amount-span')
+      const followObj = await response.json()
+      followBtn.innerText = followObj.status
+      followersAmountSpan.innerText = followObj.amount
+      sessionStorage.removeItem('isUserFollowersLoaded')
+      getUserFollowers(userId)
+    }
+  } catch (err) {
+    Materialize.toast('Sorry could not follow/unfollow user', 2000)
+  }
+}
+
+async function getUserFollowers (userId) {
+  const isUserFollowersLoaded = sessionStorage.getItem('isUserFollowersLoaded')
+  if (isUserFollowersLoaded === null) {
+    try {
+      const response = await fetch(`/users/${userId}/followers`, {
+        method: 'get',
+        credentials: 'same-origin'
+      })
+      if (response.status === 200) {
+        const userFollowersArr = await response.json()
+        displayUserFollowers(userFollowersArr)
+      }
+    } catch (err) {
+      Materialize.toast('Sorry, could not display followers for user', 2000)
+    }
+    sessionStorage.setItem('isUserFollowersLoaded', 'true')
+  }
+}
+
+async function getUserFollowing (userId) {
+  const isUserFollowingLoaded = sessionStorage.getItem('isUserFollowingLoaded')
+  if (isUserFollowingLoaded === null) {
+    try {
+      const response = await fetch(`/users/${userId}/following`, {
+        method: 'get',
+        credentials: 'same-origin'
+      })
+      if (response.status === 200) {
+        const userFollowingArr = await response.json()
+        displayUserFollowing(userFollowingArr)
+      }
+    } catch (err) {
+      Materialize.toast('Sorry, could not display following users', 2000)
+    }
+    sessionStorage.setItem('isUserFollowingLoaded', 'true')
+  }
+}
+
+function displayUserFollowing (userFollowingArr) {
+  const followIngList = document.getElementById('following-list')
+  userFollowingArr.following.forEach(followingObj => {
+    let followingStatusHtml
+    followingObj.status === true ? followingStatusHtml = '<span class="user-status light-green accent-3 ml-10"></span>' : followingStatusHtml = '<span class="user-status grey lighten-2 ml-10"></span>'
+    followIngList.innerHTML += `
+    <span class="title following-span"><a class="beerraters-link" href="/users/${followingObj._id}">${followingObj.username} ${followingStatusHtml}</a>
+    `
+  })
+}
+
+function displayUserFollowers (userFollowersArr) {
+  const followersList = document.getElementById('followers-list')
+  followersList.innerHTML = '' 
+  userFollowersArr.followers.forEach(followerObj => {
+    let followerStatusHtml
+    followerObj.status === true ? followerStatusHtml = '<span class="user-status light-green accent-3 ml-10"></span>' : followerStatusHtml = '<span class="user-status grey lighten-2 ml-10"></span>'
+    followersList.innerHTML += `
+    <span class="title follower-span"><a class="beerraters-link" href="/users/${followerObj._id}">${followerObj.username} ${followerStatusHtml}</a>
+    `
+  })
+}
+
+function setEventListeners (userId) {
+  const followBtn = document.getElementById('follow-btn')
+  const ratingAmountSpan = document.getElementById('rating-amount-span')
+  const reviewAmountSpan = document.getElementById('review-amount-span')
+  const imageAmountSpan = document.getElementById('image-amount-span')
+  const followersAmountSpan = document.getElementById('followers-amount-span')
+  const followingAmountSpan = document.getElementById('following-amount-span')
+  if (followBtn) {
+    followBtn.addEventListener('click', () => {
+      toggleFollowUser(userId)
+    })
+  }
+  if (ratingAmountSpan) {
+    const ratingTab = document.getElementById('rating-tab')
+    ratingTab.addEventListener('click', () => {
+      getUserRatings(userId)
+    })
+  }
+  if (reviewAmountSpan) {
+    const reviewTab = document.getElementById('review-tab')
+    reviewTab.addEventListener('click', () => {
+      getUserReviews(userId)
+    })
+  }
+  if (imageAmountSpan) {
+    const imageTab = document.getElementById('image-tab')
+    imageTab.addEventListener('click', () => {
+      getUserImages(userId)
+    })
+  }
+  if (followingAmountSpan.innerText !== '0') {
+    const followingHeader = document.getElementById('following-header')
+    followingHeader.addEventListener('click', () => {
+      getUserFollowing(userId)
+    })
+  }
+  if (followersAmountSpan.innerText !== '0') {
+    const followersHeader = document.getElementById('followers-header')
+    followersHeader.addEventListener('click', () => {
+      getUserFollowers(userId)
+    })
+  }
+}
+
 function createUserImage (imageBlob) {
-  const image = document.createElement('img')
+  const profileImageContainer = document.getElementById('profile-img-container')
+  const profileImage = document.createElement('img')
   const objectURL = URL.createObjectURL(imageBlob)
-  image.src = objectURL
-  image.setAttribute('class', 'responsive-img card-image profile')
-  image.setAttribute('id', 'profile-img')
-  return image
+  profileImage.src = objectURL
+  profileImage.setAttribute('class', 'responsive-img card-image profile')
+  profileImage.setAttribute('id', 'profile-img')
+  profileImageContainer.appendChild(profileImage)
 }
 
 function createBeerImage (imageBlob) {
@@ -175,113 +212,93 @@ function createBeerImage (imageBlob) {
   return image
 }
 
-function createChart (first, second, third, fourth) {
-  const myDoughnutChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: ['Reviews', 'Rankings', 'Images', 'Drinks'],
-      datasets: [{
-        data: [first, second, third, fourth],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255,99,132,1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)'
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      legend: {
-        display: false
-      }
-    }
+function displayUserConsumes (consumedBeersArr) {
+  const consumesList = document.getElementById('consume-list')
+  consumedBeersArr.consumes.forEach(consumeObj => {
+    consumesList.innerHTML += `
+      <a href="/beers/${consumeObj.beer_id}" class="collection-item">${consumeObj.beer_name}</a>
+      `
   })
 }
 
-function displayUserConsumes (user) {
-  const userConsumesList = document.getElementById('consume-list')
-  if (user.consumes.length > 0) {
-    user.consumes.forEach(beer => {
-      userConsumesList.innerHTML += `
-      <a href="/beers/${beer._id}" class="collection-item">${beer.name}</a>
-      `
-    })
-  } else {
-    userConsumesList.innerHTML += `
-    <span class="card-title">No user drinks</span>
-    `
-  }
-}
-
-function displayUserRatings (user) {
+function displayUserRatings (userRatingsArr) {
   const userRatingsList = document.getElementById('ratings-list')
-  if (user.ratings.length > 0) {
-    user.ratings.forEach(beer => {
-      let rating = 0
-      beer.ratings.forEach(ratingObj => {
-        if (ratingObj.user === userId) {
-          rating = ratingObj.rating
-        }
-      })
-      userRatingsList.innerHTML += `
-      <a href="/beers/${beer._id}" class="collection-item">${beer.name} <span class="badge right">${rating}</span></a>
-      `
-    })
-  } else {
+  userRatingsArr.ratings.forEach(ratingObj => {
     userRatingsList.innerHTML += `
-    <span class="card-title">No user ratings</span>
-    `
-  }
+      <a href="/beers/${ratingObj.beer_id}" class="collection-item">${ratingObj.beer_name} <span class="card-subtitle">(${ratingObj.rating})</span></a>
+      `
+  })
 }
 
-function displayGalleryImages (imageBlob, index, beerName) {
-  const imageColumns = document.getElementsByClassName('image-column')
+function displayUserReviews (userReviewsArr) {
+  const userReviewsContainer = document.getElementById('reviews-container')
+  userReviewsArr.reviews.forEach(reviewsObj => {
+    userReviewsContainer.innerHTML += `
+    <li class="collection-item review-item">
+    <span class="title">
+      <a class="review-title beerraters-link" href="/beers/${reviewsObj.beer_id}">${reviewsObj.beer_name}</a>
+    </span>
+    <p>
+    ${reviewsObj.place}
+    </p>
+    <p>
+      <span class="card-subtitle review-body">${reviewsObj.body}</span>
+    </p>
+</li>
+      `
+  })
+}
+
+function displayUserImages (imageBlob, beerName) {
   const beerImage = createBeerImage(imageBlob)
+  const imageContainer = document.getElementById('images-container')
   beerImage.setAttribute('class', 'materialboxed responsive-img caption-images')
   beerImage.setAttribute('data-caption', `${beerName}`)
-  imageColumns[index].appendChild(beerImage)
+  imageContainer.appendChild(beerImage)
   $('.materialboxed').materialbox()
 }
 
-async function getGalleryImages (images) {
-  try {
-    let i = 0
-    while (i < images.length) {
-      const response = await fetch(`/users/${userId}/userImages`, {
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }),
-        method: 'post',
-        credentials: 'same-origin',
-        body: JSON.stringify({
-          index: i
+async function getUserImages (userId) {
+  const isUserReviewsLoaded = sessionStorage.getItem('isUserImagesLoaded')
+  if (isUserReviewsLoaded === null) {
+    const imagesAmount = parseInt(document.getElementById('image-amount-span').innerText)
+    try {
+      let i = 0
+      while (i < imagesAmount) {
+        const response = await fetch(`/users/${userId}/userImages`, {
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          method: 'post',
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            index: i
+          })
         })
-      })
-      const img = await response.blob()
-      const beerName = response.headers.get('Beer-Name')
-      displayGalleryImages(img, i, beerName)
-      i++
+        if (response.status === 200) {
+          const beerImage = await response.blob()
+          const beerName = response.headers.get('Beer-Name')
+          displayUserImages(beerImage, beerName)
+        }
+        i++
+      }
+    } catch (err) {
+      // console.log(err)
     }
-  } catch (err) {
-    console.log(err)
+    sessionStorage.setItem('isUserImagesLoaded', 'true')
   }
 }
 
-if (imageContainer.childNodes.length === 1) {
-  (async () => {
-    const imageBlob = await getUserProfileImg(userId)
-    const userImage = createUserImage(imageBlob)
-    imageContainer.appendChild(userImage)
-    Materialize.fadeInImage('#profile-img')
-  })()
-}
-
-getUserRanking()
-getUser()
+(async () => {
+  sessionStorage.removeItem('isUserRatingLoaded')
+  sessionStorage.removeItem('isUserReviewsLoaded')
+  sessionStorage.removeItem('isUserImagesLoaded')
+  sessionStorage.removeItem('isUserFollowersLoaded')
+  sessionStorage.removeItem('isUserFollowingLoaded')
+  const userId = location.href.split('/')[4]
+  await Promise.all([
+    getUserProfileImg(userId),
+    getUserConsumes(userId)
+  ])
+  setEventListeners(userId)
+})()
