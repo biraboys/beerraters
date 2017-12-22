@@ -9,17 +9,14 @@ socket.on('news', async function (feedItem) {
   const userIds = users.following.map(user => {
     return user._id
   })
-  if (userIds.includes(feedItem.user_id)) {
+  if (userIds.indexOf(feedItem.user_id) > -1) {
+    $('#new-feed-badge').removeClass('hide')
+    $('#feed-link').click(() => {
+      $('#new-feed-badge').addClass('hide')
+    })
     $('#feed-link').addClass('pulse')
     $('#feed-link').click(() => {
       $('#feed-link').removeClass('pulse')
     })
-    if (localStorage.getItem('newFeedCounter') !== null) {
-      let feedCounter = Number(localStorage.getItem('newFeedCounter'))
-      feedCounter++
-      localStorage.setItem('newFeedCounter', feedCounter)
-    } else {
-      localStorage.setItem('newFeedCounter', 1)
-    }
   }
 })

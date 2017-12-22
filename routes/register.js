@@ -1,6 +1,5 @@
 const router = require('express-promise-router')()
 const UsersController = require('../controllers/users')
-// const { validateParams, schemas } = require('../helpers/routeHelpers')
 
 router.route('/')
   .get(async (req, res, next) => {

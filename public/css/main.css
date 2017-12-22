@@ -194,10 +194,6 @@ a {
 }
 
 
-.collection .collection-item.feed-item {
-  margin-bottom: 20px;
-}
-
 .pointer {
   cursor: pointer;
 }
@@ -255,17 +251,8 @@ a {
   display: none;
 }
 
-.feed-item-column {
-  max-height: 195px;
-}
-
 .beerraters-link {
   color: #BF813A;
-}
-
-.user-images-container {
-  display: flex;
-  padding-bottom: 10px;
 }
 
 #tabs-swipe {
@@ -286,4 +273,22 @@ a {
 
 .intro-card {
   height: 275px;
+}
+
+@media only screen and (max-width: 768px) {
+  .tabs-fixed-width.beerraters-tabs {
+    display: inline;
+  }
+  .tabs .tab.beerraters-tab {
+    text-align: left;
+    padding-left: 10px;
+  }
+  .tabs .tab.beerraters-tab a {
+    padding-left: 10px !important;
+  }
+  .mobile-inline-block {
+    display: inline-block;
+    padding-left: 10px;
+    padding-top: 10px;
+  }
 }

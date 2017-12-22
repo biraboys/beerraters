@@ -365,16 +365,16 @@ async function generateBeerCard (beerObj) {
               <div class="card-title">                  
                 ${rating}
               </div>
-              <span>
+              <span class="mobile-inline-block">
                 ${consumes}
               </span>
-              <span>
+              <span class="mobile-inline-block">
                 ${ratings}
               </span>
-              <span>
+              <span class="mobile-inline-block">
                 ${reviews}
               </span>
-              <span>
+              <span class="mobile-inline-block">
                 ${images}
               </span>
             </div>
@@ -430,16 +430,16 @@ function generateUserCard (user) {
               <div class="card-title">
                 <a class="beerraters-link" href="/users/${user._id}">@${user.username}</a>
               </div>
-            <span>
+            <span class="mobile-inline-block">
               ${consumes}
             </span>
-            <span>
+            <span class="mobile-inline-block">
               ${ratings}
             </span>
-            <span>
+            <span class="mobile-inline-block">
               ${reviews}
             </span>
-            <span>
+            <span class="mobile-inline-block">
               ${images}
             </span>
           </div> 
@@ -462,7 +462,7 @@ function displayErrorMessage (beerName, type, filter) {
   let addBeerMessage, filterMessage
   switch (filter) {
     case 'name':
-      addBeerMessage = 'Add this beer to our database <a href="/beers/add">here!</a>'
+      addBeerMessage = 'Add this beer to our database <a class="beerraters-link" href="/beers/add">here!</a>'
       filterMessage = `beer <span style="font-weight: bold;">"${beerName}"</span>`
       break
     case 'style':

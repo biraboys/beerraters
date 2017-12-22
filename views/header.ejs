@@ -62,18 +62,20 @@
           <% if (!session) { %>
             <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
               <% } else { %>
-            <li><a href="/"><i class="material-icons left">rss_feed</i>Feed</a></li>            
+            <li><a id="feed-link" href="/"><i class="material-icons left">rss_feed</i>Feed <span id="new-feed-badge" class="new badge right hide"></span></a></li>            
               <% } %>
         <li><a href="/search"><i class="material-icons left">search</i>Search</a></li>
         <% if (!session) { %>
           <li><a href="/register"><i class="material-icons left">explore</i>Sign Up</a></li>
           <li><a href="/login"><i class="material-icons left">input</i>Login</a></li>    
           <% } else { %>
-          <li><a id="user-session-id" href="/users/<%= session._id %>"><i class="material-icons left">person</i>My Profile</a></li>
+          <li><a id="user-session-id" href="/users/<%= session._id %>"><i class="material-icons left">person</i>Profile</a></li>
           <li><a id="logout"><i class="material-icons left">power_settings_new</i>Logout</a></li>
           <% } %> 
       </ul>
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+      <a href="#" data-activates="nav-mobile" class="button-collapse">
+        <i aria-hidden="true" class="material-icons">menu</i>
+      </a>
     </div>
 </nav>
   

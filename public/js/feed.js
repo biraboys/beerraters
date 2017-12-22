@@ -9,25 +9,17 @@ socket.on('news', async function (feedItem) {
   const userIds = users.following.map(user => {
     return user._id
   })
-  if (userIds.includes(feedItem.user_id)) {
+  if (userIds.indexOf(feedItem.user_id) > -1) {
     const activityList = document.getElementById('activity-list')
-    const feedCounterSpan = document.getElementById('feed-counter-span')
-    const newFeedStorage = localStorage.getItem('newFeedCounter')
-    let newFeedCounter
-    if (newFeedStorage !== null) {
-      newFeedCounter = parseInt(newFeedStorage)
-      newFeedCounter++
-      localStorage.setItem('newFeedCounter', newFeedCounter)
-    } else {
-      localStorage.setItem('newFeedCounter', 1)
-      newFeedCounter = 1
-    }
-    feedCounterSpan.innerText = newFeedCounter
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
+    const date = new Date(feedItem.created)
+    feedItem.created = date.toLocaleDateString('en-GB', dateOptions)
+    feedItem.beer_name.length > 20 ? feedItem.beer_name = `${feedItem.beer_name.substring(0, 20)}...` : feedItem.beer_name = feedItem.beer_name
     const feedTypeHtml = generateFeedTypeHtml(feedItem)
     const newFeedItem = `
     <div class="col s12 m12 l4">
       <div class="card feed-item pulse" tabindex="0">
-        <div class="card-content">
+        <div class="card-content" style="height: 150px;">
           <span class="card-title">
             <i class="material-icons va-middle">account_circle</i>
             <a href="/users/${feedItem.user_id}" class="va-middle">${feedItem.username}</a>
@@ -46,7 +38,7 @@ socket.on('news', async function (feedItem) {
     </div>
     `
     activityList.insertAdjacentHTML('afterbegin', newFeedItem)
-    addFeedItemsListeners(document.getElementsByClassName('feed-item')[0], newFeedCounter, feedCounterSpan)
+    addFeedItemsListeners(document.getElementsByClassName('feed-item')[0])
   }
 })
 
@@ -127,12 +119,12 @@ async function getFeed (followingIds) {
       const date = new Date(feedItem.created)
       feedItem.created = date.toLocaleDateString('en-GB', dateOptions)
       feedItem.beer_name.length > 20 ? feedItem.beer_name = `${feedItem.beer_name.substring(0, 20)}...` : feedItem.beer_name = feedItem.beer_name
-      if (followingIds.includes(feedItem.user_id)) {
+      if (followingIds.indexOf(feedItem.user_id) > -1) {
         const feedTypeHtml = generateFeedTypeHtml(feedItem)
         activityList.innerHTML += `
-        <div class="col s12 m12 l4 feed-item-column">
-          <div class="card feed-item" tabindex="0">
-            <div class="card-content">
+        <div class="col s12 m12 l4">
+          <div class="card" tabindex="0">
+            <div class="card-content" style="height: 150px;">
               <span class="card-title">
                 <i class="material-icons va-middle">account_circle</i>
                 <a href="/users/${feedItem.user_id}" class="va-middle">${feedItem.username}</a>
@@ -151,7 +143,6 @@ async function getFeed (followingIds) {
         </div>
         `
       }
-      getNewFeedCounter()
     })
   } catch (err) {
     console.log(err)
@@ -159,48 +150,14 @@ async function getFeed (followingIds) {
 }
 
 /**
- * Checks localStorage to see the amount of new feed items for the user.
- */
-function getNewFeedCounter () {
-  const feedCounterSpan = document.getElementById('feed-counter-span')
-  const feedItems = document.getElementsByClassName('feed-item')
-  const newFeedStorage = localStorage.getItem('newFeedCounter')
-  let newFeedCounter
-  if (newFeedStorage !== null) {
-    let feedItemIndex = 0
-    newFeedCounter = parseInt(newFeedStorage)
-    for (const feedItem of feedItems) {
-      if (feedItemIndex < newFeedCounter) {
-        feedItem.classList.add('pulse')
-        addFeedItemsListeners(feedItem, newFeedCounter, feedCounterSpan)
-      }
-      feedItemIndex++
-    }
-    feedCounterSpan.innerText = newFeedCounter
-  }
-}
-
-/**
  * Add feed item listener depending on if item is new or not
  * @param {Object} feedItem - Feed item from backend based on Mongoose schema
- * @param {Number} newFeedCounter - Counter from localstorage keeping strack on amount of new items
- * @param {String} feedCounterSpan - Html span to display new feed counter
  */
-function addFeedItemsListeners (feedItem, newFeedCounter, feedCounterSpan) {
+function addFeedItemsListeners (feedItem) {
   feedItem.addEventListener('mouseover', function () {
-    if (this.classList.contains('pulse')) {
-      newFeedCounter--
-      localStorage.setItem('newFeedCounter', newFeedCounter)
-      feedCounterSpan.innerText = newFeedCounter
-    }
     this.classList.remove('pulse')
   })
   feedItem.addEventListener('focus', function () {
-    if (this.classList.contains('pulse')) {
-      newFeedCounter--
-      localStorage.setItem('newFeedCounter', newFeedCounter)
-      feedCounterSpan.innerText = newFeedCounter
-    }
     this.classList.remove('pulse')
   })
 }
