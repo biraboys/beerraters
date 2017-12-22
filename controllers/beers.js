@@ -293,7 +293,7 @@ module.exports = {
         return imageObj.user_id
       })
     }
-    if (postedImageUserIds && postedImageUserIds.includes(userId)) {
+    if (postedImageUserIds && postedImageUserIds.indexOf(userId) !== -1) {
       res.status(400).end()
     } else {
       const image = await Jimp.read(req.file.buffer)

@@ -77,8 +77,8 @@
                       <span id="image-amount-span" class="card-subtitle va-middle"><%= beer.images.length %></span>
                       <span class="card-subtitle va-middle">Images</span>
                     </span>
-                    <span class="card-content">
-                      <p><%= beer.description %></p>
+                    <span class="card-content" p>
+                      <p style="padding-top: 20px"><%= beer.description %></p>
                   </span>
               </div>
                 <div class="card-content bt-1">
@@ -219,13 +219,13 @@
                                 <div class="file-field input-field">
                                   <div class="btn">
                                     <span>Add Photo</span>
-                                    <input type="file" name="img">
+                                    <input type="file" name="img" required>
                                   </div>
                                   <div class="file-path-wrapper">
                                     <input class="file-path validate" type="text">
                                   </div>
                                 </div>
-                              <button type="submit" class="btn waves-effect waves-light right" name="submit">Submit</button>
+                              <button id="submit-image-btn" type="submit" class="btn waves-effect waves-light right" name="submit">Submit</button>
                           </form>
                           <div id="loading-container" class="preloader-wrapper big">
                               <div class="spinner-layer spinner-blue-only">
