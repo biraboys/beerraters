@@ -32,12 +32,12 @@ registerForm.addEventListener('submit', async function (e) {
     const data = await response.json()
 
     if (data) {
-      if (data.message[51] === 'u') {
+      if (data.message[63] === 'u') {
         username.className = 'validate invalid'
         usernameMsg.attributes[2].nodeValue = 'Username already taken.'
         registerBtn.classList.remove('disabled')
       }
-      if (data.message[51] === 'e') {
+      if (data.message[63] === 'e') {
         email.className = 'validate invalid'
         emailMsg.attributes[2].nodeValue = 'Email already taken.'
         registerBtn.classList.remove('disabled')
