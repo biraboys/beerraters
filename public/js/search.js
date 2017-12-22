@@ -1,310 +1,31 @@
-/**
- * Checks in session storage for previous search and applies it to DOM if found.
-*/
-function checkSessionStorage () {
-  if (sessionStorage.getItem('searchVal') !== null) {
-    const searchForm = document.forms.searchForm
-    const searchVal = sessionStorage.getItem('searchVal')
-    sessionStorage.removeItem('searchVal')
-    searchForm.q.value = searchVal
-    searchForm.q.focus()
-    searchBeer(searchVal, 'name')
-  }
-  if (sessionStorage.getItem('beerCards') !== null) {
-    const beerCards = JSON.parse(sessionStorage.getItem('beerCards'))
-    const resultMessage = JSON.parse(sessionStorage.getItem('resultMessage'))
-    const navigationButtons = JSON.parse(sessionStorage.getItem('navigationButtons'))
-    const beersJSON = JSON.parse(sessionStorage.getItem('beersJSON'))
-    const beerContainer = document.getElementById('beer-container')
-    const resultsContainer = document.getElementById('results-container')
-    const pageNavigation = document.getElementById('page-navigation')
-    resultsContainer.innerHTML = resultMessage
-    beerContainer.innerHTML = beerCards
-    pageNavigation.innerHTML = navigationButtons
-    if (beersJSON.length > 50) {
-      generateButtons(beersJSON.length, beersJSON)
-    }
-  }
-}
-
-/**
- * Toggles active class of buttons when user clicks on one.
- * @param {string} current - DOM element of the clicked button.
- * @param {string} buttons - The rest of the buttons of the same DOM class.
-*/
-function activeButtons (current, buttons) {
-  current.classList.add('active')
-  current.classList.remove('white')
-  current.classList.remove('black-text')
-  for (const button of buttons) {
-    if (button !== current) {
-      button.classList.add('white')
-      button.classList.add('black-text')
-      button.classList.remove('active')
-    }
-  }
-}
-
-/**
- * Sets listeners for beer and user search buttons.
-*/
-function setSearchButtonsListeners () {
-  const beerSearch = document.getElementById('beer-search-btn')
-  const userSearch = document.getElementById('user-search-btn')
-  const filterOptionsContainer = document.getElementById('filter-options')
-  const searchForm = document.forms.searchForm
-  const searchButtons = document.getElementsByClassName('search-btn')
-  beerSearch.addEventListener('click', function () {
-    filterOptionsContainer.style.display = 'block'
-    searchForm.q.select()
-    searchForm.q.focus()
-    activeButtons(this, searchButtons)
-  })
-  userSearch.addEventListener('click', function () {
-    filterOptionsContainer.style.display = 'none'
-    searchForm.q.select()
-    searchForm.q.focus()
-    activeButtons(this, searchButtons)
-  })
-}
-
-/**
- * Sets listeners for name, style, brewery, and country filter buttons.
-*/
-function setFilterButtonsListeners () {
-  const filterButtons = document.getElementsByClassName('filter-btn')
-  const searchForm = document.forms.searchForm
-  for (const button of filterButtons) {
-    button.addEventListener('click', function () {
-      searchForm.q.select()
-      searchForm.q.focus()
-      activeButtons(this, filterButtons)
-    })
-  }
-}
-
-/**
- * Sets listeners for seach form.
-*/
-function setSearchformListeners () {
-  const searchForm = document.forms.searchForm
-  const searchButtons = document.getElementsByClassName('search-btn')
-  searchForm.q.addEventListener('keyup', function () {
-    const errorContainer = document.getElementById('error-container')
-    if (this.value.length < 3) {
-      errorContainer.innerHTML = 'Search needs to be at least three characters long'
-    } else {
-      errorContainer.innerHTML = ''
-    }
-  })
-  searchForm.addEventListener('submit', function (e) {
-    e.preventDefault()
-    for (const button of searchButtons) {
-      if (button.classList.contains('active')) {
-        checkSubmitValue(button.name)
-      }
-    }
-  })
-}
-
-/**
- * Checks length and filter of search value and starts beer or user search.
- * @param {string} searchButtonName  - Name of search button.
-*/
-function checkSubmitValue (searchButtonName) {
-  const searchForm = document.forms.searchForm
-  const searchValue = searchForm.q.value
-  const filterButtons = document.getElementsByClassName('filter-btn')
-  if (searchValue.length >= 3) {
-    if (searchButtonName === 'beer') {
-      let filter
-      for (const button of filterButtons) {
-        if (button.classList.contains('active')) {
-          filter = button.name
-        }
-      }
-      searchBeer(searchValue, filter)
-    } else {
-      searchUser(searchValue)
-    }
-  }
-}
-
-// DB calls
-
-/**
- * Searches for beers in the database.
- * @param {string} beerName - Name of beer from search form.
- * @param {string} filter - Name, style, brewery, or country of beer.
-*/
-async function searchBeer (beerName, filter) {
-  const beerContainer = document.getElementById('beer-container')
-  const resultsContainer = document.getElementById('results-container')
-  const loadingContainer = document.getElementById('loading-container')
-  const pageNavigation = document.getElementById('page-navigation')
-  loadingContainer.classList.add('active')
-  try {
-    const response = await fetch(`/search/beers/${filter}/?q=${beerName}`)
-    const beers = await response.json()
-    if (beers.length < 1) {
-      clearContent(beerContainer)
-      displayErrorMessage(beerName, 'beer', filter)
-    } else {
-      const startValue = 1
-      let endValue
-      if (beers.length > 50) {
-        endValue = 50
-      } else {
-        endValue = beers.length
-      }
-      displayResultCount(beerName, beers.length, startValue, endValue)
-      clearContent(beerContainer)
-      clearContent(pageNavigation)
-      beers.forEach(async (beer, index) => {
-        if (index <= 50) {
-          const beerCard = await generateBeerCard(beer)
-          await displayBeer(beerCard)
-        }
-      })
-      if (beers.length > 50) {
-        addNextButton(beers.length, beers)
-      }
-    }
-    sessionStorage.setItem('beersJSON', JSON.stringify(beers))
-    sessionStorage.setItem('beerCards', JSON.stringify(beerContainer.innerHTML))
-    sessionStorage.setItem('resultMessage', JSON.stringify(resultsContainer.innerHTML))
-    sessionStorage.setItem('navigationButtons', JSON.stringify(pageNavigation.innerHTML))
-  } catch (e) {
-    console.log(e)
-  }
-  loadingContainer.classList.remove('active')
-}
-
-/**
- * Searches for users in the database.
- * @param {string} user - Name or username of user from search form.
-*/
-async function searchUser (user) {
-  const beerContainer = document.getElementById('beer-container')
-  const resultsContainer = document.getElementById('results-container')
-  const loadingContainer = document.getElementById('loading-container')
-  const pageNavigation = document.getElementById('page-navigation')
-  loadingContainer.classList.add('active')
-  try {
-    const response = await fetch(`/search/users/?q=${user}`)
-    const users = await response.json()
-    if (users.length < 1) {
-      clearContent(beerContainer)
-      displayErrorMessage(user, 'user')
-    } else {
-      const startValue = 1
-      let endValue
-      if (users.length > 50) {
-        endValue = 50
-      } else {
-        endValue = users.length
-      }
-      displayResultCount(user, users.length, startValue, endValue)
-      clearContent(beerContainer)
-      clearContent(pageNavigation)
-      users.forEach(async (user, index) => {
-        if (index <= 50) {
-          const userCard = generateUserCard(user)
-          await displayBeer(userCard)
-        }
-      })
-      if (users.length > 50) {
-        addNextButton(users.length, users)
-      }
-    }
-    sessionStorage.setItem('beersJSON', JSON.stringify(users))
-    sessionStorage.setItem('beerCards', JSON.stringify(beerContainer.innerHTML))
-    sessionStorage.setItem('resultMessage', JSON.stringify(resultsContainer.innerHTML))
-    sessionStorage.setItem('navigationButtons', JSON.stringify(pageNavigation.innerHTML))
-  } catch (err) {
-    console.log(err)
-  }
-  loadingContainer.classList.remove('active')
-}
-
-/**
- * Gets image of each beer and returns an HTML representation of a card with beer props.
- * @param {object} beerObj - Beer object from MongoDB.
- * @returns {string} HTML representation of a card with beer props.
-*/
-async function generateBeerCard (beerObj) {
-  let rating, style, brewery, country, consumes, ratings, reviews, images
-  beerObj.style_id ? style = `<span class="chip">${beerObj.style_name}</span>` : style = ''
-  beerObj.brewery_id ? brewery = `<span class="chip">${beerObj.brewery_name}</span>` : brewery = ''
-  beerObj.country_id ? country = `<span class="chip">${beerObj.country_name}</span>` : country = ''
-  if (beerObj.consumes && beerObj.consumes.length > 0) {
-    consumes = `
+function checkSessionStorage(){if(null!==sessionStorage.getItem('searchVal')){const a=document.forms.searchForm,b=sessionStorage.getItem('searchVal');sessionStorage.removeItem('searchVal'),a.q.value=b,a.q.focus(),searchBeer(b,'name')}if(null!==sessionStorage.getItem('beerCards')){const a=JSON.parse(sessionStorage.getItem('beerCards')),b=JSON.parse(sessionStorage.getItem('resultMessage')),c=JSON.parse(sessionStorage.getItem('navigationButtons')),d=JSON.parse(sessionStorage.getItem('beersJSON')),f=document.getElementById('beer-container'),g=document.getElementById('results-container'),h=document.getElementById('page-navigation');g.innerHTML=b,f.innerHTML=a,h.innerHTML=c,50<d.length&&generateButtons(d.length,d)}}function activeButtons(a,b){a.classList.add('active'),a.classList.remove('white'),a.classList.remove('black-text');for(const c of b)c!==a&&(c.classList.add('white'),c.classList.add('black-text'),c.classList.remove('active'))}function setSearchButtonsListeners(){const a=document.getElementById('beer-search-btn'),b=document.getElementById('user-search-btn'),c=document.getElementById('filter-options'),d=document.forms.searchForm,f=document.getElementsByClassName('search-btn');a.addEventListener('click',function(){c.style.display='block',d.q.select(),d.q.focus(),activeButtons(this,f)}),b.addEventListener('click',function(){c.style.display='none',d.q.select(),d.q.focus(),activeButtons(this,f)})}function setFilterButtonsListeners(){const a=document.getElementsByClassName('filter-btn'),b=document.forms.searchForm;for(const c of a)c.addEventListener('click',function(){b.q.select(),b.q.focus(),activeButtons(this,a)})}function setSearchformListeners(){const a=document.forms.searchForm,b=document.getElementsByClassName('search-btn');a.q.addEventListener('keyup',function(){const c=document.getElementById('error-container');c.innerHTML=3>this.value.length?'Search needs to be at least three characters long':''}),a.addEventListener('submit',function(c){c.preventDefault();for(const d of b)d.classList.contains('active')&&checkSubmitValue(d.name)})}function checkSubmitValue(a){const b=document.forms.searchForm,c=b.q.value,d=document.getElementsByClassName('filter-btn');if(3<=c.length)if('beer'===a){let f;for(const g of d)g.classList.contains('active')&&(f=g.name);searchBeer(c,f)}else searchUser(c)}async function searchBeer(a,b){const c=document.getElementById('beer-container'),d=document.getElementById('results-container'),f=document.getElementById('loading-container'),g=document.getElementById('page-navigation');f.classList.add('active');try{const h=await fetch(`/search/beers/${b}/?q=${a}`),j=await h.json();if(1>j.length)clearContent(c),displayErrorMessage(a,'beer',b);else{let l;l=50<j.length?50:j.length,displayResultCount(a,j.length,1,l),clearContent(c),clearContent(g),j.forEach(async(m,n)=>{if(50>=n){const o=await generateBeerCard(m);await displayBeer(o)}}),50<j.length&&addNextButton(j.length,j)}sessionStorage.setItem('beersJSON',JSON.stringify(j)),sessionStorage.setItem('beerCards',JSON.stringify(c.innerHTML)),sessionStorage.setItem('resultMessage',JSON.stringify(d.innerHTML)),sessionStorage.setItem('navigationButtons',JSON.stringify(g.innerHTML))}catch(h){console.log(h)}f.classList.remove('active')}async function searchUser(a){const b=document.getElementById('beer-container'),c=document.getElementById('results-container'),d=document.getElementById('loading-container'),f=document.getElementById('page-navigation');d.classList.add('active');try{const g=await fetch(`/search/users/?q=${a}`),h=await g.json();if(1>h.length)clearContent(b),displayErrorMessage(a,'user');else{let k;k=50<h.length?50:h.length,displayResultCount(a,h.length,1,k),clearContent(b),clearContent(f),h.forEach(async(l,m)=>{if(50>=m){const n=generateUserCard(l);await displayBeer(n)}}),50<h.length&&addNextButton(h.length,h)}sessionStorage.setItem('beersJSON',JSON.stringify(h)),sessionStorage.setItem('beerCards',JSON.stringify(b.innerHTML)),sessionStorage.setItem('resultMessage',JSON.stringify(c.innerHTML)),sessionStorage.setItem('navigationButtons',JSON.stringify(f.innerHTML))}catch(g){console.log(g)}d.classList.remove('active')}async function generateBeerCard(a){let b,c,d,f,g,h,j,k;if(c=a.style_id?`<span class="chip">${a.style_name}</span>`:'',d=a.brewery_id?`<span class="chip">${a.brewery_name}</span>`:'',f=a.country_id?`<span class="chip">${a.country_name}</span>`:'',g=a.consumes&&0<a.consumes.length?`
       <i class="material-icons va-middle" aria-hidden="true">local_drink</i>
-      <span class="card-subtitle va-middle">${beerObj.consumes.length} drinks</span>
-    `
-  } else {
-    consumes = ''
-  }
-  if (beerObj.ratings && beerObj.ratings.length > 0) {
-    ratings = `
+      <span class="card-subtitle va-middle">${a.consumes.length} drinks</span>
+    `:'',h=a.ratings&&0<a.ratings.length?`
       <i class="material-icons va-middle" aria-hidden="true">star</i>
-      <span class="card-subtitle va-middle">${beerObj.ratings.length} ratings</span>
-    `
-  } else {
-    ratings = ''
-  }
-  if (beerObj.reviews && beerObj.reviews.length > 0) {
-    reviews = `
+      <span class="card-subtitle va-middle">${a.ratings.length} ratings</span>
+    `:'',j=a.reviews&&0<a.reviews.length?`
       <i class="material-icons va-middle" aria-hidden="true">rate_review</i>
-      <span class="card-subtitle va-middle">${beerObj.reviews.length} reviews</span>
-    `
-  } else {
-    reviews = ''
-  }
-  if (beerObj.images && beerObj.images.length > 0) {
-    images = `
+      <span class="card-subtitle va-middle">${a.reviews.length} reviews</span>
+    `:'',k=a.images&&0<a.images.length?`
       <i class="material-icons va-middle" aria-hidden="true">insert_photo</i>
-      <span class="card-subtitle va-middle">${beerObj.images.length} images</span>
-    `
-  } else {
-    images = ''
-  }
-  if (beerObj.avg_rating) {
-    let numberType, blackStars, greyStars
-    rating = ''
-    beerObj.avg_rating % 1 === 0 ? numberType = 'int' : numberType = 'float'
-    switch (numberType) {
-      case 'int':
-        blackStars = beerObj.avg_rating / 1
-        for (let i = 1; i <= blackStars; i++) {
-          rating += `
+      <span class="card-subtitle va-middle">${a.images.length} images</span>
+    `:'',a.avg_rating){let m,n,o;switch(b='',m=0==a.avg_rating%1?'int':'float',m){case'int':n=a.avg_rating/1;for(let p=1;p<=n;p++)b+=`
                <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
             <path d="M0 0h24v24H0z" fill="none"/>
           </svg>
-        `
-        }
-        greyStars = 5 - blackStars
-        for (let i = 1; i <= greyStars; i++) {
-          rating += `
+        `;o=5-n;for(let p=1;p<=o;p++)b+=`
         <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
           <path d="M0 0h24v24H0z" fill="none"/>
         </svg>
-        `
-        }
-        break
-      case 'float':
-        blackStars = beerObj.avg_rating / 1
-        for (let i = 1; i <= Math.floor(blackStars); i++) {
-          rating += `
+        `;break;case'float':n=a.avg_rating/1;for(let p=1;p<=Math.floor(n);p++)b+=`
           <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
             <path d="M0 0h24v24H0z" fill="none"/>
           </svg>
-        `
-        }
-        rating += `
+        `;b+=`
          <svg class="va-middle" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <defs>
             <path d="M0 0h24v24H0V0z" id="a"/>
@@ -314,24 +35,14 @@ async function generateBeerCard (beerObj) {
           </clipPath>
           <path clip-path="url(#b)" d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4V6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/>
         </svg>
-        `
-        greyStars = Math.floor(5 - blackStars)
-        for (let i = 1; i <= greyStars; i++) {
-          rating += `
+        `,o=Math.floor(5-n);for(let p=1;p<=o;p++)b+=`
         <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
           <path d="M0 0h24v24H0z" fill="none"/>
         </svg>
-        `
-        }
-        break
-    }
-
-    rating += `
-    <span class="va-middle card-subtitle">${beerObj.avg_rating.toFixed(1)}</span>
-    `
-  } else {
-    rating = `
+        `;}b+=`
+    <span class="va-middle card-subtitle">${a.avg_rating.toFixed(1)}</span>
+    `}else b=`
      <svg class="va-middle" fill="#E8EDFA" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
       <path d="M0 0h24v24H0z" fill="none"/>
@@ -353,298 +64,78 @@ async function generateBeerCard (beerObj) {
       <path d="M0 0h24v24H0z" fill="none"/>
     </svg>
     <span class="card-subtitle">N/A</span>
-    `
-  }
-  const beerCard = `
+    `;const l=`
     <div class="row">
       <div class="card">
             <div class="card-content">
               <div class="card-title">
-                <a class="beerraters-link" href="/beers/${beerObj._id}">${beerObj.name}</a>
+                <a class="beerraters-link" href="/beers/${a._id}">${a.name}</a>
               </div> 
               <div class="card-title">                  
-                ${rating}
+                ${b}
               </div>
               <span class="mobile-inline-block">
-                ${consumes}
+                ${g}
               </span>
               <span class="mobile-inline-block">
-                ${ratings}
+                ${h}
               </span>
               <span class="mobile-inline-block">
-                ${reviews}
+                ${j}
               </span>
               <span class="mobile-inline-block">
-                ${images}
+                ${k}
               </span>
             </div>
             <div class="card-content bt-1">                 
-              ${style}             
-              ${brewery}                 
-              ${country}
+              ${c}             
+              ${d}                 
+              ${f}
           </div>
         </div>
       </div>
-      `
-  return beerCard
-}
-
-function generateUserCard (user) {
-  let consumes, ratings, reviews, images
-  if (user.consumes && user.consumes.length > 0) {
-    consumes = `
+      `;return l}function generateUserCard(a){let b,c,d,f;b=a.consumes&&0<a.consumes.length?`
       <i class="material-icons va-middle" aria-hidden="true">local_drink</i>
-      <span class="card-subtitle va-middle">${user.consumes.length} drinks</span>
-    `
-  } else {
-    consumes = ''
-  }
-  if (user.ratings && user.ratings.length > 0) {
-    ratings = `
+      <span class="card-subtitle va-middle">${a.consumes.length} drinks</span>
+    `:'',c=a.ratings&&0<a.ratings.length?`
       <i class="material-icons va-middle" aria-hidden="true">star</i>
-      <span class="card-subtitle va-middle">${user.ratings.length} ratings</span>
-    `
-  } else {
-    ratings = ''
-  }
-  if (user.reviews && user.reviews.length > 0) {
-    reviews = `
+      <span class="card-subtitle va-middle">${a.ratings.length} ratings</span>
+    `:'',d=a.reviews&&0<a.reviews.length?`
       <i class="material-icons va-middle" aria-hidden="true">rate_review</i>
-      <span class="card-subtitle va-middle">${user.reviews.length} reviews</span>
-    `
-  } else {
-    reviews = ''
-  }
-  if (user.images && user.images.length > 0) {
-    images = `
+      <span class="card-subtitle va-middle">${a.reviews.length} reviews</span>
+    `:'',f=a.images&&0<a.images.length?`
       <i class="material-icons va-middle" aria-hidden="true">insert_photo</i>
-      <span class="card-subtitle va-middle">${user.images.length} images</span>
-    `
-  } else {
-    images = ''
-  }
-  const userCard = `
+      <span class="card-subtitle va-middle">${a.images.length} images</span>
+    `:'';const g=`
     <div class="row">
       <div class="card">
             <div class="card-content">
               <div class="card-title">
-                <a class="beerraters-link" href="/users/${user._id}">@${user.username}</a>
+                <a class="beerraters-link" href="/users/${a._id}">@${a.username}</a>
               </div>
             <span class="mobile-inline-block">
-              ${consumes}
+              ${b}
             </span>
             <span class="mobile-inline-block">
-              ${ratings}
+              ${c}
             </span>
             <span class="mobile-inline-block">
-              ${reviews}
+              ${d}
             </span>
             <span class="mobile-inline-block">
-              ${images}
+              ${f}
             </span>
           </div> 
         </div>
       </div>
       </div>
-        `
-  return userCard
-}
-
-function displayBeer (beerCard) {
-  const beerContainer = document.getElementById('beer-container')
-  addContent(beerContainer, beerCard)
-  sessionStorage.setItem('beerCards', JSON.stringify(beerContainer.innerHTML))
-}
-
-function displayErrorMessage (beerName, type, filter) {
-  const resultsContainer = document.getElementById('results-container')
-  const pageNavigation = document.getElementById('page-navigation')
-  let addBeerMessage, filterMessage
-  switch (filter) {
-    case 'name':
-      addBeerMessage = 'Add this beer to our database <a class="beerraters-link" href="/beers/add">here!</a>'
-      filterMessage = `beer <span style="font-weight: bold;">"${beerName}"</span>`
-      break
-    case 'style':
-      filterMessage = `any beers for style <span style="font-weight: bold;">"${beerName}"</span>`
-      addBeerMessage = ''
-      break
-    case 'brewery':
-      filterMessage = `any beers for brewery <span style="font-weight: bold;">"${beerName}"</span>`
-      addBeerMessage = ''
-      break
-    case 'country':
-      filterMessage = `any beers for country <span style="font-weight: bold;">"${beerName}"</span>`
-      addBeerMessage = ''
-      break
-    default:
-      filterMessage = `user <span style="font-weight: bold;">"${beerName}"</span>`
-      addBeerMessage = ''
-      break
-  }
-  const errorMessage = `
+        `;return g}function displayBeer(a){const b=document.getElementById('beer-container');addContent(b,a),sessionStorage.setItem('beerCards',JSON.stringify(b.innerHTML))}function displayErrorMessage(a,b,c){const d=document.getElementById('results-container'),f=document.getElementById('page-navigation');let g,h;switch(c){case'name':g='Add this beer to our database <a class="beerraters-link" href="/beers/add">here!</a>',h=`beer <span style="font-weight: bold;">"${a}"</span>`;break;case'style':h=`any beers for style <span style="font-weight: bold;">"${a}"</span>`,g='';break;case'brewery':h=`any beers for brewery <span style="font-weight: bold;">"${a}"</span>`,g='';break;case'country':h=`any beers for country <span style="font-weight: bold;">"${a}"</span>`,g='';break;default:h=`user <span style="font-weight: bold;">"${a}"</span>`,g='';}const j=`
   <div class="row">
-  <h4>Sorry, could not find ${filterMessage}</span></h4>
-  <p>${addBeerMessage}</p>
+  <h4>Sorry, could not find ${h}</span></h4>
+  <p>${g}</p>
   </div>
-  `
-  clearContent(pageNavigation)
-  clearContent(resultsContainer)
-  addContent(resultsContainer, errorMessage)
-}
-
-function displayResultCount (beerName, resultAmount, startValue, endValue) {
-  const resultsContainer = document.getElementById('results-container')
-  const resultMessage = `
+  `;clearContent(f),clearContent(d),addContent(d,j)}function displayResultCount(a,b,c,d){const f=document.getElementById('results-container'),g=`
     <div class="row">
-      <h4 id="search-results">Results for <strong>"${beerName}"</strong>, showing <span id="start-value">${startValue}</span> - <span id="end-value">${endValue}</span> out of ${resultAmount}</h4>       
+      <h4 id="search-results">Results for <strong>"${a}"</strong>, showing <span id="start-value">${c}</span> - <span id="end-value">${d}</span> out of ${b}</h4>       
     </div>
-  `
-  clearContent(resultsContainer)
-  addContent(resultsContainer, resultMessage)
-  sessionStorage.setItem('resultMessage', JSON.stringify(resultsContainer.innerHTML))
-}
-
-function addContent (element, content) {
-  element.innerHTML += content
-}
-
-function clearContent (element) {
-  element.innerHTML = ''
-}
-
-function addNextButton (beersAmount, beers) {
-  const pageNavigation = document.getElementById('page-navigation')
-  clearContent(pageNavigation)
-  const button = generateButton('next')
-  addContent(pageNavigation, button)
-
-  const nextBtn = document.getElementById('next-btn')
-  nextBtn.addEventListener('click', () => {
-    generateButtons(beersAmount, beers)
-  })
-}
-
-function generateButtons (beersAmount, beers) {
-  const pageNavigation = document.getElementById('page-navigation')
-  let startValue = Number(document.getElementById('start-value').innerHTML)
-  let endValue = Number(document.getElementById('end-value').innerHTML)
-  endValue += 50
-
-  if (endValue > beersAmount) {
-    startValue = 50
-    endValue = beersAmount
-    newBeerCards(beersAmount, beers, startValue, endValue)
-    const button = generateButton('back')
-    addContent(pageNavigation, button)
-    const calculation = buttonCalculations('back', startValue, endValue, beersAmount)
-    const prevBtn = document.getElementById('prev-btn')
-    prevBtn.addEventListener('click', () => {
-      startValue = calculation.startValue
-      endValue = calculation.endValue
-      newBeerCards(beersAmount, beers, startValue, endValue)
-      clearContent(pageNavigation)
-      const button = generateButton('next')
-      addContent(pageNavigation, button)
-      const nextBtn = document.getElementById('next-btn')
-      nextBtn.addEventListener('click', () => {
-        generateButtons(beersAmount, beers)
-      })
-    })
-  } else {
-    startValue = 51
-    endValue = 100
-    newBeerCards(beersAmount, beers, startValue, endValue)
-    generateOtherButtons(beersAmount, beers)
-  }
-  sessionStorage.setItem('navigationButtons', JSON.stringify(pageNavigation.innerHTML))
-}
-
-function generateOtherButtons (beersAmount, beers) {
-  const pageNavigation = document.getElementById('page-navigation')
-  let startValue = Number(document.getElementById('start-value').innerHTML)
-  let endValue = Number(document.getElementById('end-value').innerHTML)
-  let button
-  clearContent(pageNavigation)
-  if (startValue !== 1) {
-    let button = generateButton('back')
-    addContent(pageNavigation, button)
-  }
-  if (endValue !== beersAmount) {
-    button = generateButton('next')
-    addContent(pageNavigation, button)
-  }
-  const prevBtn = document.getElementById('prev-btn')
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      const calculation = buttonCalculations('back', startValue, endValue, beersAmount)
-      startValue = calculation.startValue
-      endValue = calculation.endValue
-      newBeerCards(beersAmount, beers, startValue, endValue)
-      generateOtherButtons(beersAmount, beers)
-    })
-  }
-  const nextBtn = document.getElementById('next-btn')
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      const calculation = buttonCalculations('next', startValue, endValue, beersAmount)
-      startValue = calculation.startValue
-      endValue = calculation.endValue
-      newBeerCards(beersAmount, beers, startValue, endValue)
-      generateOtherButtons(beersAmount, beers)
-    })
-  }
-  sessionStorage.setItem('navigationButtons', JSON.stringify(pageNavigation.innerHTML))
-}
-
-function buttonCalculations (direction, startValue, endValue, beersAmount) {
-  if (direction === 'next') {
-    startValue += 50
-    endValue += 50
-    if (endValue > beersAmount) {
-      endValue = beersAmount
-    }
-  } else {
-    endValue -= 50
-    if (endValue < 50) {
-      endValue = 50
-    }
-    startValue -= 50
-    if (startValue < 1) {
-      startValue = 1
-    }
-  }
-  return {
-    endValue: endValue,
-    startValue: startValue
-  }
-}
-
-async function newBeerCards (beersAmount, beers, startValue, endValue) {
-  const searchForm = document.forms.searchForm
-  const beerContainer = document.getElementById('beer-container')
-  const currentBeers = beers.slice(startValue, endValue)
-  displayResultCount(searchForm.q.value, beersAmount, startValue, endValue)
-  clearContent(beerContainer)
-  await currentBeers.forEach(async beer => {
-    const beerCard = await generateBeerCard(beer)
-    await displayBeer(beerCard)
-  })
-  window.scrollTo(0, 50)
-}
-
-function generateButton (direction) {
-  let button
-  if (direction === 'back') {
-    button = `<a class="waves-effect waves-light btn" id="prev-btn">Previous</button>`
-  } else {
-    button = `<a class="waves-effect waves-light btn right" id="next-btn">Next</button>`
-  }
-  return button
-}
-
-// Init calls
-checkSessionStorage()
-setSearchButtonsListeners()
-setFilterButtonsListeners()
-setSearchformListeners()
+  `;clearContent(f),addContent(f,g),sessionStorage.setItem('resultMessage',JSON.stringify(f.innerHTML))}function addContent(a,b){a.innerHTML+=b}function clearContent(a){a.innerHTML=''}function addNextButton(a,b){const c=document.getElementById('page-navigation');clearContent(c);const d=generateButton('next');addContent(c,d);const f=document.getElementById('next-btn');f.addEventListener('click',()=>{generateButtons(a,b)})}function generateButtons(a,b){const c=document.getElementById('page-navigation');let d=+document.getElementById('start-value').innerHTML,f=+document.getElementById('end-value').innerHTML;if(f+=50,f>a){d=50,f=a,newBeerCards(a,b,d,f);const g=generateButton('back');addContent(c,g);const h=buttonCalculations('back',d,f,a),j=document.getElementById('prev-btn');j.addEventListener('click',()=>{d=h.startValue,f=h.endValue,newBeerCards(a,b,d,f),clearContent(c);const k=generateButton('next');addContent(c,k);const l=document.getElementById('next-btn');l.addEventListener('click',()=>{generateButtons(a,b)})})}else d=51,f=100,newBeerCards(a,b,d,f),generateOtherButtons(a,b);sessionStorage.setItem('navigationButtons',JSON.stringify(c.innerHTML))}function generateOtherButtons(a,b){const c=document.getElementById('page-navigation');let g,d=+document.getElementById('start-value').innerHTML,f=+document.getElementById('end-value').innerHTML;if(clearContent(c),1!=d){let k=generateButton('back');addContent(c,k)}f!==a&&(g=generateButton('next'),addContent(c,g));const h=document.getElementById('prev-btn');h&&h.addEventListener('click',()=>{const k=buttonCalculations('back',d,f,a);d=k.startValue,f=k.endValue,newBeerCards(a,b,d,f),generateOtherButtons(a,b)});const j=document.getElementById('next-btn');j&&j.addEventListener('click',()=>{const k=buttonCalculations('next',d,f,a);d=k.startValue,f=k.endValue,newBeerCards(a,b,d,f),generateOtherButtons(a,b)}),sessionStorage.setItem('navigationButtons',JSON.stringify(c.innerHTML))}function buttonCalculations(a,b,c,d){return'next'===a?(b+=50,c+=50,c>d&&(c=d)):(c-=50,50>c&&(c=50),b-=50,1>b&&(b=1)),{endValue:c,startValue:b}}async function newBeerCards(a,b,c,d){const f=document.forms.searchForm,g=document.getElementById('beer-container'),h=b.slice(c,d);displayResultCount(f.q.value,a,c,d),clearContent(g),await h.forEach(async j=>{const k=await generateBeerCard(j);await displayBeer(k)}),window.scrollTo(0,50)}function generateButton(a){let b;return b='back'===a?`<a class="waves-effect waves-light btn" id="prev-btn">Previous</button>`:`<a class="waves-effect waves-light btn right" id="next-btn">Next</button>`,b}checkSessionStorage(),setSearchButtonsListeners(),setFilterButtonsListeners(),setSearchformListeners();
